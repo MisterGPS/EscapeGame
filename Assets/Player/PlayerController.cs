@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    private Keyboard controller = Keyboard.current;
+    private InputController inputController;
     private Vector3 originalRotation;
     private int ViewMode = 0;
     private int ViewDirection = 0;
@@ -14,36 +14,51 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         originalRotation = transform.eulerAngles;
+
+        inputController = GetComponent<InputController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Switch between top down and side view
-        if (controller.upArrowKey.wasPressedThisFrame)
-        {
-            ViewMode = 1;
-            UpdateView();
-        }
-        else if (controller.downArrowKey.wasPressedThisFrame)
-        {
-            ViewMode = 0;
-            UpdateView();
-        }
 
-        // Toggle between side views
-        // Should camera be able to rotate in top down view?
-        if (controller.leftArrowKey.wasPressedThisFrame)
-        {
-            ViewDirection -= 1;
-            UpdateView();
-        }
-        else if (controller.rightArrowKey.wasPressedThisFrame)
-        {
-            ViewDirection += 1;
-            UpdateView();
-        }
+    }
 
+    public bool IsTopDown()
+    {
+        return ViewMode == 0;
+    }
+
+    public void SwitchPerspective()
+    {
+        //vor Fade
+        inputController.DisableInput();
+
+        ViewMode = ViewMode == 0 ? 1 : 0;
+        UpdateView();
+
+        //nach Fade
+        //eventuell in anderer Funktion
+        if (IsTopDown())
+        {
+            inputController.EnableTopDownInput();
+        }
+        else
+        {
+            inputController.EnableFirstPersonInput();
+        }
+    }
+
+    public void TurnLeft()
+    {
+        ViewDirection -= 1;
+        UpdateView();
+    }
+
+    public void TurnRight()
+    {
+        ViewDirection += 1;
+        UpdateView();
     }
 
     void UpdateView()
