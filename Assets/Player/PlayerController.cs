@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private ComputeShader fadeBlackShader;
 
     [SerializeField]
-    private ComputeShader blurShader;
+    private ComputeShader convolutionShader;
 
     private void Awake()
     {
@@ -116,23 +116,52 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                DispatchBlackFade(totalTime * Mathf.PI * 2, controlledCamera.activeTexture);
+                RenderTexture outTexture = DispatchBlackFade(totalTime * Mathf.PI * 2, controlledCamera.activeTexture);
+                Graphics.Blit(outTexture, controlledCamera.activeTexture);
                 yield return null;
             }
         }
     }
 
-    void DispatchBlackFade(float Time, RenderTexture source)
+    RenderTexture DispatchBlackFade(float Time, RenderTexture source)
     {
         float[] bufferIn = { Time };
         ComputeBuffer buffer = new ComputeBuffer(1, sizeof(float));
         buffer.SetData(bufferIn);
         fadeBlackShader.SetBuffer(0, "Time", buffer);
-        fadeBlackShader.SetTexture(0, "Target", texture);
+        fadeBlackShader.SetTexture(0, "Result", texture);
         fadeBlackShader.SetTexture(0, "Source", source);
         fadeBlackShader.Dispatch(0, 8, 8, 1);
 
         buffer.Dispose();
-        Graphics.Blit(texture, source);
+        return texture;
+    }
+
+    struct Kernel
+    {
+        public uint Height, Width;
+        public float[] kernelMatrice;
+
+        public Kernel(uint Height, uint Width, float[] Matrice)
+        {
+            this.Height = Height;
+            this.Width = Width;
+            this.kernelMatrice = Matrice;
+            Debug.Assert(this.kernelMatrice.Length == Height * Width);
+        }
+    }
+
+    RenderTexture DispatchConvolution(Kernel inKernel, RenderTexture Source)
+    {
+        Kernel[] inBuffer = { inKernel };
+        ComputeBuffer buffer = new ComputeBuffer(1, sizeof(float) * inKernel.kernelMatrice.Length);
+        buffer.SetData(inBuffer);
+        fadeBlackShader.SetBuffer(0, "kernelValue", buffer);
+        fadeBlackShader.SetTexture(0, "Result", texture);
+        fadeBlackShader.SetTexture(0, "Source", Source);
+        fadeBlackShader.Dispatch(0, 32, 32, 1);
+
+        buffer.Dispose();
+        return texture;
     }
 }

@@ -1,0 +1,31 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+struct kernelValue
+{
+    float weight;
+};
+
+RWTexture2D<float4> Result;
+Texture2D<float4> Source;
+StructuredBuffer<kernelValue> Kernel;
+uint Width, Height;
+
+[numthreads(32,32,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+    float4 Color = float4(1.0, 1.0, 1.0, 1.0);
+    for (uint i = 0; i < Width; i++)
+    {
+        for (uint j = 0; j < Height; j++)
+        {
+            uint WidthOffset = floor(Width / 2);
+            uint HeightOffset = floor(Height / 2);
+            Color += Kernel[Width * (j - HeightOffset) + (i - WidthOffset)].weight *
+                Source[clamp(id.xy - WidthOffset, 0, Width - 1),
+                       clamp(id.xy - HeightOffset, 0, Height - 1)];
+        }
+    }
+
+    Result[id.xy] = Color;
+}
