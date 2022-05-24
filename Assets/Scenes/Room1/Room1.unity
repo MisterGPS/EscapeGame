@@ -389,9 +389,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a536f52b8293714994d8c62b9b35ee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  renderTextureResolution: {x: 1920, y: 1080, z: 32}
+  renderTextureResolution: {x: 1349, y: 789, z: 32}
   fadeBlackShader: {fileID: 7200000, guid: a9745547ec4e2ac4daff6385688956dc, type: 3}
-  blurShader: {fileID: 7200000, guid: e306b0821a89731439456401f510132d, type: 3}
+  convolutionShader: {fileID: 0}
 --- !u!114 &1024249190
 MonoBehaviour:
   m_ObjectHideFlags: 0

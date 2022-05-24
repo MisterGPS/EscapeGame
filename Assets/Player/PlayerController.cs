@@ -14,19 +14,18 @@ public class PlayerController : MonoBehaviour
 
     // On screen FX
     private RenderTexture texture;
-    public Vector3Int renderTextureResolution = new Vector3Int(1920, 1080, 32);
+    private Vector3Int renderTextureResolution = new Vector3Int(0, 0, 32);
     
     [SerializeField]
     private ComputeShader fadeBlackShader;
+    private float fadeBlackTime = 0.0f;
 
     [SerializeField]
     private ComputeShader convolutionShader;
-
+    
     private void Awake()
     {
-        texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
-        texture.enableRandomWrite = true;
-        texture.Create();
+        
     }
 
     // Start is called before the first frame update
@@ -36,6 +35,14 @@ public class PlayerController : MonoBehaviour
 
         inputController = GetComponent<InputController>();
         controlledCamera = GetComponent<Camera>();
+        renderTextureResolution.x = controlledCamera.pixelWidth;
+        renderTextureResolution.y = controlledCamera.pixelHeight;
+
+        texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
+        texture.enableRandomWrite = true;
+        texture.Create();
+
+        Debug.Log(("Camera size: ", controlledCamera.pixelWidth, controlledCamera.pixelHeight));
     }
 
     // Update is called once per frame
@@ -92,48 +99,53 @@ public class PlayerController : MonoBehaviour
     // Update view when screen is entirely black
     IEnumerator RunBlackFade()
     {
-        float totalTime = 0;
+        Camera.onPostRender += OnPostRenderCallback;
+
+        fadeBlackTime = 0;
         bool viewUpdated = false;
-        while (totalTime < 1)
+        while (fadeBlackTime < 1)
         {
             // Avoid rendering something that won't be displayed
             yield return new WaitForEndOfFrame();
 
-            totalTime += Time.deltaTime;
-            if (totalTime > 0.5 && !viewUpdated)
+            Debug.Log(fadeBlackTime);
+
+            viewUpdated = fadeBlackTime > 0.5 || viewUpdated;
+            if (viewUpdated)
             {
+                fadeBlackTime -= Time.deltaTime;
                 float rotateValueX = viewMode * 90.0f;
                 float rotateValueY = viewDirection * 90.0f;
                 transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
-
                 // Depending on playstyle this might need to be called after the effect ends
                 ActivateInput();
-            }
 
-            if (totalTime > 1)
-            {
-                yield break;
+                if (fadeBlackTime < 0)
+                {
+                    Camera.onPostRender -= OnPostRenderCallback;
+                    yield break;
+                }
             }
             else
             {
-                RenderTexture outTexture = DispatchBlackFade(totalTime * Mathf.PI * 2, controlledCamera.activeTexture);
-                Graphics.Blit(outTexture, controlledCamera.activeTexture);
-                yield return null;
+                fadeBlackTime += Time.deltaTime;
             }
+            yield return null;
         }
+    }
+
+    private void OnPostRenderCallback(Camera cam)
+    {
+        RenderTexture outTexture = DispatchBlackFade(fadeBlackTime, cam.activeTexture);
+        Graphics.Blit(outTexture, cam.activeTexture);
     }
 
     RenderTexture DispatchBlackFade(float Time, RenderTexture source)
     {
-        float[] bufferIn = { Time };
-        ComputeBuffer buffer = new ComputeBuffer(1, sizeof(float));
-        buffer.SetData(bufferIn);
-        fadeBlackShader.SetBuffer(0, "Time", buffer);
+        fadeBlackShader.SetFloat("Time", Time);
         fadeBlackShader.SetTexture(0, "Result", texture);
         fadeBlackShader.SetTexture(0, "Source", source);
-        fadeBlackShader.Dispatch(0, 8, 8, 1);
-
-        buffer.Dispose();
+        fadeBlackShader.Dispatch(0, renderTextureResolution.x / 8, renderTextureResolution.y / 8, 1);
         return texture;
     }
 
@@ -159,7 +171,7 @@ public class PlayerController : MonoBehaviour
         fadeBlackShader.SetBuffer(0, "kernelValue", buffer);
         fadeBlackShader.SetTexture(0, "Result", texture);
         fadeBlackShader.SetTexture(0, "Source", Source);
-        fadeBlackShader.Dispatch(0, 32, 32, 1);
+        fadeBlackShader.Dispatch(0, 8, 8, 1);
 
         buffer.Dispose();
         return texture;

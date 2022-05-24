@@ -11,7 +11,7 @@ Texture2D<float4> Source;
 StructuredBuffer<kernelValue> Kernel;
 uint Width, Height;
 
-[numthreads(32,32,1)]
+[numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID)
 {
     float4 Color = float4(1.0, 1.0, 1.0, 1.0);
