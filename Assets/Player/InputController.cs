@@ -7,6 +7,10 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
 {
     private Input input;
     private PlayerController playerController;
+    public Vector2 MousePosition { get; private set; }
+    private Vector2 mouseDelta;
+    private float mouseSensitivity = 700;
+    private MouseController mouseController;
 
     // Start is called before the first frame update
     void Start()
@@ -14,6 +18,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         input = new Input();
 
         playerController = GetComponent<PlayerController>();
+        mouseController = GetComponentInChildren<MouseController>();
 
         input.CommonNav.SetCallbacks(this);
         input.FirstPerson.SetCallbacks(this);
@@ -34,7 +39,9 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     // Update is called once per frame
     void Update()
     {
-
+        MousePosition += mouseDelta * mouseSensitivity * Time.deltaTime;
+        MousePosition = new Vector2(Mathf.Clamp(MousePosition.x, 0, playerController.ControlledCamera.pixelWidth), 
+            Mathf.Clamp(MousePosition.y, 0, playerController.ControlledCamera.pixelHeight));
     }
 
     public void DisableInput()
@@ -43,17 +50,20 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         input.FirstPerson.Disable();
         input.TopDown.Disable();
         input.UI.Disable();
+        mouseController.Deactivate();
     }
 
     public void EnableUIInput()
     {
         input.UI.Enable();
+        mouseController.Activate();
     }
 
     public void EnableFirstPersonInput()
     {
         input.CommonNav.Enable();
         input.FirstPerson.Enable();
+        mouseController.Activate();
     }
 
     public void EnableTopDownInput()
@@ -68,14 +78,6 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         {
             playerController.SwitchPerspective();
         }
-        if (playerController.IsTopDown())
-        {
-            input.FirstPerson.Disable();
-        }
-        else
-        {
-            input.FirstPerson.Enable();
-        }
     }
 
     //Vector2 zum bewegen der Kamera in First Person
@@ -87,7 +89,15 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     //Vector2 zum bewegen de Zeigers/Maus in First Person
     void Input.IFirstPersonActions.OnPoint(InputAction.CallbackContext context)
     {
-        throw new System.NotImplementedException();
+        mouseDelta = context.ReadValue<Vector2>();
+    }
+
+    void Input.IFirstPersonActions.OnClick(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            playerController.InteractWithObject();
+        }
     }
 
     //temporär?

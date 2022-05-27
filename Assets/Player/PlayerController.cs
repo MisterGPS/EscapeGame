@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private int viewMode = 0;
     private int viewDirection = 0;
 
-    private Camera controlledCamera;
+    public Camera ControlledCamera { get; private set; }
 
     // On screen FX
     private RenderTexture texture;
@@ -34,15 +34,15 @@ public class PlayerController : MonoBehaviour
         originalRotation = transform.eulerAngles;
 
         inputController = GetComponent<InputController>();
-        controlledCamera = GetComponent<Camera>();
-        renderTextureResolution.x = controlledCamera.pixelWidth;
-        renderTextureResolution.y = controlledCamera.pixelHeight;
+        ControlledCamera = GetComponent<Camera>();
+        renderTextureResolution.x = ControlledCamera.pixelWidth;
+        renderTextureResolution.y = ControlledCamera.pixelHeight;
 
         texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
         texture.enableRandomWrite = true;
         texture.Create();
 
-        Debug.Log(("Camera size: ", controlledCamera.pixelWidth, controlledCamera.pixelHeight));
+        Debug.Log(("Camera size: ", ControlledCamera.pixelWidth, ControlledCamera.pixelHeight));
     }
 
     // Update is called once per frame
@@ -87,6 +87,20 @@ public class PlayerController : MonoBehaviour
         UpdateView();
     }
 
+    public void InteractWithObject()
+    {
+        Ray ray = ControlledCamera.ScreenPointToRay(inputController.MousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
+            foreach (IInteractable interactable in interactables)
+            {
+                interactable.OnInteract();
+            }
+        }
+    }
+
     void UpdateView()
     {
         inputController.DisableInput();
@@ -108,7 +122,7 @@ public class PlayerController : MonoBehaviour
             // Avoid rendering something that won't be displayed
             yield return new WaitForEndOfFrame();
 
-            Debug.Log(fadeBlackTime);
+            //Debug.Log(fadeBlackTime);
 
             viewUpdated = fadeBlackTime > 0.5 || viewUpdated;
             if (viewUpdated)

@@ -479,6 +479,15 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""234cef11-d31f-4c1d-8365-2a1d0349bb68"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -584,11 +593,22 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""7a3168a9-587e-48cb-8916-544f5cb09e6e"",
-                    ""path"": ""<Gamepad>/rightStick"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2(x=3,y=3)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bb95bd02-fd48-4364-b8fd-183931dfe5ab"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -754,6 +774,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         m_FirstPerson_Point = m_FirstPerson.FindAction("Point", throwIfNotFound: true);
         m_FirstPerson_SwitchLeft = m_FirstPerson.FindAction("SwitchLeft", throwIfNotFound: true);
         m_FirstPerson_SwitchRight = m_FirstPerson.FindAction("SwitchRight", throwIfNotFound: true);
+        m_FirstPerson_Click = m_FirstPerson.FindAction("Click", throwIfNotFound: true);
         // Top-Down
         m_TopDown = asset.FindActionMap("Top-Down", throwIfNotFound: true);
         m_TopDown_Move = m_TopDown.FindAction("Move", throwIfNotFound: true);
@@ -928,6 +949,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputAction m_FirstPerson_Point;
     private readonly InputAction m_FirstPerson_SwitchLeft;
     private readonly InputAction m_FirstPerson_SwitchRight;
+    private readonly InputAction m_FirstPerson_Click;
     public struct FirstPersonActions
     {
         private @Input m_Wrapper;
@@ -936,6 +958,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         public InputAction @Point => m_Wrapper.m_FirstPerson_Point;
         public InputAction @SwitchLeft => m_Wrapper.m_FirstPerson_SwitchLeft;
         public InputAction @SwitchRight => m_Wrapper.m_FirstPerson_SwitchRight;
+        public InputAction @Click => m_Wrapper.m_FirstPerson_Click;
         public InputActionMap Get() { return m_Wrapper.m_FirstPerson; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -957,6 +980,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @SwitchRight.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
                 @SwitchRight.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
                 @SwitchRight.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
+                @Click.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnClick;
+                @Click.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnClick;
+                @Click.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnClick;
             }
             m_Wrapper.m_FirstPersonActionsCallbackInterface = instance;
             if (instance != null)
@@ -973,6 +999,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @SwitchRight.started += instance.OnSwitchRight;
                 @SwitchRight.performed += instance.OnSwitchRight;
                 @SwitchRight.canceled += instance.OnSwitchRight;
+                @Click.started += instance.OnClick;
+                @Click.performed += instance.OnClick;
+                @Click.canceled += instance.OnClick;
             }
         }
     }
@@ -1080,6 +1109,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         void OnPoint(InputAction.CallbackContext context);
         void OnSwitchLeft(InputAction.CallbackContext context);
         void OnSwitchRight(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
     public interface ITopDownActions
     {
