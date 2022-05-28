@@ -20,6 +20,8 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         playerController = GetComponent<PlayerController>();
         mouseController = GetComponentInChildren<MouseController>();
 
+        MousePosition = new Vector2(playerController.ControlledCamera.pixelWidth / 2, playerController.ControlledCamera.pixelHeight / 2);
+
         input.CommonNav.SetCallbacks(this);
         input.FirstPerson.SetCallbacks(this);
         input.TopDown.SetCallbacks(this);
