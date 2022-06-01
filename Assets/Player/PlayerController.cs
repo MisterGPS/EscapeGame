@@ -121,9 +121,6 @@ public class PlayerController : MonoBehaviour
         {
             // Avoid rendering something that won't be displayed
             yield return new WaitForEndOfFrame();
-
-            //Debug.Log(fadeBlackTime);
-
             viewUpdated = fadeBlackTime > 0.5 || viewUpdated;
             if (viewUpdated)
             {
@@ -133,8 +130,8 @@ public class PlayerController : MonoBehaviour
                 transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
                 // Depending on playstyle this might need to be called after the effect ends
                 ActivateInput();
-
-                if (fadeBlackTime < 0)
+                
+                if (fadeBlackTime < 0.3)
                 {
                     Camera.onPostRender -= OnPostRenderCallback;
                     yield break;
@@ -150,17 +147,18 @@ public class PlayerController : MonoBehaviour
 
     private void OnPostRenderCallback(Camera cam)
     {
-        RenderTexture outTexture = DispatchBlackFade(fadeBlackTime, cam.activeTexture);
-        Graphics.Blit(outTexture, cam.activeTexture);
+        Debug.Log(fadeBlackTime);
+        DispatchBlackFade(fadeBlackTime, cam.activeTexture);
+        Graphics.Blit(texture, cam.activeTexture);
     }
 
-    RenderTexture DispatchBlackFade(float Time, RenderTexture source)
+    // TODO Fade black doesn't work after it reaches it's maximum intensity
+    void DispatchBlackFade(float Time, RenderTexture source)
     {
         fadeBlackShader.SetFloat("Time", Time);
         fadeBlackShader.SetTexture(0, "Result", texture);
         fadeBlackShader.SetTexture(0, "Source", source);
         fadeBlackShader.Dispatch(0, renderTextureResolution.x / 8, renderTextureResolution.y / 8, 1);
-        return texture;
     }
 
     struct Kernel
