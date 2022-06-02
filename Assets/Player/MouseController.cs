@@ -27,7 +27,7 @@ public class MouseController : MonoBehaviour
     {
         if (active)
         {
-            Vector3 worldPos = playerController.ControlledCamera.ScreenToWorldPoint(inputController.MousePosition);
+            Vector3 worldPos = playerController.ControlledCamera.ScreenToWorldPoint(inputController.mousePosition);
             Vector3 localPos = playerController.transform.InverseTransformPoint(worldPos);
             localPos.z = playerController.ControlledCamera.nearClipPlane;
             transform.localPosition = localPos;

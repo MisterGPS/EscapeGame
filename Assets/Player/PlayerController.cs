@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private ComputeShader convolutionShader;
+
+    [SerializeField]
+    public Texture2D mouseCursor;
     
     private void Awake()
     {
@@ -43,12 +46,14 @@ public class PlayerController : MonoBehaviour
         texture.Create();
 
         Debug.Log(("Camera size: ", ControlledCamera.pixelWidth, ControlledCamera.pixelHeight));
+
+        Cursor.SetCursor(mouseCursor, new Vector2(512, 170), CursorMode.Auto);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     public bool IsTopDown()
@@ -89,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
     public void InteractWithObject()
     {
-        Ray ray = ControlledCamera.ScreenPointToRay(inputController.MousePosition);
+        Ray ray = ControlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
@@ -104,7 +109,6 @@ public class PlayerController : MonoBehaviour
     void UpdateView()
     {
         inputController.DisableInput();
-        Debug.Log("Update View called");
         StartCoroutine(RunBlackFade());
     }
 
@@ -147,7 +151,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnPostRenderCallback(Camera cam)
     {
-        Debug.Log(fadeBlackTime);
         DispatchBlackFade(fadeBlackTime, cam.activeTexture);
         Graphics.Blit(texture, cam.activeTexture);
     }
