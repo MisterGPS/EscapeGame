@@ -22,7 +22,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         input.UI.SetCallbacks(this);
 
         input.CommonNav.Enable();
-        if (playerController.IsTopDown())
+        if (playerController.GetViewMode() == ViewMode.TopDown)
         {
             EnableTopDownInput();
         }

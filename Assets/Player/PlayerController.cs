@@ -3,12 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+public enum ViewMode
+{
+    TopDown = 0,
+    SideView = 1
+};
+
 public class PlayerController : MonoBehaviour
 {
     private InputController inputController;
     private Vector3 originalRotation;
-    private int viewMode = 0;
+    private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
+    public float fadeBlackHalfTime = 0.4f;
+
+    delegate void ViewModeChanged();
+    ViewModeChanged onViewModeChanged;
 
     public Camera ControlledCamera { get; private set; }
 
@@ -56,21 +66,22 @@ public class PlayerController : MonoBehaviour
         
     }
 
-    public bool IsTopDown()
+    public ViewMode GetViewMode()
     {
-        return viewMode == 0;
+        return viewMode;
     }
 
     public void SwitchPerspective()
     {
-        viewMode = viewMode == 0 ? 1 : 0;
-        UpdateView(); 
+        viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
+        UpdateView();
+        onViewModeChanged();
     }
 
     // Called from within the RunBlackFade coroutine
     private void ActivateInput()
     {
-        if (IsTopDown())
+        if (GetViewMode() == ViewMode.TopDown)
         {
             inputController.EnableTopDownInput();
         }
@@ -98,6 +109,7 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
+            Debug.Log(hit.collider.gameObject.name);
             IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
             foreach (IInteractable interactable in interactables)
             {
@@ -121,21 +133,21 @@ public class PlayerController : MonoBehaviour
 
         fadeBlackTime = 0;
         bool viewUpdated = false;
-        while (fadeBlackTime < 1)
+        while (true)
         {
             // Avoid rendering something that won't be displayed
             yield return new WaitForEndOfFrame();
-            viewUpdated = fadeBlackTime > 0.5 || viewUpdated;
+            viewUpdated = fadeBlackTime > fadeBlackHalfTime || viewUpdated;
             if (viewUpdated)
             {
                 fadeBlackTime -= Time.deltaTime;
-                float rotateValueX = viewMode * 90.0f;
+                float rotateValueX = (int)viewMode * 90.0f;
                 float rotateValueY = viewDirection * 90.0f;
                 transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
                 // Depending on playstyle this might need to be called after the effect ends
                 ActivateInput();
                 
-                if (fadeBlackTime < 0.3)
+                if (fadeBlackTime < Mathf.Max(fadeBlackHalfTime - 0.1f, 0))
                 {
                     Camera.onPostRender -= OnPostRenderCallback;
                     yield break;
