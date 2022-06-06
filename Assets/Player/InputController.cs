@@ -7,7 +7,6 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
 {
     private Input input;
     private PlayerController playerController;
-    public Vector2 mousePosition;
 
     // Start is called before the first frame update
     void Start()
