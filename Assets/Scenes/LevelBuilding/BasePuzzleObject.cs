@@ -15,8 +15,13 @@ public class BasePuzzleObject : MonoBehaviour
 
     private PlayerController playerController;
 
-    public bool createFaces = false;
     public string PuzzleName = "BasePuzzle";
+
+    // Build tools
+    public bool createFaces = false;
+    public bool autoSize = true;
+    public bool getSize = false;
+    public Vector3 size;
 
     [SerializeField]
     public GameObject PlayerCamera;
@@ -52,6 +57,7 @@ public class BasePuzzleObject : MonoBehaviour
         for (int i = 0; i < spriteFaces.Count; i++)
         {
             GameObject newFace = new GameObject();
+
             newFace.transform.position = transform.position;
             newFace.transform.rotation = transform.rotation;
             newFace.transform.localScale = transform.localScale;
@@ -59,24 +65,33 @@ public class BasePuzzleObject : MonoBehaviour
 
             SpriteRenderer renderer = newFace.AddComponent<SpriteRenderer>();
             renderer.sprite = spriteFaces[i];
-            newFace.AddComponent<BoxCollider>();
+            BoxCollider newCollider = newFace.AddComponent<BoxCollider>();
+            newCollider.size = new Vector3(newCollider.size.x, newCollider.size.y, 0);
             newFace.AddComponent<BasePuzzleSide>();
+
             newFace.name = PuzzleName + i;
+
             Faces.Add(newFace);
         }
 
         // Setup face sides individually
-        Vector3 frontFaceSize = Faces[0].GetComponent<BoxCollider>().size;
-        Vector3 topFaceSize = Faces[1].GetComponent<BoxCollider>().size;
+        if (!autoSize)
+        {
+            Faces[0].GetComponent<BoxCollider>().size = new Vector3(size.x, size.y, 0);
+            Faces[1].GetComponent<BoxCollider>().size = new Vector3(size.x, size.z, 0);
+            Faces[2].GetComponent<BoxCollider>().size = new Vector3(size.x, size.y, 0);
+        }
+
+        float ObjectHeight = Faces[0].GetComponent<BoxCollider>().size.y;
+        float ObjectDepth = Faces[1].GetComponent<BoxCollider>().size.y;
 
         Faces[0].transform.Rotate(new Vector3(0.0f, 0.0f, 0.0f));
         Faces[1].transform.Rotate(new Vector3(90.0f, 0.0f, 0.0f));
         Faces[2].transform.Rotate(new Vector3(0.0f, 180.0f, 0.0f));
 
-        Faces[0].transform.localPosition -= new Vector3(0, 0, topFaceSize.x / 2.0f);
-        Faces[1].transform.localPosition += new Vector3(0, frontFaceSize.y / 2.0f, 0);
-        Faces[2].transform.localPosition += new Vector3(0, 0, topFaceSize.x / 2.0f);
-
+        Faces[0].transform.localPosition -= new Vector3(0, 0, ObjectDepth / 2.0f);
+        Faces[1].transform.localPosition += new Vector3(0, ObjectHeight / 2.0f, 0);
+        Faces[2].transform.localPosition += new Vector3(0, 0, ObjectDepth / 2.0f);
     }
 
     // Update is called once per frame
@@ -86,6 +101,13 @@ public class BasePuzzleObject : MonoBehaviour
         {
             BuildFaces();
             createFaces = false;
+        }
+        if (getSize)
+        {
+            size.x = Faces[0].GetComponent<BoxCollider>().size.x;
+            size.y = Faces[0].GetComponent<BoxCollider>().size.y;
+            size.z = Faces[1].GetComponent<BoxCollider>().size.x;
+            getSize = false;
         }
     }
 }
