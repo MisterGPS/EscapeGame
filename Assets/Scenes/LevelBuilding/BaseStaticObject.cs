@@ -31,6 +31,14 @@ public class BaseStaticObject : MonoBehaviour
         }
     }
 
+    protected virtual void Reset()
+    {
+        if (Faces[0] != null)
+        {
+            BuildFaces();
+        }
+    }
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
@@ -69,6 +77,7 @@ public class BaseStaticObject : MonoBehaviour
         for (int i = 0; i < Mathf.Max(spriteFaces.Count, 3); i++)
         {
             GameObject newFace = new GameObject();
+            newFace.name = ObjectName + i;
 
             newFace.transform.position = transform.position;
             newFace.transform.rotation = transform.rotation;
@@ -80,8 +89,11 @@ public class BaseStaticObject : MonoBehaviour
             BoxCollider newCollider = newFace.AddComponent<BoxCollider>();
             newCollider.size = new Vector3(newCollider.size.x, newCollider.size.y, 0);
 
-            newFace.name = ObjectName + i;
+            ObjectFaceInfo faceInfo = newFace.AddComponent<ObjectFaceInfo>();
+            faceInfo.orientation = i;
+            faceInfo.parent = this;
 
+            CustomiseAddSide(newFace);
             Faces.Add(newFace);
         }
 
@@ -104,4 +116,6 @@ public class BaseStaticObject : MonoBehaviour
         Faces[1].transform.localPosition += new Vector3(0, ObjectHeight / 2.0f, 0);
         Faces[2].transform.localPosition += new Vector3(0, 0, ObjectDepth / 2.0f);
     }
+
+    protected virtual GameObject CustomiseAddSide(GameObject Side)  { return Side; }
 }

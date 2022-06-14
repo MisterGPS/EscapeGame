@@ -2,17 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/////////////////
-////   WIP   ////
-/////////////////
-[ExecuteInEditMode]
-public class BasePuzzleObject : BaseStaticObject
+public class Clock : BasePuzzleObject
 {
-    private void Awake()
-    {
-
-    }
-
     // Start is called before the first frame update
     protected override void Start()
     {
@@ -25,9 +16,29 @@ public class BasePuzzleObject : BaseStaticObject
         base.Update();
     }
 
+    protected override void BuildFaces()
+    {
+        base.BuildFaces();
+    }
+
     protected override GameObject CustomiseAddSide(GameObject Side)
     {
-        BasePuzzleSide newSide = Side.AddComponent<BasePuzzleSide>();
+        Side.AddComponent<ClockFace>();
         return Side;
+    }
+
+    public void Rotate180()
+    {
+        transform.Rotate(new Vector3(0, 180, 0));
+    }
+
+    public void OpenBack()
+    {
+
+    }
+
+    public void CloseBack()
+    {
+
     }
 }
