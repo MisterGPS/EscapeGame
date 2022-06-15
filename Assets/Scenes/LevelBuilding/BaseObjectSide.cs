@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectFaceInfo : MonoBehaviour
+public class BaseObjectSide : MonoBehaviour
 {
     public int orientation;
     public BaseStaticObject parent;

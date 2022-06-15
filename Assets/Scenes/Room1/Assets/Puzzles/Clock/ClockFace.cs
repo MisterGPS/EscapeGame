@@ -19,29 +19,5 @@ public class ClockFace : BasePuzzleSide
     public override void OnInteract()
     {
         Debug.Log("Clock interacted with");
-
-        ObjectFaceInfo faceInfo = gameObject.GetComponent<ObjectFaceInfo>();
-
-        // orientation 2: back  3: inner
-        switch (faceInfo.orientation)
-        {
-            case 0:
-            {
-                Debug.Log("Clock interacted with front");
-                ((Clock)faceInfo.parent).Rotate180();
-            } break;
-            case 2:
-            {
-                Debug.Log("Clock interacted with back");
-                ((Clock)faceInfo.parent).OpenBack();
-            } break;
-            case 3:
-            {
-                Debug.Log("Clock interacted with inner");
-                ((Clock)faceInfo.parent).CloseBack();
-            } break;
-            default:
-                break;
-        }
     }
 }

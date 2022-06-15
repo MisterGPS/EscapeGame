@@ -27,17 +27,18 @@ public class Clock : BasePuzzleObject
         return Side;
     }
 
-    public void Rotate180()
+    protected override void FrontClicked()
     {
+        // Turn the clock to have the back facing forward
         transform.Rotate(new Vector3(0, 180, 0));
     }
 
-    public void OpenBack()
+    protected override void TopClicked()
     {
 
     }
 
-    public void CloseBack()
+    protected override void BackClicked()
     {
 
     }

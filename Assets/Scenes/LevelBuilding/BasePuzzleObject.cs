@@ -27,7 +27,51 @@ public class BasePuzzleObject : BaseStaticObject
 
     protected override GameObject CustomiseAddSide(GameObject Side)
     {
-        BasePuzzleSide newSide = Side.AddComponent<BasePuzzleSide>();
+        BasePuzzleSide optSide = Side.AddComponent<BasePuzzleSide>();
+        optSide.onPlayerClick += SideClicked;
         return Side;
+    }
+
+    protected virtual void SideClicked(BasePuzzleSide face)
+    {
+        switch (face.orientation)
+        {
+            case 0:
+                {
+                    FrontClicked();
+                } break;
+            case 1:
+                {
+                    TopClicked();
+                } break;
+            case 2:
+                {
+                    BackClicked();
+                } break;
+            default:
+                UnidentifiedFaceClicked();
+                break;
+        }
+    }
+
+    // Helper functions; Solely to make things easier
+    protected virtual void FrontClicked()
+    {
+        Debug.Log("Interacted with front face of object " + name);
+    }
+
+    protected virtual void TopClicked()
+    {
+        Debug.Log("Interacted with top face of object " + name);
+    }
+
+    protected virtual void BackClicked()
+    {
+        Debug.Log("Interacted with back face of object " + name);
+    }
+
+    protected virtual void UnidentifiedFaceClicked()
+    {
+        Debug.Log("Interacted with UNIDENTIFIED face of object " + name);
     }
 }

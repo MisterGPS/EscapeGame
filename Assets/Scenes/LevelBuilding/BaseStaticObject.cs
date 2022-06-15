@@ -89,11 +89,15 @@ public class BaseStaticObject : MonoBehaviour
             BoxCollider newCollider = newFace.AddComponent<BoxCollider>();
             newCollider.size = new Vector3(newCollider.size.x, newCollider.size.y, 0);
 
-            ObjectFaceInfo faceInfo = newFace.AddComponent<ObjectFaceInfo>();
-            faceInfo.orientation = i;
-            faceInfo.parent = this;
-
             CustomiseAddSide(newFace);
+
+            BaseObjectSide optSide = newFace.GetComponent<BaseObjectSide>();
+            if (!optSide)
+            {
+                optSide = newFace.AddComponent<BaseObjectSide>();
+            }
+            optSide.orientation = 1;
+            optSide.parent = this;
             Faces.Add(newFace);
         }
 
