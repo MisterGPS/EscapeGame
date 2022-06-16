@@ -44,13 +44,17 @@ public class Lock : BasePuzzleSide
 
     Dictionary<Polygon, Action> buttonActions;
 
-    public int[] code;
+    int[] code;
     int[] numbers;
     int numberCount;
 
     public TextMeshProUGUI text;
 
     public bool Locked { get; private set; }
+
+
+    public GameObject gameManagerObject;
+    protected GameManager gameManager;
 
     void Awake()
     {
@@ -106,10 +110,12 @@ public class Lock : BasePuzzleSide
         reset();
     }
 
+    
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameManager = gameManagerObject.GetComponent<GameManager>();
+        code = gameManager.timeCode;
     }
 
     // Update is called once per frame

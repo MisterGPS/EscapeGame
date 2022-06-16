@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Clock : BasePuzzleObject
 {
+
     [SerializeField]
     private Sprite innerBackFace;
 
@@ -14,10 +15,14 @@ public class Clock : BasePuzzleObject
 
     private int fixedScrews = 4;
 
+    public Text time;
+
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
+        time.text = gameManager.timeString;
     }
 
     // Update is called once per frame
