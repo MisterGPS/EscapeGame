@@ -27,13 +27,13 @@ public class BasePuzzleObject : BaseStaticObject
 
     protected override GameObject CustomiseAddSide(GameObject Side)
     {
-        BasePuzzleSide optSide = Side.AddComponent<BasePuzzleSide>();
-        optSide.onPlayerClick += SideClicked;
+        Side.AddComponent<BasePuzzleSide>();
         return Side;
     }
 
-    protected virtual void SideClicked(BasePuzzleSide face)
+    public virtual void SideClicked(BasePuzzleSide face)
     {
+        Debug.Log(face.orientation);
         switch (face.orientation)
         {
             case 0:

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BasePuzzleSide : BaseObjectSide, IInteractable
 {
-    public delegate void PlayerClick(BasePuzzleSide face);
-    public PlayerClick onPlayerClick;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +19,6 @@ public class BasePuzzleSide : BaseObjectSide, IInteractable
 
     public virtual void OnInteract(RaycastHit raycastHit)
     {
-        Debug.Log("Interacted with Puzzle Side");
-        onPlayerClick.Invoke(this);
+        ((BasePuzzleObject)parent).SideClicked(this);
     }
 }

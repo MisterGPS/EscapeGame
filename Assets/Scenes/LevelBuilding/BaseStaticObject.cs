@@ -96,7 +96,7 @@ public class BaseStaticObject : MonoBehaviour
             {
                 optSide = newFace.AddComponent<BaseObjectSide>();
             }
-            optSide.orientation = 1;
+            optSide.orientation = i;
             optSide.parent = this;
             Faces.Add(newFace);
         }

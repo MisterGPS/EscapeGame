@@ -15,7 +15,10 @@ public class PlayerController : MonoBehaviour
     private Vector3 originalRotation;
     private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
-    public float fadeBlackHalfTime = 0.4f;
+
+    // Temporary List inventory; might need a limit
+    [SerializeField]
+    private List<BaseItem> inventory = new();
 
     delegate void ViewModeChanged();
     ViewModeChanged onViewModeChanged;
@@ -25,16 +28,15 @@ public class PlayerController : MonoBehaviour
     // On screen FX
     private RenderTexture texture;
     private Vector3Int renderTextureResolution = new Vector3Int(0, 0, 32);
-    
+
+    public float fadeBlackHalfTime = 0.4f;
+
     [SerializeField]
     private ComputeShader fadeBlackShader;
     private float fadeBlackTime = 0.0f;
 
     [SerializeField]
     private ComputeShader convolutionShader;
-
-    [SerializeField]
-    public Texture2D mouseCursor;
     
     private void Awake()
     {
@@ -56,8 +58,6 @@ public class PlayerController : MonoBehaviour
         texture.Create();
 
         Debug.Log(("Camera size: ", ControlledCamera.pixelWidth, ControlledCamera.pixelHeight));
-
-        Cursor.SetCursor(mouseCursor, new Vector2(512, 170), CursorMode.Auto);
     }
 
     // Update is called once per frame
@@ -122,6 +122,21 @@ public class PlayerController : MonoBehaviour
     {
         inputController.DisableInput();
         StartCoroutine(RunBlackFade());
+    }
+
+    public void AddItemToInventory(BaseItem item)
+    {
+        inventory.Add(item);
+    }
+
+    public void RemoveItemFromInventory(BaseItem item)
+    {
+        inventory.Remove(item);
+    }
+
+    public void RemoveItemFromInventory(int Position)
+    {
+        inventory.RemoveAt(Position);
     }
 
     // Use coroutine
