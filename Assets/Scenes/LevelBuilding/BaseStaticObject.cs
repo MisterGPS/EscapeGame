@@ -7,7 +7,9 @@ public class BaseStaticObject : MonoBehaviour
 {
     // Automatic default ordering: Front, Top, Back
     [SerializeField]
-    public List<Sprite> spriteFaces = new List<Sprite>();
+    protected List<Sprite> spriteFaces = new List<Sprite>();
+
+    [SerializeField]
     protected List<GameObject> Faces = new List<GameObject>();
 
     public string ObjectName = "BaseObject";
@@ -16,6 +18,7 @@ public class BaseStaticObject : MonoBehaviour
     public bool createFaces = false;
     public bool autoSize = true;
     public bool getSize = false;
+    public bool lockObject = true;
     public Vector3 size;
 
     [SerializeField]
@@ -49,18 +52,20 @@ public class BaseStaticObject : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (createFaces)
+        if (!lockObject)
         {
-            BuildFaces();
-            createFaces = false;
+            if (createFaces)
+            {
+                BuildFaces();
+            }
+            if (getSize)
+            {
+                size.x = Faces[0].GetComponent<BoxCollider>().size.x;
+                size.y = Faces[0].GetComponent<BoxCollider>().size.y;
+                size.z = Faces[1].GetComponent<BoxCollider>().size.y;
+            }
         }
-        if (getSize)
-        {
-            size.x = Faces[0].GetComponent<BoxCollider>().size.x;
-            size.y = Faces[0].GetComponent<BoxCollider>().size.y;
-            size.z = Faces[1].GetComponent<BoxCollider>().size.y;
-            getSize = false;
-        }
+        createFaces = getSize = false;
     }
 
     protected virtual void BuildFaces()

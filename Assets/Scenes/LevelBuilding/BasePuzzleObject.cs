@@ -58,7 +58,6 @@ public class BasePuzzleObject : BaseStaticObject
     protected virtual void FrontClicked()
     {
         Debug.Log("Interacted with front face of object " + name);
-        playerController.FocusObject(transform.localPosition);
     }
 
     protected virtual void TopClicked()

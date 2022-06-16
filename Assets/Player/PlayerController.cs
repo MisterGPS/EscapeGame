@@ -80,31 +80,6 @@ public class PlayerController : MonoBehaviour
         onViewModeChanged();
     }
 
-    // Focuses on a passed (relative)position
-    public void FocusObject(Vector3 ObjectPosition)
-    {
-        originalPosition = transform.position;
-        originalCameraSize = GetComponent<Camera>().orthographicSize;
-        
-
-        Vector3 newCameraPosition1,newCameraPosition2;
-        newCameraPosition1 = newCameraPosition2 = ObjectPosition; //Object Position
-        newCameraPosition1.z+= 5;
-        newCameraPosition2.z-= 5;
-        float distance1 = Vector3.Distance (newCameraPosition1,originalPosition);
-        float distance2 = Vector3.Distance (newCameraPosition2,originalPosition);
-
-        transform.position = distance1 < distance2 ? newCameraPosition1 : newCameraPosition2;
-
-
-    }
-
-    public void UnfocusObject()
-    {
-        GetComponent<Camera>().orthographicSize = originalCameraSize;
-        transform.position = originalPosition;
-    }
-
     // Called from within the RunBlackFade coroutine
     private void ActivateInput()
     {

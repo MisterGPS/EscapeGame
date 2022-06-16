@@ -615,7 +615,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""id"": ""d6df6106-4708-45d3-b328-7adf21254cbb"",
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
-                    ""processors"": ""Normalize(min=-1,max=1)"",
+                    ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Zoom"",
                     ""isComposite"": false,

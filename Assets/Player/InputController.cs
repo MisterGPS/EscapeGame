@@ -175,7 +175,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
             Debug.Log("Mouse scrolled");
             float cameraSize = playerController.GetComponent<Camera>().orthographicSize;
             playerController.GetComponent<Camera>().orthographicSize =
-            Mathf.Clamp(cameraSize + -Mouse.current.scroll.ReadValue().y, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+            Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
         }
     }
 }
