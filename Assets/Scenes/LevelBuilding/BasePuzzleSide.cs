@@ -19,7 +19,7 @@ public class BasePuzzleSide : BaseObjectSide, IInteractable
         
     }
 
-    public virtual void OnInteract()
+    public virtual void OnInteract(RaycastHit raycastHit)
     {
         Debug.Log("Interacted with Puzzle Side");
         onPlayerClick.Invoke(this);

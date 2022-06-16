@@ -16,7 +16,7 @@ public class ClockFace : BasePuzzleSide
         
     }
 
-    public override void OnInteract()
+    public override void OnInteract(RaycastHit hit)
     {
         Debug.Log("Clock interacted with");
     }

@@ -113,7 +113,7 @@ public class PlayerController : MonoBehaviour
             IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
             foreach (IInteractable interactable in interactables)
             {
-                interactable.OnInteract();
+                interactable.OnInteract(hit);
             }
         }
     }

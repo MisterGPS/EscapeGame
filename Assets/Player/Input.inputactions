@@ -559,17 +559,6 @@
                 },
                 {
                     "name": "",
-                    "id": "716b2a85-2c17-498c-994d-44ec0a7323b8",
-                    "path": "<Mouse>/delta",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Point",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7a3168a9-587e-48cb-8916-544f5cb09e6e",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
