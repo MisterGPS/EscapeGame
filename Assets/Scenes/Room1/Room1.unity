@@ -867,7 +867,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 664b3e15c99ed5946965ddaea753e7a8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 10.24, y: 10.24}
@@ -2232,6 +2232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a536f52b8293714994d8c62b9b35ee7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory: []
   fadeBlackHalfTime: 0.4
   fadeBlackShader: {fileID: 7200000, guid: a9745547ec4e2ac4daff6385688956dc, type: 3}
   convolutionShader: {fileID: 0}
@@ -2518,7 +2519,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -9.33, y: 15.27}
+  m_AnchoredPosition: {x: -9.33, y: 6.86}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1254035050

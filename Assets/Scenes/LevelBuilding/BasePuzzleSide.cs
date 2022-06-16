@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasePuzzleSide : BaseObjectSide, IInteractable
+public class BasePuzzleSide : BaseObjectSide
 {
 
     // Start is called before the first frame update
@@ -17,7 +17,7 @@ public class BasePuzzleSide : BaseObjectSide, IInteractable
         
     }
 
-    public virtual void OnInteract(RaycastHit raycastHit)
+    public override void OnInteract(RaycastHit raycastHit)
     {
         ((BasePuzzleObject)parent).SideClicked(this);
     }

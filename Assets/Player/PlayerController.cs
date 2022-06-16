@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
 {
     private InputController inputController;
     private Vector3 originalRotation;
+    private Vector3 originalPosition;
     private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
 
@@ -76,6 +77,30 @@ public class PlayerController : MonoBehaviour
         viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
         UpdateView();
         onViewModeChanged();
+    }
+
+    public void FocusObject(BaseStaticObject Object)
+    {
+        originalPosition = transform.position;
+        Vector3 newCameraPosition1,newCameraPosition2;
+        newCameraPosition1 = newCameraPosition2 = Object.transform.localPosition; //Object Position
+        newCameraPosition1.z+= 2;
+        newCameraPosition2.z-= 2;
+        float distance1 = Vector3.Distance (newCameraPosition1,originalPosition);
+        float distance2 = Vector3.Distance (newCameraPosition2,originalPosition);
+        if(distance1 < distance2)
+        {
+            transform.position = newCameraPosition1;
+        }
+        else
+        {
+            transform.position = newCameraPosition2;
+        }
+    }
+
+    public void UnfocusObject()
+    {
+        transform.position = originalPosition;
     }
 
     // Called from within the RunBlackFade coroutine

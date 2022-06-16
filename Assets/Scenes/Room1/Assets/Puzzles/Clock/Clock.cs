@@ -31,7 +31,9 @@ public class Clock : BasePuzzleObject
     {
         // Turn the clock to have the back facing forward
         Debug.Log("Interacted with front face of clock");
+        base.FrontClicked();
         transform.Rotate(new Vector3(0, 180, 0));
+        
     }
 
     protected override void TopClicked()
