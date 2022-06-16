@@ -8,6 +8,9 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     private Input input;
     private PlayerController playerController;
 
+    const float MIN_CAMERA_ZOOM = 1;
+    const float MAX_CAMERA_ZOOM = 7;  // Should be smaller than a side of a wall; development only setting (7)
+
     // Start is called before the first frame update
     void Start()
     {
@@ -73,7 +76,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     //Vector2 zum bewegen der Kamera in First Person
     void Input.IFirstPersonActions.OnLook(InputAction.CallbackContext context)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     //Vector2 zum bewegen de Zeigers/Maus in First Person
@@ -163,5 +166,16 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Input.IUIActions.OnTrackedDeviceOrientation(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();
+    }
+
+    void Input.IFirstPersonActions.OnZoom(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Debug.Log("Mouse scrolled");
+            float cameraSize = playerController.GetComponent<Camera>().orthographicSize;
+            playerController.GetComponent<Camera>().orthographicSize =
+            Mathf.Clamp(cameraSize + -Mouse.current.scroll.ReadValue().y, MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+        }
     }
 }

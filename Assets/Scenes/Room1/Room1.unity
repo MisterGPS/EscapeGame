@@ -999,6 +999,7 @@ GameObject:
   m_Component:
   - component: {fileID: 467005248}
   - component: {fileID: 467005249}
+  - component: {fileID: 467005250}
   m_Layer: 0
   m_Name: Screwdriver
   m_TagString: Untagged
@@ -1036,6 +1037,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 1024249186}
+--- !u!65 &467005250
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 467005247}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 20, y: 2.5, z: 2.5}
+  m_Center: {x: -0.6, y: 1, z: 0}
 --- !u!1 &536113787
 GameObject:
   m_ObjectHideFlags: 0

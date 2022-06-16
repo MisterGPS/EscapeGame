@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     private InputController inputController;
     private Vector3 originalRotation;
     private Vector3 originalPosition;
+    private float originalCameraSize;
     private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
 
@@ -79,27 +80,28 @@ public class PlayerController : MonoBehaviour
         onViewModeChanged();
     }
 
-    public void FocusObject(BaseStaticObject Object)
+    // Focuses on a passed (relative)position
+    public void FocusObject(Vector3 ObjectPosition)
     {
         originalPosition = transform.position;
+        originalCameraSize = GetComponent<Camera>().orthographicSize;
+        
+
         Vector3 newCameraPosition1,newCameraPosition2;
-        newCameraPosition1 = newCameraPosition2 = Object.transform.localPosition; //Object Position
-        newCameraPosition1.z+= 2;
-        newCameraPosition2.z-= 2;
+        newCameraPosition1 = newCameraPosition2 = ObjectPosition; //Object Position
+        newCameraPosition1.z+= 5;
+        newCameraPosition2.z-= 5;
         float distance1 = Vector3.Distance (newCameraPosition1,originalPosition);
         float distance2 = Vector3.Distance (newCameraPosition2,originalPosition);
-        if(distance1 < distance2)
-        {
-            transform.position = newCameraPosition1;
-        }
-        else
-        {
-            transform.position = newCameraPosition2;
-        }
+
+        transform.position = distance1 < distance2 ? newCameraPosition1 : newCameraPosition2;
+
+
     }
 
     public void UnfocusObject()
     {
+        GetComponent<Camera>().orthographicSize = originalCameraSize;
         transform.position = originalPosition;
     }
 
@@ -151,11 +153,15 @@ public class PlayerController : MonoBehaviour
 
     public void AddItemToInventory(BaseItem item)
     {
+        Debug.Log("Added item to inventory");
+        item.ToggleItemVisibility(false);
         inventory.Add(item);
     }
 
     public void RemoveItemFromInventory(BaseItem item)
     {
+        Debug.Log("removed item from inventory");
+        item.ToggleItemVisibility(true);
         inventory.Remove(item);
     }
 

@@ -28,4 +28,9 @@ public class BaseItem : MonoBehaviour, IInteractable
     {
         playerController.AddItemToInventory(this);
     }
+
+    public void ToggleItemVisibility(bool visibility)
+    {
+        gameObject.SetActive(visibility);
+    }
 }
