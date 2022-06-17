@@ -11,7 +11,7 @@ public class Clock : BasePuzzleObject
 
     // topLeft, topRight, bottomLeft, bottomRight
     [SerializeField]
-    private List<Button> buttons = new List<Button>(4);
+    private List<CustomButton> buttons = new List<CustomButton>(4);
 
     private int fixedScrews = 4;
 
@@ -23,6 +23,10 @@ public class Clock : BasePuzzleObject
     {
         base.Start();
         time.text = gameManager.getTimeString();
+        buttons[0].onPointerDown += TopLeftButtonPressed;
+        buttons[1].onPointerDown += TopRightButtonPressed;
+        buttons[2].onPointerDown += BottomLeftButtonPressed;
+        buttons[3].onPointerDown += BottomRightButtonPressed;
     }
 
     // Update is called once per frame
@@ -50,14 +54,9 @@ public class Clock : BasePuzzleObject
         
     }
 
-    protected override void TopClicked()
-    {
-
-    }
-
-    protected override void BackClicked()
-    {
-        transform.Rotate(new Vector3(0, -180, 0));
+    public override void SideClicked(BasePuzzleSide face)
+    {   
+        base.SideClicked(face);
     }
 
     private void OpenBack()
