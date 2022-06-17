@@ -5,8 +5,6 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class BaseStaticObject : MonoBehaviour
 {
-    public GameObject gameManagerObject; 
-    protected GameManager gameManager;
     // Automatic default ordering: Front, Top, Back
     [SerializeField]
     protected List<Sprite> spriteFaces = new List<Sprite>();
@@ -49,7 +47,6 @@ public class BaseStaticObject : MonoBehaviour
     {
         playerController = PlayerCamera.GetComponent<PlayerController>();
         ViewMode currentView = playerController.GetViewMode();
-        gameManager = gameManagerObject.GetComponent<GameManager>();
     }
 
     // Update is called once per frame

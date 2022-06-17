@@ -53,9 +53,6 @@ public class Lock : BasePuzzleSide
 
     public bool Locked { get; private set; }
 
-
-    public GameObject gameManagerObject;
-    protected GameManager gameManager;
     public Text open;
     public Text closed;
 
@@ -117,21 +114,22 @@ public class Lock : BasePuzzleSide
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = gameManagerObject.GetComponent<GameManager>();
-        code = gameManager.getTimeCode();
+        code = GameManager.Instance.getTimeCode();
         SetClosed();
-
     }
+
     void SetClosed()
     {
         open.enabled = false;
         closed.enabled = true;
     }
+
     void SetOpen()
     {
         open.enabled = true;
         closed.enabled = false;
     }
+    
     // Update is called once per frame
     void Update()
     {

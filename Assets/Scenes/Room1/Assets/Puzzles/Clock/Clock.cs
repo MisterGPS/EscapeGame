@@ -5,24 +5,19 @@ using UnityEngine.UI;
 
 public class Clock : BasePuzzleObject
 {
-
-    [SerializeField]
-    private Sprite innerBackFace;
-
     // topLeft, topRight, bottomLeft, bottomRight
     [SerializeField]
     private List<GameObject> screws;
-
     private int fixedScrews = 4;
 
-    public Text time;
-
+    public Text displayedTime;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
-        time.text = gameManager.getTimeString();
+
+        displayedTime.text = GameManager.Instance.getTimeString();
         screws[0].GetComponent<Screw>().onInteracted += TopLeftButtonPressed;
         screws[1].GetComponent<Screw>().onInteracted += TopRightButtonPressed;
         screws[2].GetComponent<Screw>().onInteracted += BottomLeftButtonPressed;
@@ -33,11 +28,6 @@ public class Clock : BasePuzzleObject
     protected override void Update()
     {
         base.Update();
-    }
-
-    protected override void BuildFaces()
-    {
-        base.BuildFaces();
     }
 
     protected override GameObject CustomiseAddSide(GameObject Side)
@@ -69,7 +59,7 @@ public class Clock : BasePuzzleObject
     {
         if (fixedScrews == 0)
         {
-            Faces[2].GetComponent<SpriteRenderer>().sprite = innerBackFace;
+            
         }
     }
 
