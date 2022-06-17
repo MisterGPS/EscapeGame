@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Lock : BasePuzzleSide
 {
@@ -55,6 +56,8 @@ public class Lock : BasePuzzleSide
 
     public GameObject gameManagerObject;
     protected GameManager gameManager;
+    public Text open;
+    public Text closed;
 
     void Awake()
     {
@@ -116,8 +119,19 @@ public class Lock : BasePuzzleSide
     {
         gameManager = gameManagerObject.GetComponent<GameManager>();
         code = gameManager.getTimeCode();
-    }
+        SetClosed();
 
+    }
+    void SetClosed()
+    {
+        open.enabled = false;
+        closed.enabled = true;
+    }
+    void SetOpen()
+    {
+        open.enabled = true;
+        closed.enabled = false;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -157,6 +171,7 @@ public class Lock : BasePuzzleSide
             {
                 Locked = false;
                 Debug.Log("unlocked");
+                SetOpen();
             }
             else
             {
