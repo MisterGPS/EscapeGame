@@ -11,7 +11,7 @@ public class Clock : BasePuzzleObject
 
     // topLeft, topRight, bottomLeft, bottomRight
     [SerializeField]
-    private List<CustomButton> buttons = new List<CustomButton>(4);
+    private List<GameObject> screws;
 
     private int fixedScrews = 4;
 
@@ -23,10 +23,10 @@ public class Clock : BasePuzzleObject
     {
         base.Start();
         time.text = gameManager.getTimeString();
-        buttons[0].onPointerDown += TopLeftButtonPressed;
-        buttons[1].onPointerDown += TopRightButtonPressed;
-        buttons[2].onPointerDown += BottomLeftButtonPressed;
-        buttons[3].onPointerDown += BottomRightButtonPressed;
+        screws[0].GetComponent<Screw>().onInteracted += TopLeftButtonPressed;
+        screws[1].GetComponent<Screw>().onInteracted += TopRightButtonPressed;
+        screws[2].GetComponent<Screw>().onInteracted += BottomLeftButtonPressed;
+        screws[3].GetComponent<Screw>().onInteracted += BottomRightButtonPressed;
     }
 
     // Update is called once per frame
@@ -54,6 +54,12 @@ public class Clock : BasePuzzleObject
         
     }
 
+    protected override void BackClicked()
+    {
+        Debug.Log("Interacted with back face of clock");
+        transform.Rotate(new Vector3(0, -180, 0));
+    }
+
     public override void SideClicked(BasePuzzleSide face)
     {   
         base.SideClicked(face);
@@ -69,7 +75,6 @@ public class Clock : BasePuzzleObject
 
     public virtual void TopLeftButtonPressed()
     {
-        buttons[0].interactable = false;
         fixedScrews -= 1;
         OpenBack();
     }
@@ -77,21 +82,18 @@ public class Clock : BasePuzzleObject
     public void TopRightButtonPressed()
     {
         print("TopRightButtonPressed");
-        buttons[1].interactable = false;
         fixedScrews -= 1;
         OpenBack();
     }
 
     public void BottomLeftButtonPressed()
     {
-        buttons[2].interactable = false;
         fixedScrews -= 1;
         OpenBack();
     }
 
     public void BottomRightButtonPressed()
     {
-        buttons[3].interactable = false;
         fixedScrews -= 1;
         OpenBack();
     }
