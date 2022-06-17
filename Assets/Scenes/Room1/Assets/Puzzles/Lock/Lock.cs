@@ -115,7 +115,7 @@ public class Lock : BasePuzzleSide
     void Start()
     {
         gameManager = gameManagerObject.GetComponent<GameManager>();
-        code = gameManager.timeCode;
+        code = gameManager.getTimeCode();
     }
 
     // Update is called once per frame

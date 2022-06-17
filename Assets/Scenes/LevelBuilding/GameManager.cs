@@ -5,8 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int[] timeCode;
-    public string timeString;
+    private int[] timeCode;
+    private string timeString;
     private void SetTime()
     {
         int totalMinutes = Random.Range(0, 1440);
@@ -28,6 +28,30 @@ public class GameManager : MonoBehaviour
         timeString = hoursS + ':' + minutesS;
        
     }
+
+    public int[] getTimeCode()
+    {
+        if (timeCode != null)
+            return timeCode;
+        else
+        {
+            SetTime();
+            return timeCode;
+        }
+    }
+
+    public string getTimeString()
+    {
+        if (timeString != null)
+            return timeString;
+        else
+        {
+            SetTime();
+            return timeString;
+        }
+
+    }
+
     void Start()
     {
         SetTime();

@@ -22,7 +22,7 @@ public class Clock : BasePuzzleObject
     protected override void Start()
     {
         base.Start();
-        time.text = gameManager.timeString;
+        time.text = gameManager.getTimeString();
     }
 
     // Update is called once per frame
