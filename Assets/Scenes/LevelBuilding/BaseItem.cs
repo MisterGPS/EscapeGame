@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseItem : MonoBehaviour, IInteractable
 {
     // The sprite used to represent this item in UI
-    public Sprite itemRepresentation { set; get; }
+    public Sprite itemRepresentation;
 
     [SerializeField]
     private Camera playerCamera;

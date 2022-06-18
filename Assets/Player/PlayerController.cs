@@ -18,9 +18,14 @@ public class PlayerController : MonoBehaviour
     private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
 
-    // Temporary List inventory; might need a limit
     [SerializeField]
-    private List<BaseItem> inventory = new();
+    private GameObject itemUIObject;
+
+    private SelectedItemUI itemUI; 
+
+    // Temporary inventory
+    [SerializeField]
+    private BaseItem inventory;
 
     delegate void ViewModeChanged();
     ViewModeChanged onViewModeChanged;
@@ -60,6 +65,8 @@ public class PlayerController : MonoBehaviour
         texture.Create();
 
         Debug.Log(("Camera size: ", ControlledCamera.pixelWidth, ControlledCamera.pixelHeight));
+
+        itemUI = itemUIObject.GetComponent<SelectedItemUI>();
     }
 
     // Update is called once per frame
@@ -129,20 +136,21 @@ public class PlayerController : MonoBehaviour
     public void AddItemToInventory(BaseItem item)
     {
         Debug.Log("Added item to inventory");
+        if (inventory != null)
+        {
+            inventory.ToggleItemVisibility(true);
+        }
         item.ToggleItemVisibility(false);
-        inventory.Add(item);
+        inventory=item;
+        itemUI.SetDisplayedItem(item);
     }
 
     public void RemoveItemFromInventory(BaseItem item)
     {
         Debug.Log("removed item from inventory");
-        item.ToggleItemVisibility(true);
-        inventory.Remove(item);
-    }
-
-    public void RemoveItemFromInventory(int Position)
-    {
-        inventory.RemoveAt(Position);
+        inventory.ToggleItemVisibility(true);
+        inventory=null;
+        itemUI.RemoveDisplayedItem();
     }
 
     // Use coroutine
