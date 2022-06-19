@@ -111,6 +111,17 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
+    void Input.IFirstPersonActions.OnZoom(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Debug.Log("Mouse scrolled");
+            float cameraSize = playerController.GetComponent<Camera>().orthographicSize;
+            playerController.GetComponent<Camera>().orthographicSize =
+            Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+        }
+    }
+
     //Vector2 zum bewegen in Top Down
     void Input.ITopDownActions.OnMove(InputAction.CallbackContext context)
     {
@@ -166,16 +177,5 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Input.IUIActions.OnTrackedDeviceOrientation(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();
-    }
-
-    void Input.IFirstPersonActions.OnZoom(UnityEngine.InputSystem.InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            Debug.Log("Mouse scrolled");
-            float cameraSize = playerController.GetComponent<Camera>().orthographicSize;
-            playerController.GetComponent<Camera>().orthographicSize =
-            Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
-        }
     }
 }
