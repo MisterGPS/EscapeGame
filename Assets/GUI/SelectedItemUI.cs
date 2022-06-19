@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 public class SelectedItemUI : MonoBehaviour
 {
+    public Image SelectedItemImage { get; private set; }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        SelectedItemImage = gameObject.GetComponent<Image>();
+        SelectedItemImage.enabled = false;
     }
 
     // Update is called once per frame
@@ -20,13 +22,12 @@ public class SelectedItemUI : MonoBehaviour
 
     public void SetDisplayedItem(BaseItem item) 
     {
-        Image SelectedItemImage = gameObject.GetComponent<Image>();
         SelectedItemImage.sprite = item.itemRepresentation;
         SelectedItemImage.enabled = true;
     }
 
     public void RemoveDisplayedItem ()
     {
-        gameObject.GetComponent<Image>().enabled = false;
+        SelectedItemImage.enabled = false;
     }
 }
