@@ -18,7 +18,7 @@ public class BaseObjectSide : MonoBehaviour, IInteractable
     {
         
     }
-    public virtual void OnInteract(RaycastHit raycastHit)
+    public virtual void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
         
     }

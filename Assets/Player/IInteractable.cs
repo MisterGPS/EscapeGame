@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    void OnInteract(RaycastHit raycastHit);
+    void OnInteract(RaycastHit raycastHit, BaseItem optItem = null);
 }

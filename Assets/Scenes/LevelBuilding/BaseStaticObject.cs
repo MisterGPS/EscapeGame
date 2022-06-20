@@ -22,8 +22,6 @@ public class BaseStaticObject : MonoBehaviour
     public Vector3 size;
 
     [SerializeField]
-    public GameObject PlayerCamera;
-
     protected PlayerController playerController;
 
     public BaseStaticObject()
@@ -45,7 +43,6 @@ public class BaseStaticObject : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
-        playerController = PlayerCamera.GetComponent<PlayerController>();
         ViewMode currentView = playerController.GetViewMode();
     }
 

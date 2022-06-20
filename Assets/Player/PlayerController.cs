@@ -84,7 +84,8 @@ public class PlayerController : MonoBehaviour
     {
         viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
         UpdateView();
-        onViewModeChanged();
+        if (onViewModeChanged != null)
+            onViewModeChanged();
     }
 
     // Called from within the RunBlackFade coroutine
@@ -122,7 +123,7 @@ public class PlayerController : MonoBehaviour
             IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
             foreach (IInteractable interactable in interactables)
             {
-                interactable.OnInteract(hit);
+                interactable.OnInteract(hit, inventory);
             }
         }
     }

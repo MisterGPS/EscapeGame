@@ -45,7 +45,6 @@ public class Lock : BasePuzzleSide
 
     Dictionary<Polygon, Action> buttonActions;
 
-    int[] code;
     int[] numbers;
     int numberCount;
 
@@ -114,8 +113,12 @@ public class Lock : BasePuzzleSide
     // Start is called before the first frame update
     void Start()
     {
-        code = GameManager.Instance.getTimeCode();
         SetClosed();
+    }
+
+    int[] GetCode()
+    {
+        return GameManager.Instance.timeCode;
     }
 
     void SetClosed()
@@ -165,7 +168,7 @@ public class Lock : BasePuzzleSide
     {
         if (numberCount == 4)
         {
-            if (numbers.SequenceEqual(code))
+            if (numbers.SequenceEqual(GetCode()))
             {
                 Locked = false;
                 Debug.Log("unlocked");
@@ -205,7 +208,7 @@ public class Lock : BasePuzzleSide
 
     }
 
-    public override void OnInteract(RaycastHit raycastHit)
+    public override void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
         foreach (Polygon polygon in buttonActions.Keys)
         {

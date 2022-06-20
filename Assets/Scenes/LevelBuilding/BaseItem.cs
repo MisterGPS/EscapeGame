@@ -8,14 +8,12 @@ public class BaseItem : MonoBehaviour, IInteractable
     public Sprite itemRepresentation;
 
     [SerializeField]
-    private Camera playerCamera;
-
     private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerController = playerCamera.GetComponent<PlayerController>();
+
     }
 
     // Update is called once per frame
@@ -24,7 +22,7 @@ public class BaseItem : MonoBehaviour, IInteractable
         
     }
 
-    public void OnInteract(RaycastHit raycastHit)
+    public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
         playerController.AddItemToInventory(this);
     }

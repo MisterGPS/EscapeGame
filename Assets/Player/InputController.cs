@@ -15,7 +15,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Start()
     {
         input = new Input();
-
+        
         playerController = GetComponent<PlayerController>();
 
         input.CommonNav.SetCallbacks(this);

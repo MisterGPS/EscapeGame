@@ -16,8 +16,8 @@ public class ClockFace : BasePuzzleSide
         
     }
 
-    public override void OnInteract(RaycastHit hit)
+    public override void OnInteract(RaycastHit hit, BaseItem optItem)
     {
-        base.OnInteract(hit);
+        base.OnInteract(hit, optItem);
     }
 }

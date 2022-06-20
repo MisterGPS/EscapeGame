@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class InteractionPos : MonoBehaviour, IInteractable
 {
-    public void OnInteract(RaycastHit raycastHit)
+    public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
         Vector3 localPos = transform.InverseTransformPoint(raycastHit.point);
         Debug.Log("Local Pos: " + localPos);

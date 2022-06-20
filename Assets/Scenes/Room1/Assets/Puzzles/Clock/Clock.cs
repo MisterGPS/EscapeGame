@@ -12,16 +12,32 @@ public class Clock : BasePuzzleObject
 
     public Text displayedTime;
 
+    [SerializeField]
+    private InnerClock innerClock;
+
+    [SerializeField]
+    private GameObject innerClockObject;
+    private SpriteRenderer innerClockRenderer;
+
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
 
-        displayedTime.text = GameManager.Instance.getTimeString();
+        // By default nothing should be displayed to indicate a broken clock
+        displayedTime.text = "";
+
         screws[0].GetComponent<Screw>().onInteracted += TopLeftButtonPressed;
         screws[1].GetComponent<Screw>().onInteracted += TopRightButtonPressed;
         screws[2].GetComponent<Screw>().onInteracted += BottomLeftButtonPressed;
         screws[3].GetComponent<Screw>().onInteracted += BottomRightButtonPressed;
+
+        innerClock.onCablesConnectedCallback += ActivateScreen;
+
+        innerClockRenderer = innerClockObject.GetComponent<SpriteRenderer>();
+        innerClockRenderer.enabled = false;
+        innerClock.bActivated = false;
+        innerClockObject.transform.localPosition *= -1;
     }
 
     // Update is called once per frame
@@ -47,7 +63,10 @@ public class Clock : BasePuzzleObject
     protected override void BackClicked()
     {
         Debug.Log("Interacted with back face of clock");
-        transform.Rotate(new Vector3(0, -180, 0));
+        if (innerClock.activeCable == null)
+        {
+            transform.Rotate(new Vector3(0, -180, 0));
+        }
     }
 
     public override void SideClicked(BasePuzzleSide face)
@@ -59,7 +78,11 @@ public class Clock : BasePuzzleObject
     {
         if (fixedScrews == 0)
         {
-            
+            print("Show back!");
+
+            innerClockRenderer.enabled = true;
+            innerClockObject.transform.localPosition *= -1;
+            innerClock.bActivated = true;
         }
     }
 
@@ -86,5 +109,10 @@ public class Clock : BasePuzzleObject
     {
         fixedScrews -= 1;
         OpenBack();
+    }
+
+    void ActivateScreen()
+    {
+        displayedTime.text = GameManager.Instance.timeString;
     }
 }

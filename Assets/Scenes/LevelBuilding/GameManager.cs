@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
             Instance = this;
         }
     }
+
     void Start()
     {
         Instantiate();
@@ -45,9 +46,10 @@ public class GameManager : MonoBehaviour
 
     }
 
-    // Time
-    private int[] timeCode;
-    private string timeString;
+    // Time; Clock Puzzle
+    public int[] timeCode { get; private set; }
+    public string timeString { get; private set; }
+    public bool bClockWiresSolved { get; set; }
     private void SetTime()
     {
         int totalMinutes = Random.Range(0, 1440);
@@ -72,23 +74,5 @@ public class GameManager : MonoBehaviour
 
         timeCode = new int[] { zahl1, zahl2, zahl3, zahl4 };
         timeString = hoursS + ':' + minutesS;
-    }
-
-    public int[] getTimeCode()
-    {
-        if (timeCode == null)
-        {
-            SetTime();
-        }
-        return timeCode;
-    }
-
-    public string getTimeString()
-    {
-        if (timeString == null)
-        {
-            SetTime();
-        }
-        return timeString;
     }
 }

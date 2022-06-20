@@ -17,7 +17,7 @@ public class BasePuzzleSide : BaseObjectSide
         
     }
 
-    public override void OnInteract(RaycastHit raycastHit)
+    public override void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
         ((BasePuzzleObject)parent).SideClicked(this);
     }
