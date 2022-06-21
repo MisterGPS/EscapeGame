@@ -635,6 +635,15 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""a53f9b71-ff43-4cb3-b536-c2b635949b55"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -701,6 +710,17 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1cc7d0dd-2c51-46b8-9c3a-f4cada33de4b"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -788,6 +808,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         // Top-Down
         m_TopDown = asset.FindActionMap("Top-Down", throwIfNotFound: true);
         m_TopDown_Move = m_TopDown.FindAction("Move", throwIfNotFound: true);
+        m_TopDown_Click = m_TopDown.FindAction("Click", throwIfNotFound: true);
         // CommonNav
         m_CommonNav = asset.FindActionMap("CommonNav", throwIfNotFound: true);
         m_CommonNav_ChangePerspective = m_CommonNav.FindAction("Change Perspective", throwIfNotFound: true);
@@ -1029,11 +1050,13 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_TopDown;
     private ITopDownActions m_TopDownActionsCallbackInterface;
     private readonly InputAction m_TopDown_Move;
+    private readonly InputAction m_TopDown_Click;
     public struct TopDownActions
     {
         private @Input m_Wrapper;
         public TopDownActions(@Input wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_TopDown_Move;
+        public InputAction @Click => m_Wrapper.m_TopDown_Click;
         public InputActionMap Get() { return m_Wrapper.m_TopDown; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1046,6 +1069,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_TopDownActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_TopDownActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_TopDownActionsCallbackInterface.OnMove;
+                @Click.started -= m_Wrapper.m_TopDownActionsCallbackInterface.OnClick;
+                @Click.performed -= m_Wrapper.m_TopDownActionsCallbackInterface.OnClick;
+                @Click.canceled -= m_Wrapper.m_TopDownActionsCallbackInterface.OnClick;
             }
             m_Wrapper.m_TopDownActionsCallbackInterface = instance;
             if (instance != null)
@@ -1053,6 +1079,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Click.started += instance.OnClick;
+                @Click.performed += instance.OnClick;
+                @Click.canceled += instance.OnClick;
             }
         }
     }
@@ -1133,6 +1162,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
     public interface ITopDownActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
     public interface ICommonNavActions
     {

@@ -178,4 +178,12 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         throw new System.NotImplementedException();
     }
+
+    public void OnClick(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            playerController.InteractWithObject();
+        }
+    }
 }
