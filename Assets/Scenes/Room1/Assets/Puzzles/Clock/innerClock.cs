@@ -146,8 +146,8 @@ public class InnerClock : MonoBehaviour
 
         activeLineRenderer = activeLineRenderer ? activeLineRenderer : activeCable.GetComponent<LineRenderer>();
 
-        // positionA.z -= 0.5f;
-        // positionB.z -= 0.5f;
+        positionA.z -= 0.15f;
+        positionB.z -= 0.15f;
         activeLineRenderer.SetPosition(0, positionA);
         activeLineRenderer.SetPosition(1, positionB);
 
@@ -176,6 +176,15 @@ public class InnerClock : MonoBehaviour
 
     bool VerifyConnection((CableEnd, CableEnd) connection)
     {
+        UnityEngine.Assertions.Assert.IsTrue(connectedCableEnds.Count <= desiredCableConnections.Count);
+        for (int i = 0; i < connectedCableEnds.Count; i++)
+        {
+            if (connectedCableEnds[i] == desiredCableConnections[i])
+            {
+                return false;
+            }
+        }
+
         for (int i = 0; i < desiredCableConnections.Count; i++)
         {
             if (desiredCableConnections[i] == connection)

@@ -37,7 +37,6 @@ public class Clock : BasePuzzleObject
         innerClockRenderer = innerClockObject.GetComponent<SpriteRenderer>();
         innerClockRenderer.enabled = false;
         innerClock.bActivated = false;
-        innerClockObject.transform.localPosition *= -1;
     }
 
     // Update is called once per frame
@@ -81,7 +80,9 @@ public class Clock : BasePuzzleObject
             print("Show back!");
 
             innerClockRenderer.enabled = true;
-            innerClockObject.transform.localPosition *= -1;
+            Vector3 originalPosition = innerClockObject.transform.localPosition;
+            originalPosition = new Vector3(originalPosition.x, originalPosition.y, -originalPosition.z);
+            innerClockObject.transform.localPosition = originalPosition;
             innerClock.bActivated = true;
         }
     }
