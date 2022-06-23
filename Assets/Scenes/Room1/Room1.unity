@@ -378,6 +378,8 @@ MonoBehaviour:
   - {fileID: 1454182686}
   cableMaterials:
   - {fileID: 2100000, guid: 7af92fcc5ada9934588c755828c7e9d2, type: 2}
+  - {fileID: 2100000, guid: fc32fd598a7c48245a950e7bfc58183e, type: 2}
+  - {fileID: 2100000, guid: e452d677fe0611a4287d372fec7ada14, type: 2}
   bActivated: 0
 --- !u!1 &95553602
 GameObject:
@@ -2421,7 +2423,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc6ca298ad795c4dbce299c1e114cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cableNumber: 0
+  cableEndColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1156849199
 GameObject:
   m_ObjectHideFlags: 0
@@ -2565,7 +2567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc6ca298ad795c4dbce299c1e114cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cableNumber: 0
+  cableEndColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1213908598
 GameObject:
   m_ObjectHideFlags: 0
@@ -2959,7 +2961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc6ca298ad795c4dbce299c1e114cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cableNumber: 0
+  cableEndColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1454182686
 GameObject:
   m_ObjectHideFlags: 0
@@ -3027,7 +3029,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc6ca298ad795c4dbce299c1e114cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cableNumber: 0
+  cableEndColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1479433799
 GameObject:
   m_ObjectHideFlags: 0
@@ -4039,7 +4041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc6ca298ad795c4dbce299c1e114cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cableNumber: 0
+  cableEndColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2061544687
 GameObject:
   m_ObjectHideFlags: 0
@@ -4191,7 +4193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8bc6ca298ad795c4dbce299c1e114cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cableNumber: 0
+  cableEndColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2136884311
 GameObject:
   m_ObjectHideFlags: 0

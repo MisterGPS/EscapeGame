@@ -45,7 +45,7 @@ public class InnerClock : MonoBehaviour
             // TODO Check with new input system
             Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             cursorPosition -= transform.position;
-            DrawConnection(currentCableEnds.Item1.transform.localPosition, cursorPosition);
+            DrawConnection(currentCableEnds.Item1, cursorPosition);
         }
     }
 
@@ -67,6 +67,36 @@ public class InnerClock : MonoBehaviour
         {
             cableEndsA[i].connectionClickedDelegate += ReceiveConnectionClicked;
             cableEndsB[i].connectionClickedDelegate += ReceiveConnectionClicked;
+        }
+    }
+
+    void GenerateCableConnections()
+    {
+        InitCableEnds();
+
+        List<CableEnd> tempACableEnds = new(cableEndsA);
+        List<CableEnd> tempBCableEnds = new(cableEndsB);
+        List<Color> generatedColors = new();
+        GameManager.ShuffleList(cableMaterials);
+        desiredCableConnections.Clear();
+
+        for (int i = 0; i < 3; i++)
+        {
+            generatedColors.Add(Random.ColorHSV(1, 1, 1, 1, 0, 1, 1, 1));
+        }
+
+        for (int i = 0; i < 3; i++)
+        {
+            int cableAIndex = Random.Range(0, tempACableEnds.Count);
+            int cableBIndex = Random.Range(0, tempBCableEnds.Count);
+
+            desiredCableConnections.Add((tempACableEnds[cableAIndex], tempBCableEnds[cableBIndex]));
+
+            tempACableEnds[cableAIndex].cableEndColor = generatedColors[i];
+            tempBCableEnds[cableBIndex].cableEndColor = generatedColors[i];
+
+            tempACableEnds.RemoveAt(cableAIndex);
+            tempBCableEnds.RemoveAt(cableBIndex);
         }
     }
 
@@ -106,8 +136,7 @@ public class InnerClock : MonoBehaviour
     {
         if (VerifyConnection())
         {
-            DrawConnection(currentCableEnds.Item1.transform.localPosition,
-                           currentCableEnds.Item2.transform.localPosition, true);
+            DrawConnection(currentCableEnds.Item1, currentCableEnds.Item2, true);
 
             connectedCableEnds.Add(currentCableEnds);
             currentCableEnds = new();
@@ -126,7 +155,7 @@ public class InnerClock : MonoBehaviour
         activeCable = null;
     }
 
-    void DrawConnection(Vector3 positionA, Vector3 positionB, bool bFinal = false)
+    void DrawConnection(CableEnd originCable, Vector3 positionB, bool bFinal = false)
     {
         LineRenderer activeLineRenderer = null;
 
@@ -139,39 +168,30 @@ public class InnerClock : MonoBehaviour
             activeCable.transform.localScale = Vector3.one;
 
             activeLineRenderer = activeCable.AddComponent<LineRenderer>();
-            activeLineRenderer.material = cableMaterials[Random.Range(0, cableMaterials.Count)];
+
+            Material cableMaterial = cableMaterials[connectedCableEnds.Count];
+            cableMaterial.SetColor("_Color", originCable.cableEndColor);
+            activeLineRenderer.material = cableMaterial;
+
             activeLineRenderer.useWorldSpace = false;
             activeLineRenderer.sortingOrder = 3;
         }
 
         activeLineRenderer = activeLineRenderer ? activeLineRenderer : activeCable.GetComponent<LineRenderer>();
 
-        positionA.z -= 0.15f;
+        Vector3 targetPosition = originCable.transform.localPosition;
+        targetPosition.z -= 0.15f;
         positionB.z -= 0.15f;
-        activeLineRenderer.SetPosition(0, positionA);
+        activeLineRenderer.SetPosition(0, targetPosition);
         activeLineRenderer.SetPosition(1, positionB);
 
         activeCable = bFinal ? null : activeCable;
         activeLineRenderer.sortingOrder = bFinal ? 1 : 3;
     }
 
-    void GenerateCableConnections()
+    void DrawConnection(CableEnd originCable, CableEnd targetCable, bool bFinal = false)
     {
-        InitCableEnds();
-
-        List<CableEnd> tempACableEnds = new(cableEndsA);
-        List<CableEnd> tempBCableEnds = new(cableEndsB);
-        desiredCableConnections.Clear();
-        for (int i = 0; i < 3; i++)
-        {
-            int cableAIndex = Random.Range(0, tempACableEnds.Count);
-            int cableBIndex = Random.Range(0, tempBCableEnds.Count);
-
-            desiredCableConnections.Add((tempACableEnds[cableAIndex], tempBCableEnds[cableBIndex]));
-
-            tempACableEnds.RemoveAt(cableAIndex);
-            tempBCableEnds.RemoveAt(cableBIndex);
-        }
+        DrawConnection(originCable, targetCable.transform.localPosition, bFinal);
     }
 
     bool VerifyConnection((CableEnd, CableEnd) connection)

@@ -11,14 +11,14 @@ public class Screw : MonoBehaviour, IInteractable
     [SerializeField]
     private BaseItem requiredItem;
 
-    public bool bInteracted { get; private set; }
+    public bool bInteracted { get; private set; } = false;
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
         if (optItem != requiredItem)
             return;
 
-        bInteracted = true;
-        if (onInteracted != null)
+        if (onInteracted != null && !bInteracted)
             onInteracted.Invoke();
+        bInteracted = true;
     }
 }

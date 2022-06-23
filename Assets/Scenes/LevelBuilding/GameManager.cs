@@ -46,6 +46,19 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public static void ShuffleList<T>(List<T> list)
+    {
+        int count = list.Count;
+        int last = count - 1;
+        for (var i = 0; i < count; i++)
+        {
+            int r = Random.Range(i, count);
+            T tmp = list[i];
+            list[i] = list[r];
+            list[r] = tmp;
+        }
+    }
+
     // Time; Clock Puzzle
     public int[] timeCode { get; private set; }
     public string timeString { get; private set; }
