@@ -481,15 +481,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Click"",
-                    ""type"": ""Button"",
-                    ""id"": ""234cef11-d31f-4c1d-8365-2a1d0349bb68"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Zoom"",
                     ""type"": ""Value"",
                     ""id"": ""d15e3d97-ef0a-4e99-b15a-2fec778f2b9b"",
@@ -601,17 +592,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""bb95bd02-fd48-4364-b8fd-183931dfe5ab"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""d6df6106-4708-45d3-b328-7adf21254cbb"",
                     ""path"": ""<Mouse>/scroll/y"",
                     ""interactions"": """",
@@ -635,15 +615,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold"",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Click"",
-                    ""type"": ""Button"",
-                    ""id"": ""a53f9b71-ff43-4cb3-b536-c2b635949b55"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -712,17 +683,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1cc7d0dd-2c51-46b8-9c3a-f4cada33de4b"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Click"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -738,6 +698,15 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Click"",
+                    ""type"": ""Button"",
+                    ""id"": ""2d7a1212-ab53-44ac-bf10-f5e2e796fd95"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -749,6 +718,17 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Change Perspective"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ebdc070c-b756-4544-89e3-71c8860e26b8"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -803,15 +783,14 @@ public partial class @Input : IInputActionCollection2, IDisposable
         m_FirstPerson_Point = m_FirstPerson.FindAction("Point", throwIfNotFound: true);
         m_FirstPerson_SwitchLeft = m_FirstPerson.FindAction("SwitchLeft", throwIfNotFound: true);
         m_FirstPerson_SwitchRight = m_FirstPerson.FindAction("SwitchRight", throwIfNotFound: true);
-        m_FirstPerson_Click = m_FirstPerson.FindAction("Click", throwIfNotFound: true);
         m_FirstPerson_Zoom = m_FirstPerson.FindAction("Zoom", throwIfNotFound: true);
         // Top-Down
         m_TopDown = asset.FindActionMap("Top-Down", throwIfNotFound: true);
         m_TopDown_Move = m_TopDown.FindAction("Move", throwIfNotFound: true);
-        m_TopDown_Click = m_TopDown.FindAction("Click", throwIfNotFound: true);
         // CommonNav
         m_CommonNav = asset.FindActionMap("CommonNav", throwIfNotFound: true);
         m_CommonNav_ChangePerspective = m_CommonNav.FindAction("Change Perspective", throwIfNotFound: true);
+        m_CommonNav_Click = m_CommonNav.FindAction("Click", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -980,7 +959,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputAction m_FirstPerson_Point;
     private readonly InputAction m_FirstPerson_SwitchLeft;
     private readonly InputAction m_FirstPerson_SwitchRight;
-    private readonly InputAction m_FirstPerson_Click;
     private readonly InputAction m_FirstPerson_Zoom;
     public struct FirstPersonActions
     {
@@ -990,7 +968,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
         public InputAction @Point => m_Wrapper.m_FirstPerson_Point;
         public InputAction @SwitchLeft => m_Wrapper.m_FirstPerson_SwitchLeft;
         public InputAction @SwitchRight => m_Wrapper.m_FirstPerson_SwitchRight;
-        public InputAction @Click => m_Wrapper.m_FirstPerson_Click;
         public InputAction @Zoom => m_Wrapper.m_FirstPerson_Zoom;
         public InputActionMap Get() { return m_Wrapper.m_FirstPerson; }
         public void Enable() { Get().Enable(); }
@@ -1013,9 +990,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @SwitchRight.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
                 @SwitchRight.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
                 @SwitchRight.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
-                @Click.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnClick;
-                @Click.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnClick;
-                @Click.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnClick;
                 @Zoom.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnZoom;
                 @Zoom.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnZoom;
                 @Zoom.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnZoom;
@@ -1035,9 +1009,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @SwitchRight.started += instance.OnSwitchRight;
                 @SwitchRight.performed += instance.OnSwitchRight;
                 @SwitchRight.canceled += instance.OnSwitchRight;
-                @Click.started += instance.OnClick;
-                @Click.performed += instance.OnClick;
-                @Click.canceled += instance.OnClick;
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
@@ -1050,13 +1021,11 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_TopDown;
     private ITopDownActions m_TopDownActionsCallbackInterface;
     private readonly InputAction m_TopDown_Move;
-    private readonly InputAction m_TopDown_Click;
     public struct TopDownActions
     {
         private @Input m_Wrapper;
         public TopDownActions(@Input wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_TopDown_Move;
-        public InputAction @Click => m_Wrapper.m_TopDown_Click;
         public InputActionMap Get() { return m_Wrapper.m_TopDown; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1069,9 +1038,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_TopDownActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_TopDownActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_TopDownActionsCallbackInterface.OnMove;
-                @Click.started -= m_Wrapper.m_TopDownActionsCallbackInterface.OnClick;
-                @Click.performed -= m_Wrapper.m_TopDownActionsCallbackInterface.OnClick;
-                @Click.canceled -= m_Wrapper.m_TopDownActionsCallbackInterface.OnClick;
             }
             m_Wrapper.m_TopDownActionsCallbackInterface = instance;
             if (instance != null)
@@ -1079,9 +1045,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Click.started += instance.OnClick;
-                @Click.performed += instance.OnClick;
-                @Click.canceled += instance.OnClick;
             }
         }
     }
@@ -1091,11 +1054,13 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_CommonNav;
     private ICommonNavActions m_CommonNavActionsCallbackInterface;
     private readonly InputAction m_CommonNav_ChangePerspective;
+    private readonly InputAction m_CommonNav_Click;
     public struct CommonNavActions
     {
         private @Input m_Wrapper;
         public CommonNavActions(@Input wrapper) { m_Wrapper = wrapper; }
         public InputAction @ChangePerspective => m_Wrapper.m_CommonNav_ChangePerspective;
+        public InputAction @Click => m_Wrapper.m_CommonNav_Click;
         public InputActionMap Get() { return m_Wrapper.m_CommonNav; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1108,6 +1073,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @ChangePerspective.started -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnChangePerspective;
                 @ChangePerspective.performed -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnChangePerspective;
                 @ChangePerspective.canceled -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnChangePerspective;
+                @Click.started -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnClick;
+                @Click.performed -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnClick;
+                @Click.canceled -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnClick;
             }
             m_Wrapper.m_CommonNavActionsCallbackInterface = instance;
             if (instance != null)
@@ -1115,6 +1083,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @ChangePerspective.started += instance.OnChangePerspective;
                 @ChangePerspective.performed += instance.OnChangePerspective;
                 @ChangePerspective.canceled += instance.OnChangePerspective;
+                @Click.started += instance.OnClick;
+                @Click.performed += instance.OnClick;
+                @Click.canceled += instance.OnClick;
             }
         }
     }
@@ -1156,16 +1127,15 @@ public partial class @Input : IInputActionCollection2, IDisposable
         void OnPoint(InputAction.CallbackContext context);
         void OnSwitchLeft(InputAction.CallbackContext context);
         void OnSwitchRight(InputAction.CallbackContext context);
-        void OnClick(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
     }
     public interface ITopDownActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnClick(InputAction.CallbackContext context);
     }
     public interface ICommonNavActions
     {
         void OnChangePerspective(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
 }

@@ -73,6 +73,14 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
+    void Input.ICommonNavActions.OnClick(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            playerController.InteractWithObject();
+        }
+    }
+
     //Vector2 zum bewegen der Kamera in First Person
     void Input.IFirstPersonActions.OnLook(InputAction.CallbackContext context)
     {
@@ -83,14 +91,6 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Input.IFirstPersonActions.OnPoint(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();
-    }
-
-    void Input.IFirstPersonActions.OnClick(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            playerController.InteractWithObject();
-        }
     }
 
     //temporär?
@@ -177,13 +177,5 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Input.IUIActions.OnTrackedDeviceOrientation(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();
-    }
-
-    public void OnClick(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            playerController.InteractWithObject();
-        }
     }
 }
