@@ -7,7 +7,7 @@ public class Clock : BasePuzzleObject
 {
     // topLeft, topRight, bottomLeft, bottomRight
     [SerializeField]
-    private List<GameObject> screws;
+    private List<Screw> screws;
     private int fixedScrews = 4;
 
     public Text displayedTime;
@@ -16,7 +16,6 @@ public class Clock : BasePuzzleObject
     private InnerClock innerClock;
 
     [SerializeField]
-    private GameObject innerClockObject;
     private SpriteRenderer innerClockRenderer;
 
     // Start is called before the first frame update
@@ -27,14 +26,13 @@ public class Clock : BasePuzzleObject
         // By default nothing should be displayed to indicate a broken clock
         displayedTime.text = "";
 
-        screws[0].GetComponent<Screw>().onInteracted += TopLeftButtonPressed;
-        screws[1].GetComponent<Screw>().onInteracted += TopRightButtonPressed;
-        screws[2].GetComponent<Screw>().onInteracted += BottomLeftButtonPressed;
-        screws[3].GetComponent<Screw>().onInteracted += BottomRightButtonPressed;
+        foreach (Screw screw in screws)
+        {
+            screw.onInteracted += ScrewClicked;
+        }
 
         innerClock.onCablesConnectedCallback += ActivateScreen;
 
-        innerClockRenderer = innerClockObject.GetComponent<SpriteRenderer>();
         innerClockRenderer.enabled = false;
         innerClock.bActivated = false;
     }
@@ -80,33 +78,14 @@ public class Clock : BasePuzzleObject
             print("Show back!");
 
             innerClockRenderer.enabled = true;
-            Vector3 originalPosition = innerClockObject.transform.localPosition;
+            Vector3 originalPosition = innerClockRenderer.transform.localPosition;
             originalPosition = new Vector3(originalPosition.x, originalPosition.y, -originalPosition.z);
-            innerClockObject.transform.localPosition = originalPosition;
+            innerClockRenderer.transform.localPosition = originalPosition;
             innerClock.bActivated = true;
         }
     }
 
-    public virtual void TopLeftButtonPressed()
-    {
-        fixedScrews -= 1;
-        OpenBack();
-    }
-
-    public void TopRightButtonPressed()
-    {
-        print("TopRightButtonPressed");
-        fixedScrews -= 1;
-        OpenBack();
-    }
-
-    public void BottomLeftButtonPressed()
-    {
-        fixedScrews -= 1;
-        OpenBack();
-    }
-
-    public void BottomRightButtonPressed()
+    void ScrewClicked()
     {
         fixedScrews -= 1;
         OpenBack();

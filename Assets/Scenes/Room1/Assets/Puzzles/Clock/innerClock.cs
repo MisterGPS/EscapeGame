@@ -7,26 +7,22 @@ using UnityEngine.UI;
 public class InnerClock : MonoBehaviour
 {
     [SerializeField]
-    private List<GameObject> cableEndObjectsA;
-    private List<CableEnd> cableEndsA;
-         
-    [SerializeField]
-    private List<GameObject> cableEndObjectsB;
-    private List<CableEnd> cableEndsB;
+    private List<CableEnd> cableEndsA, cableEndsB;
 
     [SerializeField]
     private List<Material> cableMaterials;
 
     private List<(CableEnd, CableEnd)> desiredCableConnections = new();
     private List<(CableEnd, CableEnd)> connectedCableEnds = new();
-    public GameObject activeCable { get; private set; }
-
     private (CableEnd, CableEnd) currentCableEnds = new();
+    public GameObject activeCable { get; private set; }
+    private const int totalCableConnections = 3;
     private bool bSingleCableSelected = false;
 
-    private const int totalCableConnections = 3;
+    // Whether the InnerClock Puzzle is activated
+    public bool bActivated { private get; set; } = false;
 
-    public bool bActivated = false;
+    const float MAX_CABLE_LENGTH = 10.0f;
 
 
     // TODO Cables should be connectable from both sides
@@ -34,8 +30,6 @@ public class InnerClock : MonoBehaviour
     void Start()
     {
         GenerateCableConnections();
-        // DrawConnection(cableEndObjectsA[0].transform.localPosition,
-        //     cableEndObjectsB[2].transform.localPosition, true);
     }
 
     void Update()
@@ -44,8 +38,21 @@ public class InnerClock : MonoBehaviour
         {
             // TODO Check with new input system
             Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            cursorPosition -= transform.position;
-            DrawConnection(currentCableEnds.Item1, cursorPosition);
+            
+            Vector3 relativeCursorPosition = cursorPosition - transform.position;
+
+            // Hardcode cursor offset, due to object rotation
+            // relativeCursorPosition.y = relativeCursorPosition.x;
+            relativeCursorPosition.x = relativeCursorPosition.z;
+            relativeCursorPosition.z = 0;
+            relativeCursorPosition = new Vector3(relativeCursorPosition.x / transform.lossyScale.x,
+                                                 relativeCursorPosition.y / transform.lossyScale.x,
+                                                 relativeCursorPosition.z / transform.lossyScale.x);
+
+            Vector3 connectionVector = relativeCursorPosition - currentCableEnds.Item1.GetConnectionPosition();
+            connectionVector *= connectionVector.magnitude > MAX_CABLE_LENGTH ? (MAX_CABLE_LENGTH / connectionVector.magnitude) : 1;
+
+            DrawConnection(currentCableEnds.Item1, currentCableEnds.Item1.GetConnectionPosition() + connectionVector);
         }
     }
 
@@ -54,14 +61,7 @@ public class InnerClock : MonoBehaviour
 
     void InitCableEnds()
     {
-        UnityEngine.Assertions.Assert.IsTrue(cableEndObjectsA.Count == cableEndObjectsB.Count);
-        cableEndsA = new();
-        cableEndsB = new();
-        for (int i = 0; i < cableEndObjectsA.Count; i++)
-        {
-            cableEndsA.Add(cableEndObjectsA[i].GetComponent<CableEnd>());
-            cableEndsB.Add(cableEndObjectsB[i].GetComponent<CableEnd>());
-        }
+        UnityEngine.Assertions.Assert.IsTrue(cableEndsA.Count == cableEndsB.Count);
         
         for (int i = 0; i < cableEndsA.Count; i++)
         {
@@ -80,20 +80,22 @@ public class InnerClock : MonoBehaviour
         GameManager.ShuffleList(cableMaterials);
         desiredCableConnections.Clear();
 
-        for (int i = 0; i < 3; i++)
+        float generatedHue = Random.Range(0.0f, 1.0f);
+        for (int i = 1; i <= tempACableEnds.Count; i++)
         {
-            generatedColors.Add(Random.ColorHSV(1, 1, 1, 1, 0, 1, 1, 1));
+            float currentHue = (generatedHue + ((float)i / (float)tempACableEnds.Count)) % 1.0f;
+            generatedColors.Add(Random.ColorHSV(currentHue, currentHue, 1, 1, 1, 1, 1, 1));
         }
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < generatedColors.Count; i++)
         {
             int cableAIndex = Random.Range(0, tempACableEnds.Count);
             int cableBIndex = Random.Range(0, tempBCableEnds.Count);
 
             desiredCableConnections.Add((tempACableEnds[cableAIndex], tempBCableEnds[cableBIndex]));
 
-            tempACableEnds[cableAIndex].cableEndColor = generatedColors[i];
-            tempBCableEnds[cableBIndex].cableEndColor = generatedColors[i];
+            tempACableEnds[cableAIndex].SetCableEndColor(generatedColors[i]);
+            tempBCableEnds[cableBIndex].SetCableEndColor(generatedColors[i]);
 
             tempACableEnds.RemoveAt(cableAIndex);
             tempBCableEnds.RemoveAt(cableBIndex);
@@ -168,7 +170,6 @@ public class InnerClock : MonoBehaviour
             activeCable.transform.localScale = Vector3.one;
 
             activeLineRenderer = activeCable.AddComponent<LineRenderer>();
-
             Material cableMaterial = cableMaterials[connectedCableEnds.Count];
             cableMaterial.SetColor("_Color", originCable.cableEndColor);
             activeLineRenderer.material = cableMaterial;
@@ -179,10 +180,10 @@ public class InnerClock : MonoBehaviour
 
         activeLineRenderer = activeLineRenderer ? activeLineRenderer : activeCable.GetComponent<LineRenderer>();
 
-        Vector3 targetPosition = originCable.transform.localPosition;
-        targetPosition.z -= 0.15f;
+        Vector3 positionA = originCable.GetConnectionPosition();
+        positionA.z -= 0.15f;
         positionB.z -= 0.15f;
-        activeLineRenderer.SetPosition(0, targetPosition);
+        activeLineRenderer.SetPosition(0, positionA);
         activeLineRenderer.SetPosition(1, positionB);
 
         activeCable = bFinal ? null : activeCable;
@@ -191,23 +192,27 @@ public class InnerClock : MonoBehaviour
 
     void DrawConnection(CableEnd originCable, CableEnd targetCable, bool bFinal = false)
     {
-        DrawConnection(originCable, targetCable.transform.localPosition, bFinal);
+        DrawConnection(originCable, targetCable.GetConnectionPosition(), bFinal);
     }
 
     bool VerifyConnection((CableEnd, CableEnd) connection)
     {
         UnityEngine.Assertions.Assert.IsTrue(connectedCableEnds.Count <= desiredCableConnections.Count);
+
+        // Check if the connection already exists
         for (int i = 0; i < connectedCableEnds.Count; i++)
         {
             if (connectedCableEnds[i] == desiredCableConnections[i])
             {
+                print("Invalid connection");
                 return false;
             }
         }
 
         for (int i = 0; i < desiredCableConnections.Count; i++)
         {
-            if (desiredCableConnections[i] == connection)
+            if (desiredCableConnections[i] == connection ||
+                desiredCableConnections[i] == (connection.Item2, connection.Item1))
             {
                 print("Found valid connection");
                 return true;
@@ -227,8 +232,7 @@ public class InnerClock : MonoBehaviour
         if (connectedCableEnds.Count == totalCableConnections)
         {
             GameManager.Instance.bClockWiresSolved = true;
-            if (onCablesConnectedCallback != null)
-                onCablesConnectedCallback();
+            onCablesConnectedCallback?.Invoke();
         }
     }
 }

@@ -7,7 +7,11 @@ public class CableEnd : MonoBehaviour, IInteractable
     public delegate void OnConnectionClicked(CableEnd cableEnd);
     public OnConnectionClicked connectionClickedDelegate;
 
-    public Color cableEndColor;
+    public Color cableEndColor { get; private set; }
+
+    // This property should be set to an empty placed at the exact spot of where the cable should be attached to
+    [SerializeField]
+    private GameObject connectionTarget;
     
     // Start is called before the first frame update
     void Start()
@@ -25,5 +29,16 @@ public class CableEnd : MonoBehaviour, IInteractable
     {
         if (connectionClickedDelegate != null)
             connectionClickedDelegate(this);
+    }
+
+    public Vector3 GetConnectionPosition()
+    {
+        return transform.localPosition - (transform.position - connectionTarget.transform.position);
+    }
+
+    public void SetCableEndColor(Color value)
+    {
+        cableEndColor = value;
+        gameObject.GetComponent<SpriteRenderer>().material.color = value;
     }
 }
