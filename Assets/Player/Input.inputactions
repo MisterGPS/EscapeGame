@@ -459,15 +459,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Click",
-                    "type": "Button",
-                    "id": "234cef11-d31f-4c1d-8365-2a1d0349bb68",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Zoom",
                     "type": "Value",
                     "id": "d15e3d97-ef0a-4e99-b15a-2fec778f2b9b",
@@ -579,17 +570,6 @@
                 },
                 {
                     "name": "",
-                    "id": "bb95bd02-fd48-4364-b8fd-183931dfe5ab",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "d6df6106-4708-45d3-b328-7adf21254cbb",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",
@@ -613,15 +593,6 @@
                     "processors": "",
                     "interactions": "Hold",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "Click",
-                    "type": "Button",
-                    "id": "a53f9b71-ff43-4cb3-b536-c2b635949b55",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -690,17 +661,6 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "1cc7d0dd-2c51-46b8-9c3a-f4cada33de4b",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
@@ -716,6 +676,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Click",
+                    "type": "Button",
+                    "id": "2d7a1212-ab53-44ac-bf10-f5e2e796fd95",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -727,6 +696,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Change Perspective",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ebdc070c-b756-4544-89e3-71c8860e26b8",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
