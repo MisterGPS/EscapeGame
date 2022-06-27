@@ -7,8 +7,7 @@ public class BaseItem : MonoBehaviour, IInteractable
     // The sprite used to represent this item in UI
     public Sprite itemRepresentation;
 
-    [SerializeField]
-    private PlayerController playerController;
+    public PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
