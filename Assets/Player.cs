@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
     void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
-        movemove = new Vector3(moveInput.x, moveInput.y,0);
+        movemove = new Vector3(moveInput.x, rb.position.y, moveInput.y);
         print(moveInput);
     }
 }

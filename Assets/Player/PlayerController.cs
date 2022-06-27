@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     private float originalCameraSize;
     private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
-    public GameObject player;
 
     [SerializeField]
     private GameObject itemUIObject;
@@ -73,7 +72,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+        
     }
 
     public ViewMode GetViewMode()
@@ -105,9 +104,6 @@ public class PlayerController : MonoBehaviour
     public void TurnLeft()
     {
         viewDirection -= 1;
-        Quaternion myRotation = Quaternion.identity;
-        myRotation.eulerAngles = new Vector3(0,-90,0);
-        player.GetComponent<Rigidbody>().rotation = myRotation;
         UpdateView();
     }
 

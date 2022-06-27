@@ -13,7 +13,7 @@ public class Screw : MonoBehaviour, IInteractable
 
     // How often the screw needs to be clicked until it is considered unscrewed
     private int currentRotations = 0;
-    const int NUM_REQUIRED_ROTATION = 1;
+    const int NUM_REQUIRED_ROTATION = 2;
 
     public bool bInteracted { get; private set; } = false;
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
