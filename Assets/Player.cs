@@ -14,20 +14,20 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void FixedUpdate()
     {
         print(rb.position);
         rb.MovePosition(rb.position + moveSpeed * movemove * Time.fixedDeltaTime);
-        
+
     }
 
     void OnMove(InputValue value)
