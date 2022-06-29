@@ -25,15 +25,13 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        print(rb.position);
-        rb.MovePosition(rb.position + moveSpeed * movemove * Time.fixedDeltaTime);
-
+        rb.MovePosition(rb.position + movemove * (moveSpeed * Time.fixedDeltaTime));
     }
 
     void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
         movemove = new Vector3(moveInput.x,0, moveInput.y);
-        print(moveInput);
+        // print(moveInput);
     }
 }

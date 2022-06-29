@@ -177,8 +177,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2581891085572859056}
-  - component: {fileID: 3714494741468295403}
   - component: {fileID: 34523249292490353}
+  - component: {fileID: 5270682813390183433}
   m_Layer: 0
   m_Name: Screwdriver
   m_TagString: Untagged
@@ -203,20 +203,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3714494741468295403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5497229405403177614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d680b4f2b5818634db31fd25d5a69231, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemRepresentation: {fileID: 21300000, guid: ee3064abea34ec940b07c84db385c928, type: 3}
-  playerController: {fileID: 0}
 --- !u!65 &34523249292490353
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -230,3 +216,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 19.68772, y: 2.7382593, z: 2.2459009}
   m_Center: {x: -0.5069199, y: 1.0186751, z: 0.10777742}
+--- !u!114 &5270682813390183433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5497229405403177614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b542d41aa96d7248b7d84db481480a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemRepresentation: {fileID: 21300000, guid: ee3064abea34ec940b07c84db385c928, type: 3}
+  playerController: {fileID: 0}
