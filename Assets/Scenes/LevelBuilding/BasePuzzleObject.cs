@@ -25,10 +25,10 @@ public class BasePuzzleObject : BaseStaticObject
         base.Update();
     }
 
-    protected override GameObject CustomiseAddSide(GameObject Side)
+    protected override GameObject CustomiseAddSide(GameObject side)
     {
-        Side.AddComponent<BasePuzzleSide>();
-        return Side;
+        side.AddComponent<BasePuzzleSide>();
+        return side;
     }
 
     public virtual void SideClicked(BasePuzzleSide face)

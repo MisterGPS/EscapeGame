@@ -46,8 +46,8 @@ public class InnerClock : MonoBehaviour
             relativeCursorPosition.x = relativeCursorPosition.z;
             relativeCursorPosition.z = 0;
             relativeCursorPosition = new Vector3(relativeCursorPosition.x / transform.lossyScale.x,
-                                                 relativeCursorPosition.y / transform.lossyScale.x,
-                                                 relativeCursorPosition.z / transform.lossyScale.x);
+                                                 relativeCursorPosition.z / transform.lossyScale.x,
+                                                 relativeCursorPosition.y / transform.lossyScale.x);
 
             Vector3 connectionVector = relativeCursorPosition - currentCableEnds.Item1.GetConnectionPosition();
             connectionVector *= connectionVector.magnitude > MAX_CABLE_LENGTH ? (MAX_CABLE_LENGTH / connectionVector.magnitude) : 1;
@@ -181,8 +181,8 @@ public class InnerClock : MonoBehaviour
         activeLineRenderer = activeLineRenderer ? activeLineRenderer : activeCable.GetComponent<LineRenderer>();
 
         Vector3 positionA = originCable.GetConnectionPosition();
-        positionA.z -= 0.15f;
-        positionB.z -= 0.15f;
+        positionA.y = 0.15f;
+        positionB.y = 0.15f;
         activeLineRenderer.SetPosition(0, positionA);
         activeLineRenderer.SetPosition(1, positionB);
 

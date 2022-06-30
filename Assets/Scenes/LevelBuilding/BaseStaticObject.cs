@@ -7,12 +7,12 @@ public class BaseStaticObject : MonoBehaviour
 {
     // Automatic default ordering: Front, Top, Back
     [SerializeField]
-    protected List<Sprite> spriteFaces = new List<Sprite>();
+    protected List<Material> faceMaterials = new List<Material>();
 
     [SerializeField]
-    protected List<GameObject> Faces = new List<GameObject>();
+    protected List<GameObject> faces = new List<GameObject>();
 
-    public string ObjectName = "BaseObject";
+    public string objectName = "BaseObject";
 
     // Build tools
     public bool createFaces = false;
@@ -26,15 +26,15 @@ public class BaseStaticObject : MonoBehaviour
 
     public BaseStaticObject()
     {
-        for (int i = 0; i < Mathf.Max(spriteFaces.Count, 3); i++)
+        for (int i = 0; i < Mathf.Max(faceMaterials.Count, 3); i++)
         {
-            Faces.Add(null);
+            faces.Add(null);
         }
     }
 
     protected virtual void Reset()
     {
-        if (Faces[0] != null)
+        if (faces[0] != null)
         {
             BuildFaces();
         }
@@ -57,9 +57,9 @@ public class BaseStaticObject : MonoBehaviour
             }
             if (getSize)
             {
-                size.x = Faces[0].GetComponent<BoxCollider>().size.x;
-                size.y = Faces[0].GetComponent<BoxCollider>().size.y;
-                size.z = Faces[1].GetComponent<BoxCollider>().size.y;
+                size.x = faces[0].GetComponent<BoxCollider>().size.x;
+                size.y = faces[0].GetComponent<BoxCollider>().size.y;
+                size.z = faces[1].GetComponent<BoxCollider>().size.y;
             }
         }
         createFaces = getSize = false;
@@ -69,25 +69,27 @@ public class BaseStaticObject : MonoBehaviour
     {
         Debug.Log("Build Faces called");
 
-        for (int i = 0; i < Faces.Count; i++)
+        for (int i = 0; i < faces.Count; i++)
         {
-            DestroyImmediate(Faces[i]);
+            DestroyImmediate(faces[i]);
         }
 
-        Faces.Clear();
+        faces.Clear();
 
-        for (int i = 0; i < Mathf.Max(spriteFaces.Count, 3); i++)
+        for (int i = 0; i < Mathf.Max(faceMaterials.Count, 3); i++)
         {
             GameObject newFace = new GameObject();
-            newFace.name = ObjectName + i;
+            newFace.name = objectName + i;
 
             newFace.transform.position = transform.position;
             newFace.transform.rotation = transform.rotation;
             newFace.transform.localScale = transform.localScale;
             newFace.transform.parent = transform;
 
-            SpriteRenderer renderer = newFace.AddComponent<SpriteRenderer>();
-            renderer.sprite = spriteFaces.Count > i ? spriteFaces[i] : null;
+            newFace.AddComponent<MeshFilter>();
+            MeshRenderer meshRenderer = newFace.AddComponent<MeshRenderer>();
+            meshRenderer.sharedMaterials[0] = faceMaterials.Count > i ? faceMaterials[i] : null;
+            
             BoxCollider newCollider = newFace.AddComponent<BoxCollider>();
             newCollider.size = new Vector3(newCollider.size.x, newCollider.size.y, 0);
 
@@ -100,28 +102,28 @@ public class BaseStaticObject : MonoBehaviour
             }
             optSide.orientation = i;
             optSide.parent = this;
-            Faces.Add(newFace);
+            faces.Add(newFace);
         }
 
+        faces[0].transform.Rotate(new Vector3(90.0f, 0.0f, 180.0f));
+        faces[1].transform.Rotate(new Vector3(90.0f, 0.0f, 0.0f));
+        faces[2].transform.Rotate(new Vector3(0.0f, 180.0f, 0.0f));
+        
         // Setup face sides individually
         if (!autoSize)
         {
-            Faces[0].GetComponent<BoxCollider>().size = new Vector3(size.x, size.y, 0);
-            Faces[1].GetComponent<BoxCollider>().size = new Vector3(size.x, size.z, 0);
-            Faces[2].GetComponent<BoxCollider>().size = new Vector3(size.x, size.y, 0);
+            faces[0].GetComponent<BoxCollider>().size = new Vector3(size.x, size.y, 0);
+            faces[1].GetComponent<BoxCollider>().size = new Vector3(size.x, size.z, 0);
+            faces[2].GetComponent<BoxCollider>().size = new Vector3(size.x, size.y, 0);
         }
 
-        float ObjectHeight = Faces[0].GetComponent<BoxCollider>().size.y;
-        float ObjectDepth = Faces[1].GetComponent<BoxCollider>().size.y;
+        float objectHeight = faces[0].GetComponent<BoxCollider>().size.y;
+        float objectDepth = faces[1].GetComponent<BoxCollider>().size.y;
 
-        Faces[0].transform.Rotate(new Vector3(0.0f, 0.0f, 0.0f));
-        Faces[1].transform.Rotate(new Vector3(90.0f, 0.0f, 0.0f));
-        Faces[2].transform.Rotate(new Vector3(0.0f, 180.0f, 0.0f));
-
-        Faces[0].transform.localPosition -= new Vector3(0, 0, ObjectDepth / 2.0f);
-        Faces[1].transform.localPosition += new Vector3(0, ObjectHeight / 2.0f, 0);
-        Faces[2].transform.localPosition += new Vector3(0, 0, ObjectDepth / 2.0f);
+        faces[0].transform.localPosition -= new Vector3(0, 0, objectDepth / 2.0f);
+        faces[1].transform.localPosition += new Vector3(0, objectHeight / 2.0f, 0);
+        faces[2].transform.localPosition += new Vector3(0, 0, objectDepth / 2.0f);
     }
 
-    protected virtual GameObject CustomiseAddSide(GameObject Side)  { return Side; }
+    protected virtual GameObject CustomiseAddSide(GameObject side)  { return side; }
 }

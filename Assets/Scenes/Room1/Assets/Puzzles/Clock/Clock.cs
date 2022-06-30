@@ -14,15 +14,15 @@ public class Clock : BasePuzzleObject
 
     [SerializeField]
     private InnerClock innerClock;
-
-    [SerializeField]
-    private SpriteRenderer innerClockRenderer;
+    private MeshRenderer innerClockRenderer;
 
     // Start is called before the first frame update
     protected override void Start()
     {
         base.Start();
 
+        innerClockRenderer = innerClock.GetComponent<MeshRenderer>();
+        
         // By default nothing should be displayed to indicate a broken clock
         displayedTime.text = "";
 
@@ -37,16 +37,10 @@ public class Clock : BasePuzzleObject
         innerClock.bActivated = false;
     }
 
-    // Update is called once per frame
-    protected override void Update()
+    protected override GameObject CustomiseAddSide(GameObject side)
     {
-        base.Update();
-    }
-
-    protected override GameObject CustomiseAddSide(GameObject Side)
-    {
-        Side.AddComponent<ClockFace>();
-        return Side;
+        side.AddComponent<ClockFace>();
+        return side;
     }
 
     protected override void FrontClicked()
@@ -79,7 +73,7 @@ public class Clock : BasePuzzleObject
 
             innerClockRenderer.enabled = true;
             Vector3 originalPosition = innerClockRenderer.transform.localPosition;
-            originalPosition = new Vector3(originalPosition.x, originalPosition.y, -originalPosition.z);
+            originalPosition = new Vector3(originalPosition.x, -originalPosition.y, originalPosition.z);
             innerClockRenderer.transform.localPosition = originalPosition;
             innerClock.bActivated = true;
         }
