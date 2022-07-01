@@ -6,34 +6,22 @@ using UnityEngine;
 public class Bear : MonoBehaviour, IInteractable
 {
     [SerializeField]
-    private Sprite bearWithKnife, bearWithoutKnife;
+    private Material bearWithKnife, bearWithoutKnife;
 
     [SerializeField]
-    private Sprite bearCutWithKnife, bearCutWithoutKnife;
+    private Material bearCutWithKnife, bearCutWithoutKnife;
 
     [SerializeField]
     private PlayerController playerController;
 
     [SerializeField]
-    private SpriteRenderer displayingSprite;
+    private MeshRenderer displayingSprite;
     
     private bool bKnifeRemoved = false;
     private bool bBearCut = false;
     
     [SerializeField]
     private BaseItem heldItemPrefab;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem = null)
     {
@@ -46,8 +34,8 @@ public class Bear : MonoBehaviour, IInteractable
     {
         bKnifeRemoved = value;
         if (bKnifeRemoved)
-            displayingSprite.GetComponent<SpriteRenderer>().sprite = bBearCut ? bearCutWithKnife : bearWithKnife;
+            displayingSprite.GetComponent<MeshRenderer>().sharedMaterials[0] = bBearCut ? bearCutWithKnife : bearWithKnife;
         else
-            displayingSprite.GetComponent<SpriteRenderer>().sprite = bBearCut ? bearCutWithoutKnife : bearWithoutKnife;
+            displayingSprite.GetComponent<MeshRenderer>().sharedMaterials[0] = bBearCut ? bearCutWithoutKnife : bearWithoutKnife;
     }
 }

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &465179256251400223
+--- !u!1 &1343928213281810951
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,51 +8,61 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6616961512149163142}
-  - component: {fileID: 5472554948516373730}
+  - component: {fileID: 1000921752872347128}
+  - component: {fileID: 5861090445507839755}
+  - component: {fileID: 7131335472870222679}
+  - component: {fileID: 2672436503153654625}
   m_Layer: 0
-  m_Name: "b\xE4r, zu, messer"
+  m_Name: BearPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6616961512149163142
+--- !u!4 &1000921752872347128
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 465179256251400223}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.68, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_GameObject: {fileID: 1343928213281810951}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 3.68, z: -4e-15}
+  m_LocalScale: {x: 2.0535, y: 1, z: 1.1578}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 516641166591054287}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &5472554948516373730
-SpriteRenderer:
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!33 &5861090445507839755
+MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 465179256251400223}
+  m_GameObject: {fileID: 1343928213281810951}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &7131335472870222679
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343928213281810951}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
+  m_RayTracingMode: 2
   m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7e48b6300cbd3f646889061e8f4fad62, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -65,7 +75,7 @@ SpriteRenderer:
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
   m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
+  m_SelectedEditorRenderState: 3
   m_MinimumChartSize: 4
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
@@ -73,17 +83,21 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e0206d92ebd1a9d4bb202393b95bd57d, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 20.48, y: 11.52}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &2672436503153654625
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343928213281810951}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &6532244506490214392
 GameObject:
   m_ObjectHideFlags: 0
@@ -114,7 +128,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6616961512149163142}
+  - {fileID: 1000921752872347128}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -130,13 +144,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4e53f4d7670c2c4b83f234997f237b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bearWithKnife: {fileID: 21300000, guid: e0206d92ebd1a9d4bb202393b95bd57d, type: 3}
-  bearWithoutKnife: {fileID: 21300000, guid: f4252b6b12862d1419ca4a21548b70cd, type: 3}
-  bearCutWithKnife: {fileID: 21300000, guid: 6f39032b888c33f419294841cc8c2ad3, type: 3}
-  bearCutWithoutKnife: {fileID: 21300000, guid: 9b6c39454e2561148b5f52795dd76abd, type: 3}
+  bearWithKnife: {fileID: 2100000, guid: 7e48b6300cbd3f646889061e8f4fad62, type: 2}
+  bearWithoutKnife: {fileID: 2100000, guid: 89b1d862c5c6fb547a66c5ea2b225741, type: 2}
+  bearCutWithKnife: {fileID: 2100000, guid: 3421d761918bb3644806a7b996ddaef9, type: 2}
+  bearCutWithoutKnife: {fileID: 2100000, guid: 583118bfcff5eeb49874732323366152, type: 2}
   playerController: {fileID: 0}
-  displayingSprite: {fileID: 5472554948516373730}
-  heldItemPrefab: {fileID: 6661168786773828527, guid: eb514035f30bda14d8d15c3d618e0322, type: 3}
+  displayingSprite: {fileID: 7131335472870222679}
+  heldItemPrefab: {fileID: 6739615885417492098, guid: eb514035f30bda14d8d15c3d618e0322, type: 3}
 --- !u!65 &1059598082389132854
 BoxCollider:
   m_ObjectHideFlags: 0

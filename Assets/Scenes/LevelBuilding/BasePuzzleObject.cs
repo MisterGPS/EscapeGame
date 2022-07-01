@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,23 +9,6 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class BasePuzzleObject : BaseStaticObject
 {
-    private void Awake()
-    {
-
-    }
-
-    // Start is called before the first frame update
-    protected override void Start()
-    {
-        base.Start();
-    }
-
-    // Update is called once per frame
-    protected override void Update()
-    {
-        base.Update();
-    }
-
     protected override GameObject CustomiseAddSide(GameObject side)
     {
         side.AddComponent<BasePuzzleSide>();
@@ -33,7 +17,6 @@ public class BasePuzzleObject : BaseStaticObject
 
     public virtual void SideClicked(BasePuzzleSide face)
     {
-        Debug.Log(face.orientation);
         switch (face.orientation)
         {
             case 0:
@@ -57,21 +40,21 @@ public class BasePuzzleObject : BaseStaticObject
     // Helper functions; Solely to make things easier
     protected virtual void FrontClicked()
     {
-        Debug.Log("Interacted with front face of object " + name);
+        throw new NotImplementedException("Interacted with front face of object " + name);
     }
 
     protected virtual void TopClicked()
     {
-        Debug.Log("Interacted with top face of object " + name);
+        throw new NotImplementedException("Interacted with top face of object " + name);
     }
 
     protected virtual void BackClicked()
     {
-        Debug.Log("Interacted with back face of object " + name);
+        throw new NotImplementedException("Interacted with back face of object " + name);
     }
 
     protected virtual void UnidentifiedFaceClicked()
     {
-        Debug.Log("Interacted with UNIDENTIFIED face of object " + name);
+        throw new NotImplementedException("Interacted with UNIDENTIFIED face of object " + name);
     }
 }
