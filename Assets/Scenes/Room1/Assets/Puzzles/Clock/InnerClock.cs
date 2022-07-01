@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class InnerClock : MonoBehaviour
 {
@@ -38,8 +37,8 @@ public class InnerClock : MonoBehaviour
         {
             // TODO Check with new input system
             Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            
-            Vector3 relativeCursorPosition = cursorPosition - transform.position;
+
+            var relativeCursorPosition = cursorPosition - transform.position;
 
             // Hardcode cursor offset, due to object rotation
             // relativeCursorPosition.y = relativeCursorPosition.x;
@@ -199,10 +198,11 @@ public class InnerClock : MonoBehaviour
     {
         UnityEngine.Assertions.Assert.IsTrue(connectedCableEnds.Count <= desiredCableConnections.Count);
 
+        print(connectedCableEnds.Count.ToString());
         // Check if the connection already exists
-        for (int i = 0; i < connectedCableEnds.Count; i++)
+        foreach (var cableConnection in connectedCableEnds)
         {
-            if (connectedCableEnds[i] == desiredCableConnections[i])
+            if (cableConnection == currentCableEnds)
             {
                 print("Invalid connection");
                 return false;

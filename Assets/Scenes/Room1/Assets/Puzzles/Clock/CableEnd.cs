@@ -33,7 +33,15 @@ public class CableEnd : MonoBehaviour, IInteractable
 
     public Vector3 GetConnectionPosition()
     {
-        return transform.localPosition - (transform.position - connectionTarget.transform.position);
+        Vector3 connectionCenter = transform.parent.position;
+        Vector3 connectionTargetPosition = connectionTarget.transform.position;
+        print(connectionCenter);
+        print(connectionTargetPosition);
+        Vector3 relativeEndPosition = (connectionTargetPosition - connectionCenter) * 10;
+        relativeEndPosition.x = relativeEndPosition.z;
+        relativeEndPosition.z = relativeEndPosition.y;
+        
+        return relativeEndPosition;
     }
 
     public void SetCableEndColor(Color value)
