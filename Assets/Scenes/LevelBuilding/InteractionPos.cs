@@ -11,6 +11,6 @@ public class InteractionPos : MonoBehaviour, IInteractable
         Vector3 localPos = transform.InverseTransformPoint(raycastHit.point);
         Debug.Log("Local Pos: " + localPos);
         Debug.Log("World Pos: " + raycastHit.point);
-        //GUIUtility.systemCopyBuffer = String.Format(CultureInfo.InvariantCulture, "new({0:F2}F, {1:F2}F);", localPos.x, localPos.y);
+        //GUIUtility.systemCopyBuffer = String.Format(CultureInfo.InvariantCulture, "new({0:F2}F, {1:F2}F);", localPos.x, localPos.z);
     }
 }

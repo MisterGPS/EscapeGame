@@ -18,15 +18,13 @@ public class Polygon
         Vertices = vertices;
     }
 
-    public void DrawDebugOutLine(Transform transform, float zOffset, Color color, float duration, bool depthTest)
+    public void DrawDebugOutLine(Transform transform, float yOffset, Color color, float duration, bool depthTest)
     {
         for (int i = 0; i < Vertices.Length; i++)
         {
             int j = nextVerticeIndex(i);
-            Vector3 a = Vertices[i];
-            a.z += zOffset;
-            Vector3 b = Vertices[j];
-            b.z += zOffset;
+            Vector3 a = new(Vertices[i].x, yOffset, Vertices[i].y);
+            Vector3 b = new(Vertices[j].x, yOffset, Vertices[j].y);
             Debug.DrawLine(transform.TransformPoint(a), transform.TransformPoint(b), color, duration, depthTest);
             //Debug.Log(transform.TransformPoint(a) + ", " + transform.TransformPoint(b));
         }

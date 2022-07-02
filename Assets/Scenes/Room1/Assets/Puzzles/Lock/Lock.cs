@@ -57,26 +57,26 @@ public class Lock : BasePuzzleSide
 
     void Awake()
     {
-        position9 = new(-4.93F, 1.62F);
-        position98 = new(-2.26F, 1.71F);
-        position87 = new(0.51F, 1.76F);
-        position7E = new(3.32F, 1.85F);
-        positionE = new(5.49F, 1.67F);
-        position96 = new(-4.89F, -1.19F);
-        position9865 = new(-2.35F, -1.28F);
-        position8754 = new(0.32F, -1.38F);
-        position7E4R = new(3.09F, -1.38F);
-        positionER = new(5.39F, -1.38F);
-        position63 = new(-4.84F, -4.33F);
-        position6532 = new(-2.35F, -4.28F);
-        position5421 = new(0.18F, -4.24F);
-        position4R10 = new(3.04F, -4.28F);
-        positionR0 = new(5.21F, -4.24F);
-        positon3 = new(-4.89F, -7.23F);
-        position32 = new(-2.26F, -7.28F);
-        position21 = new(0.14F, -7.28F);
-        position10 = new(2.90F, -7.23F);
-        position0 = new(5.12F, -7.09F);
+        position9 = new(2.37F, -0.77F);
+        position98 = new(1.09F, -0.80F);
+        position87 = new(-0.22F, -0.84F);
+        position7E = new(-1.57F, -0.87F);
+        positionE = new(-2.70F, -0.80F);
+        position96 = new(2.40F, 0.65F);
+        position9865 = new(1.13F, 0.65F);
+        position8754 = new(-0.11F, 0.69F);
+        position7E4R = new(-1.50F, 0.72F);
+        positionER = new(-2.56F, 0.69F);
+        position63 = new(2.33F, 2.14F);
+        position6532 = new(1.13F, 2.10F);
+        position5421 = new(-0.11F, 2.10F);
+        position4R10 = new(-1.46F, 2.10F);
+        positionR0 = new(-2.52F, 2.10F);
+        positon3 = new(2.38F, 3.58F);
+        position32 = new(1.10F, 3.58F);
+        position21 = new(-0.07F, 3.58F);
+        position10 = new(-1.45F, 3.53F);
+        position0 = new(-2.51F, 3.53F);
 
         polygon9 = new(position9, position98, position9865, position96);
         polygon8 = new(position98, position87, position8754, position9865);
@@ -212,10 +212,10 @@ public class Lock : BasePuzzleSide
     {
         foreach (Polygon polygon in buttonActions.Keys)
         {
-            if (polygon.contains(transform.InverseTransformPoint(raycastHit.point)))
+            Vector3 hitPoint = transform.InverseTransformPoint(raycastHit.point);
+            if (polygon.contains(new Vector2(hitPoint.x, hitPoint.z)))
             {
-                Action action;
-                buttonActions.TryGetValue(polygon, out action);
+                buttonActions.TryGetValue(polygon, out Action action);
                 action();
                 break;
             }
