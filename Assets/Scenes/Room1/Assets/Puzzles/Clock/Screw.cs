@@ -21,6 +21,7 @@ public class Screw : MonoBehaviour, IInteractable
 
         if (onInteracted != null && !bInteracted)
         {
+           
             StartCoroutine(Unscrew());
         }
     }
@@ -31,6 +32,7 @@ public class Screw : MonoBehaviour, IInteractable
         bInteracted = true;
         while (transform.rotation.eulerAngles.z < 160 * (currentRotations + 1))
         {
+            FindObjectOfType<AudioManager>().Play("SchraubenzieherDreh");
             transform.Rotate(new Vector3(0, 0, 240.0f * Time.deltaTime));
            yield return new WaitForFixedUpdate();
         }

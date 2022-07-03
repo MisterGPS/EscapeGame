@@ -54,6 +54,7 @@ public class Lock : BasePuzzleSide
 
     public Text open;
     public Text closed;
+    [SerializeField]
 
     void Awake()
     {
@@ -131,6 +132,8 @@ public class Lock : BasePuzzleSide
     {
         open.enabled = true;
         closed.enabled = false;
+        FindObjectOfType<AudioManager>().Stop("UhrTick");
+        FindObjectOfType<AudioManager>().Play("DoorOpen");
     }
     
     // Update is called once per frame
@@ -149,6 +152,8 @@ public class Lock : BasePuzzleSide
             numbers[numberCount] = number;
             numberCount++;
             updateDisplay();
+           
+
         }
         else
         {
@@ -198,6 +203,7 @@ public class Lock : BasePuzzleSide
             else
             {
                 sb.Append(number);
+                FindObjectOfType<AudioManager>().Play("Tastenfeldsound");
             }
         }
         text.text = sb.ToString();
@@ -206,6 +212,7 @@ public class Lock : BasePuzzleSide
     void playErrorSound()
     {
 
+        FindObjectOfType<AudioManager>().Play("Error");
     }
 
     public override void OnInteract(RaycastHit raycastHit, BaseItem optItem)
@@ -218,6 +225,7 @@ public class Lock : BasePuzzleSide
                 buttonActions.TryGetValue(polygon, out Action action);
                 action();
                 break;
+
             }
         }
     }
