@@ -1,3 +1,5 @@
+using System.Text;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +7,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // Singleton
-    static public GameManager Instance { get; private set; }
+    public static GameManager Instance { get; private set; }
+
+    public static string SaveFile { get; private set; }
+
+    public static CacheDiscardList LoadCacheDiscardList { get; } = new CacheDiscardList();
+
+    private GameState state;
 
     private void Awake()
     {
@@ -32,18 +40,33 @@ public class GameManager : MonoBehaviour
 
     private void Instantiate()
     {
+        SaveFile = Application.persistentDataPath + "\\save.json";
         SetTime();
+        timeStringCache = new(() => {
+            StringBuilder sb = new();
+            sb.Append(timeCode[0]);
+            sb.Append(timeCode[1]);
+            sb.Append(":");
+            sb.Append(timeCode[2]);
+            sb.Append(timeCode[3]);
+            return sb.ToString();
+        }, LoadCacheDiscardList);
     }
 
     // Saving and loading generated puzzles
-    private void Load()
+    public void Load()
     {
-
+        string json = File.ReadAllText(SaveFile);
+        Debug.Log(json);
+        JsonUtility.FromJsonOverwrite(json, state);
+        LoadCacheDiscardList.DiscardAll();
     }
 
-    private void Save()
+    public void Save()
     {
-
+        string json = JsonUtility.ToJson(state, true);
+        Debug.Log(json);
+        File.WriteAllText(SaveFile, json);
     }
 
     public static void ShuffleList<T>(List<T> list)
@@ -60,25 +83,15 @@ public class GameManager : MonoBehaviour
     }
 
     // Time; Clock Puzzle
-    public int[] timeCode { get; private set; }
-    public string timeString { get; private set; }
+    public int[] timeCode { get => state.timeCode; private set => state.timeCode = value; }
+    public string timeString { get => timeStringCache.Value; }
+    private LazyCache<string> timeStringCache;
     public bool bClockWiresSolved { get; set; }
     private void SetTime()
     {
         int totalMinutes = Random.Range(0, 1440);
         int hours = Mathf.FloorToInt(totalMinutes / 60);
         int minutes = totalMinutes % 60;
-        string hoursS = hours.ToString();
-        string minutesS = minutes.ToString();
-
-        if (hoursS.Length != 2)
-        {
-            hoursS = "0" + hoursS;
-        }
-        if (minutesS.Length != 2)
-        {
-            minutesS = "0" + minutesS;
-        }
 
         int zahl1 = Mathf.FloorToInt(hours / 10);
         int zahl2 = hours % 10;
@@ -86,6 +99,14 @@ public class GameManager : MonoBehaviour
         int zahl4 = minutes % 10;
 
         timeCode = new int[] { zahl1, zahl2, zahl3, zahl4 };
-        timeString = hoursS + ':' + minutesS;
+    }
+
+    /**
+     * Saves all the variables that represent the current state of the game and need to persist between sessions.
+     */
+    [System.Serializable]
+    private struct GameState
+    {
+        public int[] timeCode;
     }
 }

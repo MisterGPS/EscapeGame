@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFirstPersonActions, Input.ITopDownActions, Input.IUIActions
+public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFirstPersonActions, Input.ITopDownActions, Input.IUIActions, Input.IDebugActions
 {
     private Input input;
     private PlayerController playerController;
@@ -22,6 +22,11 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         input.FirstPerson.SetCallbacks(this);
         input.TopDown.SetCallbacks(this);
         input.UI.SetCallbacks(this);
+        if (Debug.isDebugBuild)
+        {
+            input.Debug.SetCallbacks(this);
+            input.Debug.Enable();
+        }
 
         input.CommonNav.Enable();
         if (playerController.GetViewMode() == ViewMode.TopDown)
@@ -129,6 +134,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     }
 
     //Ab hier UI-Zeug für später
+
     void Input.IUIActions.OnNavigate(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();
@@ -177,5 +183,23 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Input.IUIActions.OnTrackedDeviceOrientation(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();
+    }
+
+    //Debug Zeug
+
+    void Input.IDebugActions.OnSave(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GameManager.Instance.Save();
+        }
+    }
+
+    void Input.IDebugActions.OnLoad(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            GameManager.Instance.Load();
+        }
     }
 }

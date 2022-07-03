@@ -733,6 +733,54 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Debug"",
+            ""id"": ""e52ca43f-1f71-4534-b768-da045d5a277b"",
+            ""actions"": [
+                {
+                    ""name"": ""Save"",
+                    ""type"": ""Button"",
+                    ""id"": ""989f2d09-6630-4dbb-92e7-31191bf0c7ed"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Load"",
+                    ""type"": ""Button"",
+                    ""id"": ""605499b4-9721-4382-a921-2c72af6f73a4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""a0c12ce1-98d1-4141-ae5b-3d529d76cf58"",
+                    ""path"": ""<Keyboard>/o"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Save"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c98c0aed-1698-48b3-a1f4-690b9f1e9dd2"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Load"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -791,6 +839,10 @@ public partial class @Input : IInputActionCollection2, IDisposable
         m_CommonNav = asset.FindActionMap("CommonNav", throwIfNotFound: true);
         m_CommonNav_ChangePerspective = m_CommonNav.FindAction("Change Perspective", throwIfNotFound: true);
         m_CommonNav_Click = m_CommonNav.FindAction("Click", throwIfNotFound: true);
+        // Debug
+        m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
+        m_Debug_Save = m_Debug.FindAction("Save", throwIfNotFound: true);
+        m_Debug_Load = m_Debug.FindAction("Load", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1090,6 +1142,47 @@ public partial class @Input : IInputActionCollection2, IDisposable
         }
     }
     public CommonNavActions @CommonNav => new CommonNavActions(this);
+
+    // Debug
+    private readonly InputActionMap m_Debug;
+    private IDebugActions m_DebugActionsCallbackInterface;
+    private readonly InputAction m_Debug_Save;
+    private readonly InputAction m_Debug_Load;
+    public struct DebugActions
+    {
+        private @Input m_Wrapper;
+        public DebugActions(@Input wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Save => m_Wrapper.m_Debug_Save;
+        public InputAction @Load => m_Wrapper.m_Debug_Load;
+        public InputActionMap Get() { return m_Wrapper.m_Debug; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(DebugActions set) { return set.Get(); }
+        public void SetCallbacks(IDebugActions instance)
+        {
+            if (m_Wrapper.m_DebugActionsCallbackInterface != null)
+            {
+                @Save.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnSave;
+                @Save.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnSave;
+                @Save.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnSave;
+                @Load.started -= m_Wrapper.m_DebugActionsCallbackInterface.OnLoad;
+                @Load.performed -= m_Wrapper.m_DebugActionsCallbackInterface.OnLoad;
+                @Load.canceled -= m_Wrapper.m_DebugActionsCallbackInterface.OnLoad;
+            }
+            m_Wrapper.m_DebugActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Save.started += instance.OnSave;
+                @Save.performed += instance.OnSave;
+                @Save.canceled += instance.OnSave;
+                @Load.started += instance.OnLoad;
+                @Load.performed += instance.OnLoad;
+                @Load.canceled += instance.OnLoad;
+            }
+        }
+    }
+    public DebugActions @Debug => new DebugActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1137,5 +1230,10 @@ public partial class @Input : IInputActionCollection2, IDisposable
     {
         void OnChangePerspective(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+    }
+    public interface IDebugActions
+    {
+        void OnSave(InputAction.CallbackContext context);
+        void OnLoad(InputAction.CallbackContext context);
     }
 }
