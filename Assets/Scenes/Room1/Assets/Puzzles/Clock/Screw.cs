@@ -16,7 +16,7 @@ public class Screw : MonoBehaviour, IInteractable
     private bool bInteracted { get; set; } = false;
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
-        if ((ScrewdriverItem)optItem == null)
+        if (optItem==null||(ScrewdriverItem)optItem == null)
             return;
 
         if (onInteracted != null && !bInteracted)

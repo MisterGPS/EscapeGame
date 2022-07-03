@@ -23,9 +23,12 @@ public class PlayerController : MonoBehaviour
 
     private SelectedItemUI itemUI; 
 
-    // Temporary inventory
-    [SerializeField]
-    private BaseItem inventory;
+    public  List<BaseItem> inventory { get; private set; }
+
+    public const int INVENTORY_LENGHT=4;  
+
+    public int activeItemID { get; set; }
+
 
     delegate void ViewModeChanged();
     ViewModeChanged onViewModeChanged;
@@ -44,7 +47,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private ComputeShader convolutionShader;
-    
+
+    [SerializeField]
+    private Inventar inventoryUI; 
+
     private void Awake()
     {
         
@@ -67,6 +73,12 @@ public class PlayerController : MonoBehaviour
         Debug.Log(("Camera size: ", ControlledCamera.pixelWidth, ControlledCamera.pixelHeight));
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
+
+        inventory = new List<BaseItem> ();
+        for (int i = 0; i < INVENTORY_LENGHT; i++)
+        {
+            inventory.Add(null);
+        }
     }
 
     // Update is called once per frame
@@ -123,7 +135,7 @@ public class PlayerController : MonoBehaviour
             IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
             foreach (IInteractable interactable in interactables)
             {
-                interactable.OnInteract(hit, inventory);
+                interactable.OnInteract(hit, inventory[activeItemID]);
             }
         }
     }
@@ -134,23 +146,45 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(RunBlackFade());
     }
 
-    public void AddItemToInventory(BaseItem item)
+    public BaseItem GetActiveItem() 
     {
-        Debug.Log("Added item to inventory");
-        if (inventory != null)
-        {
-            inventory.ToggleItemVisibility(true);
-        }
-        item.ToggleItemVisibility(false);
-        inventory=item;
-        itemUI.SetDisplayedItem(item);
+        return inventory[activeItemID]; 
     }
 
+    
+
+    public void AddItemToInventory(BaseItem item)
+    {
+        for(int i=0; i<INVENTORY_LENGHT; i++)
+        {
+           if (inventory[i] == null)
+            {
+                inventory[i] = item;
+                item.ToggleItemVisibility(false);
+                itemUI.SetDisplayedItem(item);
+                if (inventoryUI.bInventoryOpen)
+                {
+                    inventoryUI.OpenInventory();
+                }
+                return; 
+            }
+        }
+        inventory[activeItemID].ToggleItemVisibility(true);
+        inventory[activeItemID] = item;
+        item.ToggleItemVisibility(false);
+        itemUI.SetDisplayedItem(item);
+        if (inventoryUI.bInventoryOpen)
+        {
+            inventoryUI.OpenInventory();
+        }
+    }
+
+    //redundant 
     public void RemoveItemFromInventory(BaseItem item)
     {
         Debug.Log("removed item from inventory");
-        inventory.ToggleItemVisibility(true);
-        inventory=null;
+        inventory[activeItemID].ToggleItemVisibility(true);
+        inventory[activeItemID] = null;
         itemUI.RemoveDisplayedItem();
     }
 
