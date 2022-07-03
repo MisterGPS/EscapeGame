@@ -15,6 +15,7 @@ public class Clock : BasePuzzleObject
     [SerializeField]
     private InnerClock innerClock;
     private MeshRenderer innerClockRenderer;
+ 
 
     // Start is called before the first frame update
     protected override void Start()
@@ -28,6 +29,7 @@ public class Clock : BasePuzzleObject
 
         foreach (Screw screw in screws)
         {
+            
             screw.onInteracted += ScrewClicked;
         }
 
@@ -81,6 +83,7 @@ public class Clock : BasePuzzleObject
 
     void ScrewClicked()
     {
+        
         fixedScrews -= 1;
         OpenBack();
     }
@@ -88,5 +91,7 @@ public class Clock : BasePuzzleObject
     void ActivateScreen()
     {
         displayedTime.text = GameManager.Instance.timeString;
+        FindObjectOfType<AudioManager>().Play("UhrTick");
+      
     }
 }
