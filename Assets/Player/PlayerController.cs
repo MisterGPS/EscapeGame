@@ -63,14 +63,6 @@ public class PlayerController : MonoBehaviour
 
         inputController = GetComponent<InputController>();
         ControlledCamera = GetComponent<Camera>();
-        renderTextureResolution.x = ControlledCamera.pixelWidth;
-        renderTextureResolution.y = ControlledCamera.pixelHeight;
-
-        texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
-        texture.enableRandomWrite = true;
-        texture.Create();
-
-        Debug.Log(("Camera size: ", ControlledCamera.pixelWidth, ControlledCamera.pixelHeight));
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
 
@@ -96,8 +88,7 @@ public class PlayerController : MonoBehaviour
     {
         viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
         UpdateView();
-        if (onViewModeChanged != null)
-            onViewModeChanged();
+        onViewModeChanged?.Invoke();
     }
 
     // Called from within the RunBlackFade coroutine
@@ -128,8 +119,7 @@ public class PlayerController : MonoBehaviour
     public void InteractWithObject()
     {
         Ray ray = ControlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Debug.Log(hit.collider.gameObject.name);
             IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
@@ -194,7 +184,14 @@ public class PlayerController : MonoBehaviour
     IEnumerator RunBlackFade()
     {
         Camera.onPostRender += OnPostRenderCallback;
-
+        
+        renderTextureResolution.x = ControlledCamera.pixelWidth;
+        renderTextureResolution.y = ControlledCamera.pixelHeight;
+        
+        texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
+        texture.enableRandomWrite = true;
+        texture.Create();
+        
         fadeBlackTime = 0;
         bool viewUpdated = false;
         while (true)
@@ -211,7 +208,7 @@ public class PlayerController : MonoBehaviour
                 // Depending on playstyle this might need to be called after the effect ends
                 ActivateInput();
                 
-                if (fadeBlackTime < Mathf.Max(fadeBlackHalfTime - 0.1f, 0))
+                if (fadeBlackTime < 0)
                 {
                     Camera.onPostRender -= OnPostRenderCallback;
                     yield break;
@@ -227,10 +224,11 @@ public class PlayerController : MonoBehaviour
 
     private void OnPostRenderCallback(Camera cam)
     {
-        DispatchBlackFade(fadeBlackTime, cam.activeTexture);
+        DispatchBlackFade(fadeBlackTime / fadeBlackHalfTime * Mathf.PI / 2, cam.activeTexture);
         Graphics.Blit(texture, cam.activeTexture);
+        texture.Release();
     }
-
+    
     // TODO Fade black doesn't work after it reaches it's maximum intensity
     void DispatchBlackFade(float Time, RenderTexture source)
     {
