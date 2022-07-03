@@ -21,7 +21,6 @@ public class Screw : MonoBehaviour, IInteractable
 
         if (onInteracted != null && !bInteracted)
         {
-           
             StartCoroutine(Unscrew());
         }
     }

@@ -15,7 +15,6 @@ public class Clock : BasePuzzleObject
     [SerializeField]
     private InnerClock innerClock;
     private MeshRenderer innerClockRenderer;
- 
 
     // Start is called before the first frame update
     protected override void Start()
@@ -29,7 +28,6 @@ public class Clock : BasePuzzleObject
 
         foreach (Screw screw in screws)
         {
-            
             screw.onInteracted += ScrewClicked;
         }
 
@@ -50,7 +48,6 @@ public class Clock : BasePuzzleObject
         // Turn the clock to have the back facing forward
         Debug.Log("Interacted with front face of clock");
         transform.Rotate(new Vector3(0, 180, 0));
-        
     }
 
     protected override void BackClicked()
@@ -83,7 +80,6 @@ public class Clock : BasePuzzleObject
 
     void ScrewClicked()
     {
-        
         fixedScrews -= 1;
         OpenBack();
     }
@@ -92,6 +88,5 @@ public class Clock : BasePuzzleObject
     {
         displayedTime.text = GameManager.Instance.timeString;
         FindObjectOfType<AudioManager>().Play("UhrTick");
-      
     }
 }

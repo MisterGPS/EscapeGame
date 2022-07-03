@@ -54,7 +54,6 @@ public class Lock : BasePuzzleSide
 
     public Text open;
     public Text closed;
-    [SerializeField]
 
     void Awake()
     {
