@@ -21,6 +21,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private GameObject itemUIObject;
 
+    
+
+    [SerializeField]
+    public Player player;
+
     private SelectedItemUI itemUI; 
 
     public  List<BaseItem> inventory { get; private set; }
@@ -87,6 +92,7 @@ public class PlayerController : MonoBehaviour
     public void SwitchPerspective()
     {
         viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
+        player.SetTopDown();
         UpdateView();
         onViewModeChanged?.Invoke();
     }
@@ -107,12 +113,14 @@ public class PlayerController : MonoBehaviour
     public void TurnLeft()
     {
         viewDirection -= 1;
+        player.TurnL();
         UpdateView();
     }
 
     public void TurnRight()
     {
         viewDirection += 1;
+        player.TurnR();
         UpdateView();
     }
 

@@ -9,12 +9,16 @@ public class Player : MonoBehaviour
     private Vector2 moveInput;
     private Rigidbody rb;
     private Vector3 movemove;
+    private int direction;
+    private bool TopDown;
     // Start is called before the
     //first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-
+        //rb.rotation = Quaternion.Euler(-90, 0, 0);
+        TopDown = false;
+        direction = 0;
     }
 
     // Update is called once per frame
@@ -31,7 +35,45 @@ public class Player : MonoBehaviour
     void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
-        movemove = new Vector3(moveInput.x,0, moveInput.y);
+        if (TopDown)
+        {
+            print("hello");
+            switch (direction)
+            {
+                case 0:
+                    movemove = new Vector3(moveInput.x, moveInput.y, 0);
+                    break;
+                case 1:
+                    movemove = new Vector3(0, moveInput.y, moveInput.x);
+                    break;
+                case 2:
+                    movemove = new Vector3(-moveInput.x, moveInput.y, 0);
+                    break;
+                case 3:
+                    movemove = new Vector3(0, moveInput.y, -moveInput.x);
+                    break;
+            }
+        }
+        else
+        {
+            movemove = new Vector3(moveInput.x, 0, moveInput.y);
+        }
+
         // print(moveInput);
+    }
+
+    public void TurnL()
+    {
+        direction = (direction + 3) % 4;
+    }
+
+    public void TurnR()
+    {
+        direction = (direction + 1) % 4;
+    }
+    public SetTopDown()
+    {
+        print("hello");
+        TopDown = !TopDown;
     }
 }
