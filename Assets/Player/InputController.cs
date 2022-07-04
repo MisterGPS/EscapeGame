@@ -93,7 +93,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         throw new System.NotImplementedException();
     }
 
-    //temporär?
+    //temporï¿½r?
     void Input.IFirstPersonActions.OnSwitchLeft(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -102,7 +102,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
-    //temporär?
+    //temporï¿½r?
     void Input.IFirstPersonActions.OnSwitchRight(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -128,7 +128,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         throw new System.NotImplementedException();
     }
 
-    //Ab hier UI-Zeug für später
+    //Ab hier UI-Zeug fï¿½r spï¿½ter
     void Input.IUIActions.OnNavigate(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();
