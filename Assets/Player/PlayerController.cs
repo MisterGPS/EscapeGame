@@ -17,15 +17,20 @@ public class PlayerController : MonoBehaviour
     private float originalCameraSize;
     private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
+    private bool bPerspectiveTransitioning = false;
 
     [SerializeField]
     private GameObject itemUIObject;
+    public Player player;
 
     private SelectedItemUI itemUI; 
 
-    // Temporary inventory
-    [SerializeField]
-    private BaseItem inventory;
+    public  List<BaseItem> inventory { get; private set; }
+
+    public const int INVENTORY_LENGHT=4;  
+
+    public int activeItemID { get; set; }
+
 
     delegate void ViewModeChanged();
     ViewModeChanged onViewModeChanged;
@@ -44,7 +49,10 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private ComputeShader convolutionShader;
-    
+
+    [SerializeField]
+    private Inventar inventoryUI; 
+
     private void Awake()
     {
         
@@ -57,16 +65,16 @@ public class PlayerController : MonoBehaviour
 
         inputController = GetComponent<InputController>();
         ControlledCamera = GetComponent<Camera>();
-        renderTextureResolution.x = ControlledCamera.pixelWidth;
-        renderTextureResolution.y = ControlledCamera.pixelHeight;
-
-        texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
-        texture.enableRandomWrite = true;
-        texture.Create();
-
-        Debug.Log(("Camera size: ", ControlledCamera.pixelWidth, ControlledCamera.pixelHeight));
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
+
+        inventory = new List<BaseItem> ();
+        for (int i = 0; i < INVENTORY_LENGHT; i++)
+        {
+            inventory.Add(null);
+        }
+        
+        //UpdateView();
     }
 
     // Update is called once per frame
@@ -82,15 +90,19 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchPerspective()
     {
-        viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
-        UpdateView();
-        if (onViewModeChanged != null)
-            onViewModeChanged();
+        if (!bPerspectiveTransitioning)
+        {
+            viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
+            player.SetTopDown();
+            UpdateView();
+            onViewModeChanged?.Invoke();
+        }
     }
 
     // Called from within the RunBlackFade coroutine
     private void ActivateInput()
     {
+        bPerspectiveTransitioning = false;
         if (GetViewMode() == ViewMode.TopDown)
         {
             inputController.EnableTopDownInput();
@@ -104,53 +116,75 @@ public class PlayerController : MonoBehaviour
     public void TurnLeft()
     {
         viewDirection -= 1;
+        player.TurnL();
         UpdateView();
     }
 
     public void TurnRight()
     {
         viewDirection += 1;
+        player.TurnR();
         UpdateView();
     }
 
     public void InteractWithObject()
     {
         Ray ray = ControlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Debug.Log(hit.collider.gameObject.name);
             IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
             foreach (IInteractable interactable in interactables)
             {
-                interactable.OnInteract(hit, inventory);
+                interactable.OnInteract(hit, inventory[activeItemID]);
             }
         }
     }
 
     void UpdateView()
     {
+        bPerspectiveTransitioning = true;
         inputController.DisableInput();
         StartCoroutine(RunBlackFade());
     }
 
-    public void AddItemToInventory(BaseItem item)
+    public BaseItem GetActiveItem() 
     {
-        Debug.Log("Added item to inventory");
-        if (inventory != null)
-        {
-            inventory.ToggleItemVisibility(true);
-        }
-        item.ToggleItemVisibility(false);
-        inventory=item;
-        itemUI.SetDisplayedItem(item);
+        return inventory[activeItemID]; 
     }
 
+    public void AddItemToInventory(BaseItem item)
+    {
+        for(int i=0; i<INVENTORY_LENGHT; i++)
+        {
+           if (inventory[i] == null)
+           {
+                inventory[i] = item;
+                item.ToggleItemVisibility(false);
+                itemUI.SetDisplayedItem(item);
+                if (inventoryUI.bInventoryOpen)
+                {
+                    inventoryUI.OpenInventory();
+                }
+                return; 
+           }
+        }
+        inventory[activeItemID].ToggleItemVisibility(true);
+        inventory[activeItemID] = item;
+        item.ToggleItemVisibility(false);
+        itemUI.SetDisplayedItem(item);
+        if (inventoryUI.bInventoryOpen)
+        {
+            inventoryUI.OpenInventory();
+        }
+    }
+
+    //redundant 
     public void RemoveItemFromInventory(BaseItem item)
     {
         Debug.Log("removed item from inventory");
-        inventory.ToggleItemVisibility(true);
-        inventory=null;
+        inventory[activeItemID].ToggleItemVisibility(true);
+        inventory[activeItemID] = null;
         itemUI.RemoveDisplayedItem();
     }
 
@@ -160,43 +194,46 @@ public class PlayerController : MonoBehaviour
     IEnumerator RunBlackFade()
     {
         Camera.onPostRender += OnPostRenderCallback;
-
+        
+        renderTextureResolution.x = ControlledCamera.pixelWidth;
+        renderTextureResolution.y = ControlledCamera.pixelHeight;
+        
+        texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
+        texture.enableRandomWrite = true;
+        texture.Create();
+        
         fadeBlackTime = 0;
-        bool viewUpdated = false;
-        while (true)
+        while (fadeBlackTime < fadeBlackHalfTime)
         {
+            fadeBlackTime += Time.deltaTime;
+            
             // Avoid rendering something that won't be displayed
             yield return new WaitForEndOfFrame();
-            viewUpdated = fadeBlackTime > fadeBlackHalfTime || viewUpdated;
-            if (viewUpdated)
-            {
-                fadeBlackTime -= Time.deltaTime;
-                float rotateValueX = (int)viewMode * 90.0f;
-                float rotateValueY = viewDirection * 90.0f;
-                transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
-                // Depending on playstyle this might need to be called after the effect ends
-                ActivateInput();
-                
-                if (fadeBlackTime < Mathf.Max(fadeBlackHalfTime - 0.1f, 0))
-                {
-                    Camera.onPostRender -= OnPostRenderCallback;
-                    yield break;
-                }
-            }
-            else
-            {
-                fadeBlackTime += Time.deltaTime;
-            }
-            yield return null;
         }
-    }
+        
+        float rotateValueX = (int)viewMode * 90.0f;
+        float rotateValueY = viewDirection * 90.0f;
+        float height = ((int) viewMode * 2 - 1) * -15.0f;
+        transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
+        transform.position += new Vector3(0, height, 0);
 
+        while (fadeBlackTime > 0)
+        {
+            fadeBlackTime -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        
+        Camera.onPostRender -= OnPostRenderCallback;
+        ActivateInput();
+    }
+    
     private void OnPostRenderCallback(Camera cam)
     {
-        DispatchBlackFade(fadeBlackTime, cam.activeTexture);
+        DispatchBlackFade(fadeBlackTime / fadeBlackHalfTime * Mathf.PI / 2, cam.activeTexture);
         Graphics.Blit(texture, cam.activeTexture);
+        texture.Release();
     }
-
+    
     // TODO Fade black doesn't work after it reaches it's maximum intensity
     void DispatchBlackFade(float Time, RenderTexture source)
     {

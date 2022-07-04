@@ -15,7 +15,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Start()
     {
         input = new Input();
-        
+
         playerController = GetComponent<PlayerController>();
 
         input.CommonNav.SetCallbacks(this);
@@ -89,7 +89,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     //Vector2 zum bewegen der Kamera in First Person
     void Input.IFirstPersonActions.OnLook(InputAction.CallbackContext context)
     {
-        
+
     }
 
     //Vector2 zum bewegen de Zeigers/Maus in First Person
@@ -98,7 +98,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         throw new System.NotImplementedException();
     }
 
-    //temporär?
+    //temporï¿½r?
     void Input.IFirstPersonActions.OnSwitchLeft(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -107,7 +107,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
-    //temporär?
+    //temporï¿½r?
     void Input.IFirstPersonActions.OnSwitchRight(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -133,7 +133,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         throw new System.NotImplementedException();
     }
 
-    //Ab hier UI-Zeug für später
+    //Ab hier UI-Zeug fï¿½r spï¿½ter
 
     void Input.IUIActions.OnNavigate(InputAction.CallbackContext context)
     {
