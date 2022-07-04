@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public static string SaveFile { get; private set; }
+    public static PlayerController PlayerController { get; private set; }
 
     public static CacheDiscardList LoadCacheDiscardList { get; } = new CacheDiscardList();
 
@@ -24,9 +25,15 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
+            PreStart();
         }
     }
 
+    void PreStart()
+    {
+        PlayerController = FindObjectOfType<PlayerController>();
+    }
+    
     void Start()
     {
         Instantiate();
@@ -76,9 +83,7 @@ public class GameManager : MonoBehaviour
         for (var i = 0; i < count; i++)
         {
             int r = Random.Range(i, count);
-            T tmp = list[i];
-            list[i] = list[r];
-            list[r] = tmp;
+            (list[i], list[r]) = (list[r], list[i]);
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,64 +8,64 @@ public enum ViewMode
 {
     TopDown = 0,
     SideView = 1
-};
+}
+
+public enum ViewDirection
+{
+    North = 0,
+    East = 1,
+    South = 2,
+    West = 3
+}
 
 public class PlayerController : MonoBehaviour
 {
     private InputController inputController;
-    private Vector3 originalRotation;
-    private Vector3 originalPosition;
+    private Vector3 cameraOriginalRotation;
+    private Vector3 cameraOriginalPosition;
     private float originalCameraSize;
-    private ViewMode viewMode = ViewMode.TopDown;
-    private int viewDirection = 0;
+    public ViewMode viewMode { get; private set; } = ViewMode.TopDown;
+    public ViewDirection viewDirection { get; private set; } = ViewDirection.North;
     private bool bPerspectiveTransitioning = false;
+    
+    public float moveSpeed = 1.0f;
+    private Rigidbody rb;
 
     [SerializeField]
     private GameObject itemUIObject;
-    public Player player;
-
-    private SelectedItemUI itemUI; 
-
+    
+    [SerializeField]
+    private Inventar inventoryUI;
+    
+    private SelectedItemUI itemUI;
     public  List<BaseItem> inventory { get; private set; }
+    public const int INVENTORY_LENGHT=4;
+    public int activeItemID;
 
-    public const int INVENTORY_LENGHT=4;  
+    private delegate void ViewModeChanged();
+    private ViewModeChanged onViewModeChanged;
 
-    public int activeItemID { get; set; }
-
-
-    delegate void ViewModeChanged();
-    ViewModeChanged onViewModeChanged;
-
-    public Camera ControlledCamera { get; private set; }
+    public Camera controlledCamera;
 
     // On screen FX
     private RenderTexture texture;
-    private Vector3Int renderTextureResolution = new Vector3Int(0, 0, 32);
-
-    public float fadeBlackHalfTime = 0.4f;
-
+    private Vector3Int renderTextureResolution;
+    
     [SerializeField]
     private ComputeShader fadeBlackShader;
     private float fadeBlackTime = 0.0f;
-
-    [SerializeField]
-    private ComputeShader convolutionShader;
-
-    [SerializeField]
-    private Inventar inventoryUI; 
-
-    private void Awake()
-    {
-        
-    }
+    public float fadeBlackHalfTime = 0.4f;
+    
+    //[SerializeField]
+    //private ComputeShader convolutionShader;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        originalRotation = transform.eulerAngles;
-
+        cameraOriginalRotation = controlledCamera.transform.eulerAngles;
+        cameraOriginalPosition = controlledCamera.transform.position;
+        
         inputController = GetComponent<InputController>();
-        ControlledCamera = GetComponent<Camera>();
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
 
@@ -73,19 +74,11 @@ public class PlayerController : MonoBehaviour
         {
             inventory.Add(null);
         }
-        
-        //UpdateView();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        
-    }
-
-    public ViewMode GetViewMode()
-    {
-        return viewMode;
+        ReceiveMove();
     }
 
     public void SwitchPerspective()
@@ -93,7 +86,6 @@ public class PlayerController : MonoBehaviour
         if (!bPerspectiveTransitioning)
         {
             viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
-            player.SetTopDown();
             UpdateView();
             onViewModeChanged?.Invoke();
         }
@@ -103,7 +95,7 @@ public class PlayerController : MonoBehaviour
     private void ActivateInput()
     {
         bPerspectiveTransitioning = false;
-        if (GetViewMode() == ViewMode.TopDown)
+        if (viewMode == ViewMode.TopDown)
         {
             inputController.EnableTopDownInput();
         }
@@ -113,23 +105,80 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TurnLeft()
+    public void ReceiveMove()
     {
-        viewDirection -= 1;
-        player.TurnL();
-        UpdateView();
+        if (viewMode == ViewMode.TopDown)
+        {
+            ReceiveTopDownMove();
+        }
+        else
+        {
+            ReceiveSideViewMove();
+        }
+    }
+    
+    private void ReceiveTopDownMove()
+    {
+        Vector2 value = inputController.movePosition * (moveSpeed * Time.fixedDeltaTime);
+        Vector3 movementOffset = Vector3.zero;
+        switch ((int)viewDirection)
+        {
+            case 0:
+                movementOffset = new Vector3(value.x, 0, value.y);
+                break;
+            case 1:
+                movementOffset = new Vector3(value.y, 0, -value.x);
+                break;
+            case 2:
+                movementOffset = new Vector3(-value.x, 0, -value.y);
+                break;
+            case 3:
+                movementOffset = new Vector3(-value.y, 0, value.x);
+                break;
+        }
+        transform.position += movementOffset * moveSpeed;
     }
 
+    private void ReceiveSideViewMove()
+    {
+        Vector2 value = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime);
+        Vector3 movementOffset = Vector3.zero;
+        switch ((int)viewDirection)
+        {
+            case 0:
+                movementOffset = new Vector3(value.x, value.y, 0);
+                break;
+            case 1:
+                movementOffset = new Vector3(0, value.y, -value.x);
+                break;
+            case 2:
+                movementOffset = new Vector3(-value.x, value.y, 0);
+                break;
+            case 3:
+                movementOffset = new Vector3(0, value.y, value.x);
+                break;
+        }
+        
+        transform.position += movementOffset * moveSpeed;
+    }
+    
+    public void TurnLeft()
+    {
+        viewDirection = (ViewDirection)((int)viewDirection - 1);
+        int positiveDirection = viewDirection < 0 ? 4 + (int)viewDirection : (int)viewDirection;
+        viewDirection = (ViewDirection)(positiveDirection % 4);
+        UpdateView();
+    }
+    
     public void TurnRight()
     {
-        viewDirection += 1;
-        player.TurnR();
+        viewDirection = (ViewDirection)(((int)viewDirection + 1) % 4);
         UpdateView();
     }
 
     public void InteractWithObject()
     {
-        Ray ray = ControlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+        Ray ray = controlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
         if (Physics.Raycast(ray, out RaycastHit hit))
         {
             Debug.Log(hit.collider.gameObject.name);
@@ -179,7 +228,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //redundant 
+    //redundant
     public void RemoveItemFromInventory(BaseItem item)
     {
         Debug.Log("removed item from inventory");
@@ -195,8 +244,8 @@ public class PlayerController : MonoBehaviour
     {
         Camera.onPostRender += OnPostRenderCallback;
         
-        renderTextureResolution.x = ControlledCamera.pixelWidth;
-        renderTextureResolution.y = ControlledCamera.pixelHeight;
+        renderTextureResolution.x = controlledCamera.pixelWidth;
+        renderTextureResolution.y = controlledCamera.pixelHeight;
         
         texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
         texture.enableRandomWrite = true;
@@ -212,11 +261,13 @@ public class PlayerController : MonoBehaviour
         }
         
         float rotateValueX = (int)viewMode * 90.0f;
-        float rotateValueY = viewDirection * 90.0f;
+        float rotateValueY = (int)viewDirection * 90.0f;
         float height = ((int) viewMode * 2 - 1) * -15.0f;
-        transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
-        transform.position += new Vector3(0, height, 0);
-
+        controlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
+        controlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
+        print(height);
+        print(viewMode);
+        print("End");
         while (fadeBlackTime > 0)
         {
             fadeBlackTime -= Time.deltaTime;
@@ -235,14 +286,17 @@ public class PlayerController : MonoBehaviour
     }
     
     // TODO Fade black doesn't work after it reaches it's maximum intensity
-    void DispatchBlackFade(float Time, RenderTexture source)
+    void DispatchBlackFade(float time, RenderTexture source)
     {
-        fadeBlackShader.SetFloat("Time", Time);
+        fadeBlackShader.SetFloat("Time", time);
         fadeBlackShader.SetTexture(0, "Result", texture);
         fadeBlackShader.SetTexture(0, "Source", source);
         fadeBlackShader.Dispatch(0, renderTextureResolution.x / 8, renderTextureResolution.y / 8, 1);
     }
 
+    ///////////////////////////////////
+    /// Not implemented WIP feature ///
+    ///////////////////////////////////
     struct Kernel
     {
         public uint Height, Width;

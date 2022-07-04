@@ -9,7 +9,10 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     private PlayerController playerController;
 
     const float MIN_CAMERA_ZOOM = 1;
-    const float MAX_CAMERA_ZOOM = 7;  // Should be smaller than a side of a wall; development only setting (7)
+    const float MAX_CAMERA_ZOOM = 5;  // Should be smaller than a side of a wall; development only setting (7)
+    
+    public Vector2 movePosition { get; private set; }
+    public Vector2 viewPosition { get; private set; }
 
     // Start is called before the first frame update
     void Start()
@@ -29,7 +32,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
 
         input.CommonNav.Enable();
-        if (playerController.GetViewMode() == ViewMode.TopDown)
+        if (playerController.viewMode == ViewMode.TopDown)
         {
             EnableTopDownInput();
         }
@@ -42,7 +45,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 
     public void DisableInput()
@@ -72,6 +75,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
 
     void Input.ICommonNavActions.OnChangePerspective(InputAction.CallbackContext context)
     {
+        print("Changing Perspective");
         if (context.performed)
         {
             playerController.SwitchPerspective();
@@ -89,7 +93,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     //Vector2 zum bewegen der Kamera in First Person
     void Input.IFirstPersonActions.OnLook(InputAction.CallbackContext context)
     {
-
+        viewPosition = context.ReadValue<Vector2>();
     }
 
     //Vector2 zum bewegen de Zeigers/Maus in First Person
@@ -98,7 +102,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         throw new System.NotImplementedException();
     }
 
-    //tempor�r?
+    //temporary?
     void Input.IFirstPersonActions.OnSwitchLeft(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -107,7 +111,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
-    //tempor�r?
+    //temporary?
     void Input.IFirstPersonActions.OnSwitchRight(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -116,13 +120,12 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
-    void Input.IFirstPersonActions.OnZoom(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    void Input.IFirstPersonActions.OnZoom(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            Debug.Log("Mouse scrolled");
-            float cameraSize = playerController.GetComponent<Camera>().orthographicSize;
-            playerController.GetComponent<Camera>().orthographicSize =
+            float cameraSize = playerController.controlledCamera.orthographicSize;
+            playerController.controlledCamera.orthographicSize =
             Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
         }
     }
@@ -130,11 +133,10 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     //Vector2 zum bewegen in Top Down
     void Input.ITopDownActions.OnMove(InputAction.CallbackContext context)
     {
-        throw new System.NotImplementedException();
+        movePosition = context.ReadValue<Vector2>();
     }
 
     //Ab hier UI-Zeug f�r sp�ter
-
     void Input.IUIActions.OnNavigate(InputAction.CallbackContext context)
     {
         throw new System.NotImplementedException();

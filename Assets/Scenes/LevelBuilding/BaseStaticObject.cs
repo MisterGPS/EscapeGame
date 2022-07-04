@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +22,6 @@ public class BaseStaticObject : MonoBehaviour
     public bool lockObject = true;
     public Vector3 size;
 
-    [SerializeField]
     protected PlayerController playerController;
 
     public BaseStaticObject()
@@ -40,10 +40,9 @@ public class BaseStaticObject : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     protected virtual void Start()
     {
-        ViewMode currentView = playerController.GetViewMode();
+        playerController = GameManager.PlayerController;
     }
 
     // Update is called once per frame

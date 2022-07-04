@@ -6,61 +6,44 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public float moveSpeed = 1f;
-    private Vector2 moveInput;
     private Rigidbody rb;
-    private Vector3 movemove;
-    private int direction;
+    private int direction = 0;
     private bool TopDown;
-    // Start is called before the
-    //first frame update
     
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        //rb.rotation = Quaternion.Euler(-90, 0, 0);
         TopDown = true;
         direction = 0;
     }
 
-    // Update is called once per frame
-    void Update()
+    void ReceiveMove(Vector2 value)
     {
-
-    }
-
-    void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + movemove * (moveSpeed * Time.fixedDeltaTime));
-    }
-
-    void OnMove(InputValue value)
-    {
-        moveInput = value.Get<Vector2>();
+        Vector3 movementOffset = Vector3.zero;
         if (TopDown)
         {
             print("hello");
             switch (direction)
             {
                 case 0:
-                    movemove = new Vector3(moveInput.x, moveInput.y, 0);
+                    movementOffset = new Vector3(value.x, value.y, 0);
                     break;
                 case 1:
-                    movemove = new Vector3(0, moveInput.y, moveInput.x);
+                    movementOffset = new Vector3(0, value.y, value.x);
                     break;
                 case 2:
-                    movemove = new Vector3(-moveInput.x, moveInput.y, 0);
+                    movementOffset = new Vector3(-value.x, value.y, 0);
                     break;
                 case 3:
-                    movemove = new Vector3(0, moveInput.y, -moveInput.x);
+                    movementOffset = new Vector3(0, value.y, -value.x);
                     break;
             }
         }
         else
         {
-            movemove = new Vector3(moveInput.x, 0, moveInput.y);
+            movementOffset = new Vector3(value.x, 0, value.y);
         }
-
-        // print(moveInput);
+        // rb.MovePosition(rb.position + movementOffset * (moveSpeed * Time.fixedDeltaTime));
     }
 
     public void TurnL()
@@ -77,4 +60,5 @@ public class Player : MonoBehaviour
         print("hello");
         TopDown = !TopDown;
     }
+    
 }
