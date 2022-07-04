@@ -13,11 +13,12 @@ public class Player : MonoBehaviour
     private bool TopDown;
     // Start is called before the
     //first frame update
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         //rb.rotation = Quaternion.Euler(-90, 0, 0);
-        TopDown = false;
+        TopDown = true;
         direction = 0;
     }
 
@@ -71,7 +72,7 @@ public class Player : MonoBehaviour
     {
         direction = (direction + 1) % 4;
     }
-    public SetTopDown()
+    public void SetTopDown()
     {
         print("hello");
         TopDown = !TopDown;

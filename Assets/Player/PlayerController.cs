@@ -17,13 +17,10 @@ public class PlayerController : MonoBehaviour
     private float originalCameraSize;
     private ViewMode viewMode = ViewMode.TopDown;
     private int viewDirection = 0;
+    private bool bPerspectiveTransitioning = false;
 
     [SerializeField]
     private GameObject itemUIObject;
-
-    
-
-    [SerializeField]
     public Player player;
 
     private SelectedItemUI itemUI; 
@@ -91,10 +88,13 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchPerspective()
     {
-        viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
-        player.SetTopDown();
-        UpdateView();
-        onViewModeChanged?.Invoke();
+        if (!bPerspectiveTransitioning)
+        {
+            viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
+            player.SetTopDown();
+            UpdateView();
+            onViewModeChanged?.Invoke();
+        }
     }
 
     // Called from within the RunBlackFade coroutine
@@ -140,6 +140,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdateView()
     {
+        bPerspectiveTransitioning = true;
         inputController.DisableInput();
         StartCoroutine(RunBlackFade());
     }
@@ -149,14 +150,12 @@ public class PlayerController : MonoBehaviour
         return inventory[activeItemID]; 
     }
 
-    
-
     public void AddItemToInventory(BaseItem item)
     {
         for(int i=0; i<INVENTORY_LENGHT; i++)
         {
            if (inventory[i] == null)
-            {
+           {
                 inventory[i] = item;
                 item.ToggleItemVisibility(false);
                 itemUI.SetDisplayedItem(item);
@@ -165,7 +164,7 @@ public class PlayerController : MonoBehaviour
                     inventoryUI.OpenInventory();
                 }
                 return; 
-            }
+           }
         }
         inventory[activeItemID].ToggleItemVisibility(true);
         inventory[activeItemID] = item;
@@ -219,6 +218,7 @@ public class PlayerController : MonoBehaviour
                 if (fadeBlackTime < 0)
                 {
                     Camera.onPostRender -= OnPostRenderCallback;
+                    bPerspectiveTransitioning = false;
                     yield break;
                 }
             }
