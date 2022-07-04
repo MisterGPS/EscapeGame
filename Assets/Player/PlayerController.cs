@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        GetCameraViewBoxWorldSpace();
         ReceiveMove();
     }
 
@@ -121,18 +122,18 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 value = inputController.movePosition * (moveSpeed * Time.fixedDeltaTime);
         Vector3 movementOffset = Vector3.zero;
-        switch ((int)viewDirection)
+        switch (viewDirection)
         {
-            case 0:
+            case ViewDirection.North:
                 movementOffset = new Vector3(value.x, 0, value.y);
                 break;
-            case 1:
+            case ViewDirection.East:
                 movementOffset = new Vector3(value.y, 0, -value.x);
                 break;
-            case 2:
+            case ViewDirection.South:
                 movementOffset = new Vector3(-value.x, 0, -value.y);
                 break;
-            case 3:
+            case ViewDirection.West:
                 movementOffset = new Vector3(-value.y, 0, value.x);
                 break;
         }
@@ -141,25 +142,82 @@ public class PlayerController : MonoBehaviour
 
     private void ReceiveSideViewMove()
     {
-        Vector2 value = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime);
+        // Scale Movement by Speed, Time and camera zoom level
+        Vector2 value = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (controlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
-        switch ((int)viewDirection)
+        switch (viewDirection)
         {
-            case 0:
+            case ViewDirection.North:
                 movementOffset = new Vector3(value.x, value.y, 0);
                 break;
-            case 1:
+            case ViewDirection.East:
                 movementOffset = new Vector3(0, value.y, -value.x);
                 break;
-            case 2:
+            case ViewDirection.South:
                 movementOffset = new Vector3(-value.x, value.y, 0);
                 break;
-            case 3:
+            case ViewDirection.West:
                 movementOffset = new Vector3(0, value.y, value.x);
                 break;
         }
         
         transform.position += movementOffset * moveSpeed;
+    }
+
+    // Returns the (posX, posY) of bottom left corner and (width, height) of the the camera view field box in world space coordinates
+    // WIP in connection with PlayerBounds
+    public (Vector2, Vector2) GetCameraViewBoxWorldSpace()
+    {
+        float screenAspect = (float) Screen.width / (float) Screen.height;
+        float camHalfHeight = controlledCamera.orthographicSize;
+        float camHalfWidth = screenAspect * camHalfHeight;
+        
+        Vector3 cameraHalfSize = Vector3.zero;
+        Vector3 boxCoordinates = Vector3.zero;
+        
+        if (viewMode == ViewMode.SideView)
+        {
+            cameraHalfSize = new Vector3(camHalfWidth, camHalfHeight, 0);
+            Vector3 cameraPosition = controlledCamera.transform.position;
+            boxCoordinates = cameraPosition - cameraHalfSize;
+            print(cameraPosition);
+            print(boxCoordinates);
+            switch (viewDirection)
+            {
+                case ViewDirection.North:
+                    break;
+                case ViewDirection.East:
+                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
+                    break;
+                case ViewDirection.South:
+                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
+                    break;
+                case ViewDirection.West:
+                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.z);
+                    break;
+            }
+        }
+        else
+        {
+            cameraHalfSize = new Vector3(camHalfWidth, 0, -camHalfHeight);
+            boxCoordinates = controlledCamera.transform.position - cameraHalfSize;
+            
+            switch (viewDirection)
+            {
+                case ViewDirection.North:
+                    break;
+                case ViewDirection.East:
+                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
+                    break;
+                case ViewDirection.South:
+                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
+                    break;
+                case ViewDirection.West:
+                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
+                    break;
+            }
+        }
+        return (boxCoordinates, cameraHalfSize * 2);
     }
     
     public void TurnLeft()
@@ -197,7 +255,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(RunBlackFade());
     }
 
-    public BaseItem GetActiveItem() 
+    public BaseItem GetActiveItem()
     {
         return inventory[activeItemID]; 
     }
@@ -265,9 +323,6 @@ public class PlayerController : MonoBehaviour
         float height = ((int) viewMode * 2 - 1) * -15.0f;
         controlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
         controlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
-        print(height);
-        print(viewMode);
-        print("End");
         while (fadeBlackTime > 0)
         {
             fadeBlackTime -= Time.deltaTime;

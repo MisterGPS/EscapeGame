@@ -8,8 +8,8 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     private Input input;
     private PlayerController playerController;
 
-    const float MIN_CAMERA_ZOOM = 1;
-    const float MAX_CAMERA_ZOOM = 5;  // Should be smaller than a side of a wall; development only setting (7)
+    public const float MIN_CAMERA_ZOOM = 1;
+    public const float MAX_CAMERA_ZOOM = 5;  // Should be smaller than a side of a wall; development only setting (7)
     
     public Vector2 movePosition { get; private set; }
     public Vector2 viewPosition { get; private set; }
@@ -75,7 +75,6 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
 
     void Input.ICommonNavActions.OnChangePerspective(InputAction.CallbackContext context)
     {
-        print("Changing Perspective");
         if (context.performed)
         {
             playerController.SwitchPerspective();
