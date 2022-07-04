@@ -73,6 +73,8 @@ public class PlayerController : MonoBehaviour
         {
             inventory.Add(null);
         }
+        
+        //UpdateView();
     }
 
     // Update is called once per frame
@@ -100,6 +102,7 @@ public class PlayerController : MonoBehaviour
     // Called from within the RunBlackFade coroutine
     private void ActivateInput()
     {
+        bPerspectiveTransitioning = false;
         if (GetViewMode() == ViewMode.TopDown)
         {
             inputController.EnableTopDownInput();
@@ -200,36 +203,30 @@ public class PlayerController : MonoBehaviour
         texture.Create();
         
         fadeBlackTime = 0;
-        bool viewUpdated = false;
-        while (true)
+        while (fadeBlackTime < fadeBlackHalfTime)
         {
+            fadeBlackTime += Time.deltaTime;
+            
             // Avoid rendering something that won't be displayed
             yield return new WaitForEndOfFrame();
-            viewUpdated = fadeBlackTime > fadeBlackHalfTime || viewUpdated;
-            if (viewUpdated)
-            {
-                fadeBlackTime -= Time.deltaTime;
-                float rotateValueX = (int)viewMode * 90.0f;
-                float rotateValueY = viewDirection * 90.0f;
-                transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
-                // Depending on playstyle this might need to be called after the effect ends
-                ActivateInput();
-                
-                if (fadeBlackTime < 0)
-                {
-                    Camera.onPostRender -= OnPostRenderCallback;
-                    bPerspectiveTransitioning = false;
-                    yield break;
-                }
-            }
-            else
-            {
-                fadeBlackTime += Time.deltaTime;
-            }
-            yield return null;
         }
-    }
+        
+        float rotateValueX = (int)viewMode * 90.0f;
+        float rotateValueY = viewDirection * 90.0f;
+        float height = ((int) viewMode * 2 - 1) * -15.0f;
+        transform.eulerAngles = new Vector3(originalRotation.x - rotateValueX, originalRotation.y + rotateValueY, originalRotation.z);
+        transform.position += new Vector3(0, height, 0);
 
+        while (fadeBlackTime > 0)
+        {
+            fadeBlackTime -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+        
+        Camera.onPostRender -= OnPostRenderCallback;
+        ActivateInput();
+    }
+    
     private void OnPostRenderCallback(Camera cam)
     {
         DispatchBlackFade(fadeBlackTime / fadeBlackHalfTime * Mathf.PI / 2, cam.activeTexture);
