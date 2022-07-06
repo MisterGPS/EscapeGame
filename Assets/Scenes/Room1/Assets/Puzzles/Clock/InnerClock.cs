@@ -29,6 +29,10 @@ public class InnerClock : MonoBehaviour
     void Start()
     {
         GenerateCableConnections();
+        for (int i = 0; i < cableMaterials.Count; i++)
+        {
+            cableMaterials[i] = new Material(cableMaterials[i]);
+        }
     }
 
     void Update()
