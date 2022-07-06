@@ -7,7 +7,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class Lock : BasePuzzleSide
+public class Lock : BasePuzzleSide, StateHolder
 {
     Vector2 position9;
     Vector2 position98;
@@ -45,12 +45,15 @@ public class Lock : BasePuzzleSide
 
     Dictionary<Polygon, Action> buttonActions;
 
-    int[] numbers;
+    int[] Numbers { get => lockState.numbers; set => lockState.numbers = value; }
     int numberCount;
 
     public TextMeshProUGUI text;
 
     public bool Locked { get; private set; }
+
+    public State State => lockState;
+    private LockState lockState = new LockState();
 
     public Text open;
     public Text closed;
@@ -105,7 +108,7 @@ public class Lock : BasePuzzleSide
         buttonActions.Add(polygonE, () => enter());
         buttonActions.Add(polygonR, () => reset());
 
-        numbers = new int[4];
+        Numbers = new int[4];
         reset();
     }
 
@@ -148,7 +151,7 @@ public class Lock : BasePuzzleSide
     {
         if (numberCount < 4)
         {
-            numbers[numberCount] = number;
+            Numbers[numberCount] = number;
             numberCount++;
             updateDisplay();
            
@@ -163,7 +166,7 @@ public class Lock : BasePuzzleSide
     void reset()
     {
         numberCount = 0;
-        Array.Fill(numbers, -1);
+        Array.Fill(Numbers, -1);
         Locked = true;
         updateDisplay();
     }
@@ -172,7 +175,7 @@ public class Lock : BasePuzzleSide
     {
         if (numberCount == 4)
         {
-            if (numbers.SequenceEqual(GetCode()))
+            if (Numbers.SequenceEqual(GetCode()))
             {
                 Locked = false;
                 Debug.Log("unlocked");
@@ -193,7 +196,7 @@ public class Lock : BasePuzzleSide
     void updateDisplay()
     {
         StringBuilder sb = new StringBuilder();
-        foreach (int number in numbers)
+        foreach (int number in Numbers)
         {
             if (number == -1)
             {
@@ -227,5 +230,17 @@ public class Lock : BasePuzzleSide
 
             }
         }
+    }
+
+    public void PostLoad()
+    {
+        updateDisplay();
+    }
+
+    [System.Serializable]
+    private struct LockState : State
+    {
+        public bool locked;
+        public int[] numbers;
     }
 }

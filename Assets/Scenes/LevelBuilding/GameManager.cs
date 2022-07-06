@@ -3,8 +3,9 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, StateHolder
 {
     // Singleton
     public static GameManager Instance { get; private set; }
@@ -14,7 +15,10 @@ public class GameManager : MonoBehaviour
 
     public static CacheDiscardList LoadCacheDiscardList { get; } = new CacheDiscardList();
 
-    private GameState state;
+    public State State => gameState;
+    private GameState gameState;
+
+    private SavingComponent[] saveList;
 
     private void Awake()
     {
@@ -58,22 +62,53 @@ public class GameManager : MonoBehaviour
             sb.Append(timeCode[3]);
             return sb.ToString();
         }, LoadCacheDiscardList);
+        saveList = FindObjectsOfType<SavingComponent>();
     }
 
     // Saving and loading generated puzzles
     public void Load()
     {
-        string json = File.ReadAllText(SaveFile);
+        JObject json = JObject.Parse(File.ReadAllText(SaveFile));
         Debug.Log(json);
-        JsonUtility.FromJsonOverwrite(json, state);
+        foreach (JProperty jProperty in json.Properties())
+        {
+            string id = jProperty.Name;
+            JObject jObject = jProperty.Value as JObject;
+            if (UniqueID.IDToGameobject.ContainsKey(id))
+            {
+                GameObject gameObject = UniqueID.IDToGameobject[id];
+                SavingComponent savingComponent = gameObject.GetComponent<SavingComponent>();
+                if (savingComponent != null)
+                {
+                    savingComponent.Load(jObject);
+                }
+                else
+                {
+                    Debug.LogWarning(string.Format("Save file contains data for ID {0} but the GameObject with that ID has no saveable data.\nDiscarding...", id));
+                }
+            }
+            else
+            {
+                Debug.LogWarning(string.Format("Save file contains data for ID {0} but there is no GameObject with that ID.\nDiscarding...", id));
+            }
+        }
         LoadCacheDiscardList.DiscardAll();
+        foreach (SavingComponent savingComponent in saveList)
+        {
+            savingComponent.PostLoad();
+        }
     }
 
     public void Save()
     {
-        string json = JsonUtility.ToJson(state, true);
+        JObject json = new JObject();
+        foreach (SavingComponent savingComponent in saveList)
+        {
+            JObject jObject = savingComponent.Save();
+            json.Add(savingComponent.GetComponent<UniqueID>().ID, jObject);
+        }
         Debug.Log(json);
-        File.WriteAllText(SaveFile, json);
+        File.WriteAllText(SaveFile, json.ToString());
     }
 
     public static void ShuffleList<T>(List<T> list)
@@ -88,7 +123,7 @@ public class GameManager : MonoBehaviour
     }
 
     // Time; Clock Puzzle
-    public int[] timeCode { get => state.timeCode; private set => state.timeCode = value; }
+    public int[] timeCode { get => gameState.timeCode; private set => gameState.timeCode = value; }
     public string timeString { get => timeStringCache.Value; }
     private LazyCache<string> timeStringCache;
     public bool bClockWiresSolved { get; set; }
@@ -110,7 +145,7 @@ public class GameManager : MonoBehaviour
      * Saves all the variables that represent the current state of the game and need to persist between sessions.
      */
     [System.Serializable]
-    private struct GameState
+    private struct GameState : State
     {
         public int[] timeCode;
     }

@@ -180,8 +180,8 @@ public class PlayerController : MonoBehaviour
             cameraHalfSize = new Vector3(camHalfWidth, camHalfHeight, 0);
             Vector3 cameraPosition = controlledCamera.transform.position;
             boxCoordinates = cameraPosition - cameraHalfSize;
-            print(cameraPosition);
-            print(boxCoordinates);
+            //print(cameraPosition);
+            //print(boxCoordinates);
             switch (viewDirection)
             {
                 case ViewDirection.North:
