@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum ViewMode
@@ -79,8 +80,21 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        GetCameraViewBoxWorldSpace();
         ReceiveMove();
+        ClampPosition();
+    }
+
+    // Ensures the players view is always within the defined boundaries
+    private void ClampPosition()
+    {
+        (Vector3, Vector3) cameraViewBox = GetCameraViewBoxWorldSpace();
+        cameraViewBox.Item1.y = viewMode == ViewMode.TopDown ? 5 : cameraViewBox.Item1.y;
+        
+        if (!playerBounds.InBoundary(cameraViewBox))
+        {
+            Vector3 positionOffset = playerBounds.DistToBoundary(cameraViewBox);
+            transform.position -= positionOffset;
+        }
     }
 
     public void SwitchPerspective()
@@ -107,9 +121,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void ReceiveMove()
+    private void ReceiveMove()
     {
-        
         if (viewMode == ViewMode.TopDown)
         {
             ReceiveTopDownMove();
@@ -142,15 +155,6 @@ public class PlayerController : MonoBehaviour
         }
         
         transform.position += movementOffset;
-
-        (Vector3, Vector3) cameraViewBox = GetCameraViewBoxWorldSpace();
-        cameraViewBox.Item1.y = 5;
-        print(playerBounds.InBoundary(cameraViewBox) ? "In boundary" : "Outside of boundary");
-        
-        if (!playerBounds.InBoundary(cameraViewBox))
-        {
-            transform.position -= movementOffset;
-        }
     }
     
     private void ReceiveSideViewMove()
@@ -175,14 +179,6 @@ public class PlayerController : MonoBehaviour
         }
         
         transform.position += movementOffset;
-        
-        (Vector3, Vector3) cameraViewBox = GetCameraViewBoxWorldSpace();
-        print(playerBounds.InBoundary(cameraViewBox) ? "In boundary" : "Outside of boundary");
-        
-        if (!playerBounds.InBoundary(cameraViewBox))
-        {
-            transform.position -= movementOffset;
-        }
     }
     
     // Returns the (posX, posY) of top right corner and (width, height) of the the camera view field box in world space coordinates
@@ -204,7 +200,6 @@ public class PlayerController : MonoBehaviour
 
         Vector3 direction = Quaternion.Euler(angles) * relativePosition;
         Vector3 topLeftCorner = cameraPosition + direction;
-        print(topLeftCorner);
         
         return (topLeftCorner, -2 * direction);
     }
