@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public enum ViewMode
@@ -27,16 +28,15 @@ public class PlayerController : MonoBehaviour
     public ViewMode viewMode { get; private set; } = ViewMode.TopDown;
     public ViewDirection viewDirection { get; private set; } = ViewDirection.North;
     private bool bPerspectiveTransitioning = false;
-    
+
     public float moveSpeed = 1.0f;
     private Rigidbody rb;
 
     [SerializeField]
     private GameObject itemUIObject;
-    
+
     [SerializeField]
     private Inventar inventoryUI;
-    
     private SelectedItemUI itemUI;
     public  List<BaseItem> inventory { get; private set; }
     public const int INVENTORY_LENGHT=4;
@@ -45,17 +45,19 @@ public class PlayerController : MonoBehaviour
     private delegate void ViewModeChanged();
     private ViewModeChanged onViewModeChanged;
 
+    [SerializeField]
+    private PlayerBounds playerBounds;
     public Camera controlledCamera;
 
     // On screen FX
     private RenderTexture texture;
     private Vector3Int renderTextureResolution;
-    
+
     [SerializeField]
     private ComputeShader fadeBlackShader;
     private float fadeBlackTime = 0.0f;
     public float fadeBlackHalfTime = 0.4f;
-    
+
     //[SerializeField]
     //private ComputeShader convolutionShader;
 
@@ -64,7 +66,7 @@ public class PlayerController : MonoBehaviour
     {
         cameraOriginalRotation = controlledCamera.transform.eulerAngles;
         cameraOriginalPosition = controlledCamera.transform.position;
-        
+
         inputController = GetComponent<InputController>();
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
@@ -78,8 +80,21 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        GetCameraViewBoxWorldSpace();
         ReceiveMove();
+        ClampPosition();
+    }
+
+    // Ensures the players view is always within the defined boundaries
+    private void ClampPosition()
+    {
+        (Vector3, Vector3) cameraViewBox = GetCameraViewBoxWorldSpace();
+        cameraViewBox.Item1.y = viewMode == ViewMode.TopDown ? 5 : cameraViewBox.Item1.y;
+
+        if (!playerBounds.InBoundary(cameraViewBox))
+        {
+            Vector3 positionOffset = playerBounds.DistToBoundary(cameraViewBox);
+            transform.position -= positionOffset;
+        }
     }
 
     public void SwitchPerspective()
@@ -106,7 +121,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void ReceiveMove()
+    private void ReceiveMove()
     {
         if (viewMode == ViewMode.TopDown)
         {
@@ -117,109 +132,78 @@ public class PlayerController : MonoBehaviour
             ReceiveSideViewMove();
         }
     }
-    
+
     private void ReceiveTopDownMove()
     {
-        Vector2 value = inputController.movePosition * (moveSpeed * Time.fixedDeltaTime);
+        // Scale Movement by Speed, Time and camera zoom level
+        Vector2 velocity = inputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (controlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
         switch (viewDirection)
         {
             case ViewDirection.North:
-                movementOffset = new Vector3(value.x, 0, value.y);
+                movementOffset = new Vector3(velocity.x, 0, velocity.y);
                 break;
             case ViewDirection.East:
-                movementOffset = new Vector3(value.y, 0, -value.x);
+                movementOffset = new Vector3(velocity.y, 0, -velocity.x);
                 break;
             case ViewDirection.South:
-                movementOffset = new Vector3(-value.x, 0, -value.y);
+                movementOffset = new Vector3(-velocity.x, 0, -velocity.y);
                 break;
             case ViewDirection.West:
-                movementOffset = new Vector3(-value.y, 0, value.x);
+                movementOffset = new Vector3(-velocity.y, 0, velocity.x);
                 break;
         }
-        transform.position += movementOffset * moveSpeed;
+
+        transform.position += movementOffset;
     }
 
     private void ReceiveSideViewMove()
     {
         // Scale Movement by Speed, Time and camera zoom level
-        Vector2 value = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (controlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
+        Vector2 velocity = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (controlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
         switch (viewDirection)
         {
             case ViewDirection.North:
-                movementOffset = new Vector3(value.x, value.y, 0);
+                movementOffset = new Vector3(velocity.x, velocity.y, 0);
                 break;
             case ViewDirection.East:
-                movementOffset = new Vector3(0, value.y, -value.x);
+                movementOffset = new Vector3(0, velocity.y, -velocity.x);
                 break;
             case ViewDirection.South:
-                movementOffset = new Vector3(-value.x, value.y, 0);
+                movementOffset = new Vector3(-velocity.x, velocity.y, 0);
                 break;
             case ViewDirection.West:
-                movementOffset = new Vector3(0, value.y, value.x);
+                movementOffset = new Vector3(0, velocity.y, velocity.x);
                 break;
         }
-        
-        transform.position += movementOffset * moveSpeed;
+
+        transform.position += movementOffset;
     }
 
-    // Returns the (posX, posY) of bottom left corner and (width, height) of the the camera view field box in world space coordinates
+    // Returns the (posX, posY) of top right corner and (width, height) of the the camera view field box in world space coordinates
     // WIP in connection with PlayerBounds
-    public (Vector2, Vector2) GetCameraViewBoxWorldSpace()
+    public (Vector3, Vector3) GetCameraViewBoxWorldSpace()
     {
+
         float screenAspect = (float) Screen.width / (float) Screen.height;
         float camHalfHeight = controlledCamera.orthographicSize;
         float camHalfWidth = screenAspect * camHalfHeight;
-        
-        Vector3 cameraHalfSize = Vector3.zero;
-        Vector3 boxCoordinates = Vector3.zero;
-        
-        if (viewMode == ViewMode.SideView)
-        {
-            cameraHalfSize = new Vector3(camHalfWidth, camHalfHeight, 0);
-            Vector3 cameraPosition = controlledCamera.transform.position;
-            boxCoordinates = cameraPosition - cameraHalfSize;
-            //print(cameraPosition);
-            //print(boxCoordinates);
-            switch (viewDirection)
-            {
-                case ViewDirection.North:
-                    break;
-                case ViewDirection.East:
-                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
-                    break;
-                case ViewDirection.South:
-                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
-                    break;
-                case ViewDirection.West:
-                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.z);
-                    break;
-            }
-        }
-        else
-        {
-            cameraHalfSize = new Vector3(camHalfWidth, 0, -camHalfHeight);
-            boxCoordinates = controlledCamera.transform.position - cameraHalfSize;
-            
-            switch (viewDirection)
-            {
-                case ViewDirection.North:
-                    break;
-                case ViewDirection.East:
-                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
-                    break;
-                case ViewDirection.South:
-                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
-                    break;
-                case ViewDirection.West:
-                    (boxCoordinates.x, boxCoordinates.y) = (boxCoordinates.x, boxCoordinates.y);
-                    break;
-            }
-        }
-        return (boxCoordinates, cameraHalfSize * 2);
+
+        // Negative width moves the point to the top right camera view corner
+        Vector3 cameraPosition = controlledCamera.transform.position;
+        Vector3 cameraHalfSize = new Vector3(-camHalfWidth, camHalfHeight * (int)viewMode, camHalfHeight * (1 - (int)viewMode));
+        Vector3 angles = new Vector3(0, 90 * (int)viewDirection, 0);
+
+        Vector3 boxCoordinates = cameraPosition + cameraHalfSize;
+        Vector3 relativePosition = boxCoordinates - cameraPosition;
+
+        Vector3 direction = Quaternion.Euler(angles) * relativePosition;
+        Vector3 topLeftCorner = cameraPosition + direction;
+
+        return (topLeftCorner, -2 * direction);
     }
-    
+
     public void TurnLeft()
     {
         viewDirection = (ViewDirection)((int)viewDirection - 1);
@@ -227,7 +211,7 @@ public class PlayerController : MonoBehaviour
         viewDirection = (ViewDirection)(positiveDirection % 4);
         UpdateView();
     }
-    
+
     public void TurnRight()
     {
         viewDirection = (ViewDirection)(((int)viewDirection + 1) % 4);
@@ -257,7 +241,7 @@ public class PlayerController : MonoBehaviour
 
     public BaseItem GetActiveItem()
     {
-        return inventory[activeItemID]; 
+        return inventory[activeItemID];
     }
 
     public void AddItemToInventory(BaseItem item)
@@ -273,7 +257,7 @@ public class PlayerController : MonoBehaviour
                 {
                     inventoryUI.OpenInventory();
                 }
-                return; 
+                return;
            }
         }
         inventory[activeItemID].ToggleItemVisibility(true);
@@ -301,23 +285,23 @@ public class PlayerController : MonoBehaviour
     IEnumerator RunBlackFade()
     {
         Camera.onPostRender += OnPostRenderCallback;
-        
+
         renderTextureResolution.x = controlledCamera.pixelWidth;
         renderTextureResolution.y = controlledCamera.pixelHeight;
-        
+
         texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
         texture.enableRandomWrite = true;
         texture.Create();
-        
+
         fadeBlackTime = 0;
         while (fadeBlackTime < fadeBlackHalfTime)
         {
             fadeBlackTime += Time.deltaTime;
-            
+
             // Avoid rendering something that won't be displayed
             yield return new WaitForEndOfFrame();
         }
-        
+
         float rotateValueX = (int)viewMode * 90.0f;
         float rotateValueY = (int)viewDirection * 90.0f;
         float height = ((int) viewMode * 2 - 1) * -15.0f;
@@ -328,18 +312,18 @@ public class PlayerController : MonoBehaviour
             fadeBlackTime -= Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-        
+
         Camera.onPostRender -= OnPostRenderCallback;
         ActivateInput();
     }
-    
+
     private void OnPostRenderCallback(Camera cam)
     {
         DispatchBlackFade(fadeBlackTime / fadeBlackHalfTime * Mathf.PI / 2, cam.activeTexture);
         Graphics.Blit(texture, cam.activeTexture);
         texture.Release();
     }
-    
+
     // TODO Fade black doesn't work after it reaches it's maximum intensity
     void DispatchBlackFade(float time, RenderTexture source)
     {

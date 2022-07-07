@@ -14,16 +14,13 @@ public class SelectedItemUI : MonoBehaviour
         SelectedItemImage.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void SetDisplayedItem(BaseItem item) 
     {
-        SelectedItemImage.sprite = item.itemRepresentation;
-        SelectedItemImage.enabled = true;
+        if (item)
+        {
+            SelectedItemImage.sprite = item.itemRepresentation;
+            SelectedItemImage.enabled = true;
+        }
     }
 
     public void RemoveDisplayedItem ()
