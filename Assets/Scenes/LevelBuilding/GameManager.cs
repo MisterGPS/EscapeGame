@@ -105,6 +105,10 @@ public class GameManager : MonoBehaviour, StateHolder
 
     public void Save()
     {
+        foreach (SavingComponent savingComponent in saveList)
+        {
+            savingComponent.PreSave();
+        }
         JObject json = new JObject();
         foreach (SavingComponent savingComponent in saveList)
         {
@@ -113,6 +117,10 @@ public class GameManager : MonoBehaviour, StateHolder
         }
         Debug.Log(json);
         File.WriteAllText(SaveFile, json.ToString());
+        foreach (SavingComponent savingComponent in saveList)
+        {
+            savingComponent.PostSave();
+        }
     }
 
     public static void ShuffleList<T>(List<T> list)
