@@ -32,6 +32,30 @@ public class SavingComponent : MonoBehaviour
         return json;
     }
 
+    public void PreSave()
+    {
+        foreach (StateHolder holder in stateHolders)
+        {
+            holder.PreSave();
+        }
+    }
+
+    public void PostSave()
+    {
+        foreach (StateHolder holder in stateHolders)
+        {
+            holder.PostSave();
+        }
+    }
+
+    public void PreLoad()
+    {
+        foreach (StateHolder holder in stateHolders)
+        {
+            holder.PreLoad();
+        }
+    }
+
     public void PostLoad()
     {
         foreach (StateHolder holder in stateHolders)

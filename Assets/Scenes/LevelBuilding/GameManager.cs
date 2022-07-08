@@ -68,6 +68,10 @@ public class GameManager : MonoBehaviour, StateHolder
     // Saving and loading generated puzzles
     public void Load()
     {
+        foreach (SavingComponent savingComponent in saveList)
+        {
+            savingComponent.PreLoad();
+        }
         JObject json = JObject.Parse(File.ReadAllText(SaveFile));
         Debug.Log(json);
         foreach (JProperty jProperty in json.Properties())

@@ -18,6 +18,12 @@ public interface StateHolder
         return JsonUtility.ToJson(State);
     }
 
+    public virtual void PreSave() { }
+
+    public virtual void PostSave() { }
+
+    public virtual void PreLoad() { }
+
     public virtual void PostLoad() { }
 }
 
