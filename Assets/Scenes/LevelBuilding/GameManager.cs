@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour, StateHolder
     public static CacheDiscardList LoadCacheDiscardList { get; } = new CacheDiscardList();
 
     public State State => gameState;
-    private GameState gameState;
+    private GameState gameState = new GameState();
 
     private SavingComponent[] saveList;
 
@@ -157,7 +157,7 @@ public class GameManager : MonoBehaviour, StateHolder
      * Saves all the variables that represent the current state of the game and need to persist between sessions.
      */
     [System.Serializable]
-    private struct GameState : State
+    private class GameState : State
     {
         public int[] timeCode;
     }

@@ -50,7 +50,7 @@ public class Lock : BasePuzzleSide, StateHolder
 
     public TextMeshProUGUI text;
 
-    public bool Locked { get; private set; }
+    public bool Locked { get => lockState.locked; private set => lockState.locked = value; }
 
     public State State => lockState;
     private LockState lockState = new LockState();
@@ -95,21 +95,21 @@ public class Lock : BasePuzzleSide, StateHolder
         polygon0 = new(position4R10, positionR0, position0, position10);
 
         buttonActions = new(12);
-        buttonActions.Add(polygon9, () => fillNext(9));
-        buttonActions.Add(polygon8, () => fillNext(8));
-        buttonActions.Add(polygon7, () => fillNext(7));
-        buttonActions.Add(polygon6, () => fillNext(6));
-        buttonActions.Add(polygon5, () => fillNext(5));
-        buttonActions.Add(polygon4, () => fillNext(4));
-        buttonActions.Add(polygon3, () => fillNext(3));
-        buttonActions.Add(polygon2, () => fillNext(2));
-        buttonActions.Add(polygon1, () => fillNext(1));
-        buttonActions.Add(polygon0, () => fillNext(0));
-        buttonActions.Add(polygonE, () => enter());
-        buttonActions.Add(polygonR, () => reset());
+        buttonActions.Add(polygon9, () => FillNext(9));
+        buttonActions.Add(polygon8, () => FillNext(8));
+        buttonActions.Add(polygon7, () => FillNext(7));
+        buttonActions.Add(polygon6, () => FillNext(6));
+        buttonActions.Add(polygon5, () => FillNext(5));
+        buttonActions.Add(polygon4, () => FillNext(4));
+        buttonActions.Add(polygon3, () => FillNext(3));
+        buttonActions.Add(polygon2, () => FillNext(2));
+        buttonActions.Add(polygon1, () => FillNext(1));
+        buttonActions.Add(polygon0, () => FillNext(0));
+        buttonActions.Add(polygonE, () => Enter());
+        buttonActions.Add(polygonR, () => ResetKeypad());
 
         Numbers = new int[4];
-        reset();
+        ResetKeypad();
     }
 
     
@@ -122,6 +122,18 @@ public class Lock : BasePuzzleSide, StateHolder
     int[] GetCode()
     {
         return GameManager.Instance.timeCode;
+    }
+
+    void UpdateDoorSign()
+    {
+        if (Locked)
+        {
+            SetClosed();
+        }
+        else
+        {
+            SetOpen();
+        }
     }
 
     void SetClosed()
@@ -147,13 +159,13 @@ public class Lock : BasePuzzleSide, StateHolder
         }
     }
 
-    void fillNext(int number)
+    void FillNext(int number)
     {
         if (numberCount < 4)
         {
             Numbers[numberCount] = number;
             numberCount++;
-            updateDisplay();
+            UpdateDisplay();
            
 
         }
@@ -163,15 +175,15 @@ public class Lock : BasePuzzleSide, StateHolder
         }
     }
 
-    void reset()
+    void ResetKeypad()
     {
         numberCount = 0;
         Array.Fill(Numbers, -1);
         Locked = true;
-        updateDisplay();
+        UpdateDisplay();
     }
 
-    void enter()
+    void Enter()
     {
         if (numberCount == 4)
         {
@@ -183,7 +195,7 @@ public class Lock : BasePuzzleSide, StateHolder
             }
             else
             {
-                reset();
+                ResetKeypad();
                 playErrorSound();
             }
         }
@@ -193,7 +205,7 @@ public class Lock : BasePuzzleSide, StateHolder
         }
     }
 
-    void updateDisplay()
+    void UpdateDisplay()
     {
         StringBuilder sb = new StringBuilder();
         foreach (int number in Numbers)
@@ -234,11 +246,12 @@ public class Lock : BasePuzzleSide, StateHolder
 
     public void PostLoad()
     {
-        updateDisplay();
+        UpdateDisplay();
+        UpdateDoorSign();
     }
 
     [System.Serializable]
-    private struct LockState : State
+    private class LockState : State
     {
         public bool locked;
         public int[] numbers;
