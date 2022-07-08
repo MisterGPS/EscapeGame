@@ -4,16 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class Screw : MonoBehaviour, IInteractable
+public class Screw : MonoBehaviour, IInteractable, StateHolder
 {
     public delegate void OnInteractedWith();
     public OnInteractedWith onInteracted;
 
-    // How often the screw needs to be clicked until it is considered unscrewed
-    private int currentRotations = 0;
+    public State State => screwState;
+    private ScrewState screwState = new ScrewState();
+
     const int NUM_REQUIRED_ROTATION = 2;
 
     private bool bInteracted { get; set; } = false;
+
+    void Start()
+    {
+        screwState.currentRotations = 0;
+    }
+
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
         if (optItem==null||(ScrewdriverItem)optItem == null)
@@ -29,20 +36,50 @@ public class Screw : MonoBehaviour, IInteractable
     private IEnumerator Unscrew()
     {
         bInteracted = true;
-        while (transform.rotation.eulerAngles.z < 160 * (currentRotations + 1))
+        while (transform.rotation.eulerAngles.z < 160 * (screwState.currentRotations + 1))
         {
             FindObjectOfType<AudioManager>().Play("SchraubenzieherDreh");
             transform.Rotate(new Vector3(0, 0, 240.0f * Time.deltaTime));
-           yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
         }
         bInteracted = false;
-        if (++currentRotations >= NUM_REQUIRED_ROTATION)
+        screwState.currentRotations++;
+        UpdateScrew();
+        yield return null;
+    }
+
+    public bool IsFixed() => screwState.currentRotations < NUM_REQUIRED_ROTATION;
+
+    private void UpdateScrew()
+    {
+        if (IsFixed())
+        {
+            GetComponent<SpriteRenderer>().enabled = true;
+            GetComponent<Collider>().enabled = true;
+            bInteracted = false;
+        }
+        else
         {
             GetComponent<SpriteRenderer>().enabled = false;
-            onInteracted.Invoke();
-            Destroy(this);
+            GetComponent<Collider>().enabled = false;
             bInteracted = true;
         }
-        yield return null;
+        onInteracted.Invoke();
+    }
+
+    public void PostLoad()
+    {
+        StopCoroutine(Unscrew());
+        Vector3 rotation = new Vector3(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y);
+        rotation.z = 160 * screwState.currentRotations;
+        transform.eulerAngles = rotation;
+        UpdateScrew();
+    }
+
+    [System.Serializable]
+    private class ScrewState : State
+    {
+        // How often the screw needs to be clicked until it is considered unscrewed
+        public int currentRotations;
     }
 }

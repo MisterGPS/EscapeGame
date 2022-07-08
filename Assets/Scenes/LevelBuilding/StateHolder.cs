@@ -31,3 +31,8 @@ public interface State
 {
 
 }
+
+public class EmptyState : State
+{
+    public static EmptyState INSTANCE { get; } = new EmptyState();
+}

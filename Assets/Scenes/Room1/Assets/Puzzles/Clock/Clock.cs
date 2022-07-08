@@ -8,13 +8,14 @@ public class Clock : BasePuzzleObject
     // topLeft, topRight, bottomLeft, bottomRight
     [SerializeField]
     private List<Screw> screws;
-    private int fixedScrews = 4;
 
     public Text displayedTime;
 
     [SerializeField]
     private InnerClock innerClock;
     private MeshRenderer innerClockRenderer;
+
+    private bool innerClockVisible = false;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -64,24 +65,32 @@ public class Clock : BasePuzzleObject
         base.SideClicked(face);
     }
 
-    private void OpenBack()
+    private void UpdateBack()
     {
-        if (fixedScrews == 0)
+        if (FixedScrews() == 0 != innerClockVisible)
         {
-            print("Show back!");
-
-            innerClockRenderer.enabled = true;
+            innerClockVisible = !innerClockVisible;
+            innerClockRenderer.enabled = innerClockVisible;
             Vector3 originalPosition = innerClockRenderer.transform.localPosition;
             originalPosition = new Vector3(originalPosition.x, -originalPosition.y, originalPosition.z);
             innerClockRenderer.transform.localPosition = originalPosition;
-            innerClock.bActivated = true;
+            innerClock.bActivated = innerClockVisible;
         }
+    }
+
+    private int FixedScrews()
+    {
+        int c = 0;
+        foreach (Screw screw in screws)
+        {
+            if (screw.IsFixed()) c++;
+        }
+        return c;
     }
 
     void ScrewClicked()
     {
-        fixedScrews -= 1;
-        OpenBack();
+        UpdateBack();
     }
 
     void ActivateScreen()
