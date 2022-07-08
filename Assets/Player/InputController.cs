@@ -89,6 +89,16 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
+    void Input.ICommonNavActions.OnZoom(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            float cameraSize = playerController.controlledCamera.orthographicSize;
+            playerController.controlledCamera.orthographicSize =
+            Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+        }
+    }
+
     //Vector2 zum bewegen der Kamera in First Person
     void Input.IFirstPersonActions.OnLook(InputAction.CallbackContext context)
     {
@@ -116,16 +126,6 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         if (context.performed)
         {
             playerController.TurnRight();
-        }
-    }
-
-    void Input.IFirstPersonActions.OnZoom(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            float cameraSize = playerController.controlledCamera.orthographicSize;
-            playerController.controlledCamera.orthographicSize =
-            Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
         }
     }
 

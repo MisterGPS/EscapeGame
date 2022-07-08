@@ -479,15 +479,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Zoom"",
-                    ""type"": ""Value"",
-                    ""id"": ""d15e3d97-ef0a-4e99-b15a-2fec778f2b9b"",
-                    ""expectedControlType"": ""Axis"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -587,17 +578,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": ""ScaleVector2(x=3,y=3)"",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Point"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""d6df6106-4708-45d3-b328-7adf21254cbb"",
-                    ""path"": ""<Mouse>/scroll/y"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Keyboard&Mouse"",
-                    ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -839,6 +819,15 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""9b4cca8a-4e7b-46ff-8bc8-c4d707c7c3b2"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -861,6 +850,17 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ceffa643-8579-428c-a0f4-347c1b635ea0"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -963,7 +963,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
         m_FirstPerson_Point = m_FirstPerson.FindAction("Point", throwIfNotFound: true);
         m_FirstPerson_SwitchLeft = m_FirstPerson.FindAction("SwitchLeft", throwIfNotFound: true);
         m_FirstPerson_SwitchRight = m_FirstPerson.FindAction("SwitchRight", throwIfNotFound: true);
-        m_FirstPerson_Zoom = m_FirstPerson.FindAction("Zoom", throwIfNotFound: true);
         // Top-Down
         m_TopDown = asset.FindActionMap("Top-Down", throwIfNotFound: true);
         m_TopDown_Move = m_TopDown.FindAction("Move", throwIfNotFound: true);
@@ -971,6 +970,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         m_CommonNav = asset.FindActionMap("CommonNav", throwIfNotFound: true);
         m_CommonNav_ChangePerspective = m_CommonNav.FindAction("Change Perspective", throwIfNotFound: true);
         m_CommonNav_Click = m_CommonNav.FindAction("Click", throwIfNotFound: true);
+        m_CommonNav_Zoom = m_CommonNav.FindAction("Zoom", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_Save = m_Debug.FindAction("Save", throwIfNotFound: true);
@@ -1143,7 +1143,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputAction m_FirstPerson_Point;
     private readonly InputAction m_FirstPerson_SwitchLeft;
     private readonly InputAction m_FirstPerson_SwitchRight;
-    private readonly InputAction m_FirstPerson_Zoom;
     public struct FirstPersonActions
     {
         private @Input m_Wrapper;
@@ -1152,7 +1151,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
         public InputAction @Point => m_Wrapper.m_FirstPerson_Point;
         public InputAction @SwitchLeft => m_Wrapper.m_FirstPerson_SwitchLeft;
         public InputAction @SwitchRight => m_Wrapper.m_FirstPerson_SwitchRight;
-        public InputAction @Zoom => m_Wrapper.m_FirstPerson_Zoom;
         public InputActionMap Get() { return m_Wrapper.m_FirstPerson; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1174,9 +1172,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @SwitchRight.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
                 @SwitchRight.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
                 @SwitchRight.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchRight;
-                @Zoom.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnZoom;
-                @Zoom.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnZoom;
-                @Zoom.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnZoom;
             }
             m_Wrapper.m_FirstPersonActionsCallbackInterface = instance;
             if (instance != null)
@@ -1193,9 +1188,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @SwitchRight.started += instance.OnSwitchRight;
                 @SwitchRight.performed += instance.OnSwitchRight;
                 @SwitchRight.canceled += instance.OnSwitchRight;
-                @Zoom.started += instance.OnZoom;
-                @Zoom.performed += instance.OnZoom;
-                @Zoom.canceled += instance.OnZoom;
             }
         }
     }
@@ -1239,12 +1231,14 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private ICommonNavActions m_CommonNavActionsCallbackInterface;
     private readonly InputAction m_CommonNav_ChangePerspective;
     private readonly InputAction m_CommonNav_Click;
+    private readonly InputAction m_CommonNav_Zoom;
     public struct CommonNavActions
     {
         private @Input m_Wrapper;
         public CommonNavActions(@Input wrapper) { m_Wrapper = wrapper; }
         public InputAction @ChangePerspective => m_Wrapper.m_CommonNav_ChangePerspective;
         public InputAction @Click => m_Wrapper.m_CommonNav_Click;
+        public InputAction @Zoom => m_Wrapper.m_CommonNav_Zoom;
         public InputActionMap Get() { return m_Wrapper.m_CommonNav; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1260,6 +1254,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Click.started -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnClick;
                 @Click.performed -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnClick;
                 @Click.canceled -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnClick;
+                @Zoom.started -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnZoom;
+                @Zoom.performed -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnZoom;
+                @Zoom.canceled -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnZoom;
             }
             m_Wrapper.m_CommonNavActionsCallbackInterface = instance;
             if (instance != null)
@@ -1270,6 +1267,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Click.started += instance.OnClick;
                 @Click.performed += instance.OnClick;
                 @Click.canceled += instance.OnClick;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
             }
         }
     }
@@ -1352,7 +1352,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
         void OnPoint(InputAction.CallbackContext context);
         void OnSwitchLeft(InputAction.CallbackContext context);
         void OnSwitchRight(InputAction.CallbackContext context);
-        void OnZoom(InputAction.CallbackContext context);
     }
     public interface ITopDownActions
     {
@@ -1362,6 +1361,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
     {
         void OnChangePerspective(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {
