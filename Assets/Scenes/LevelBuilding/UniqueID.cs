@@ -25,4 +25,10 @@ public class UniqueID : MonoBehaviour
         IDToGameobject.Add(ID, gameObject);
         GameobjectToID.Add(gameObject, ID);
     }
+
+    void OnDestroy()
+    {
+        IDToGameobject.Remove(ID);
+        GameobjectToID.Remove(gameObject);
+    }
 }
