@@ -133,18 +133,19 @@ public class GameManager : MonoBehaviour, StateHolder
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Room1");
         bMainMenu = false;
-        Save();
+        StartCoroutine(SaveInOneTick());
     }
     
     public void LoadLevel()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Room1");
         bMainMenu = false;
-        Load();
+        StartCoroutine(LoadInOneTick());
     }
 
     public void LoadMainMenu()
     {
+        //Hier direkt saven
         Save();
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         bMainMenu = true;
@@ -165,6 +166,32 @@ public class GameManager : MonoBehaviour, StateHolder
             int r = Random.Range(i, count);
             (list[i], list[r]) = (list[r], list[i]);
         }
+    }
+
+    private int saveTicks = 0;
+    IEnumerator SaveInOneTick()
+    {
+        while (saveTicks < 1)
+        {
+            saveTicks++;
+            yield return new WaitForFixedUpdate();
+        }
+        Save();
+        saveTicks = 0;
+        yield return null;
+    }
+
+    private int loadTicks = 0;
+    IEnumerator LoadInOneTick()
+    {
+        while (loadTicks < 1)
+        {
+            loadTicks++;
+            yield return new WaitForFixedUpdate();
+        }
+        Load();
+        loadTicks = 0;
+        yield return null;
     }
 
     // Time; Clock Puzzle
