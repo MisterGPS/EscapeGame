@@ -42,7 +42,7 @@ public class InnerClock : MonoBehaviour
             // TODO Check with new input system
             Vector3 cursorPosition = GameManager.PlayerController.controlledCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
-            var relativeCursorPosition = cursorPosition - transform.position;
+            var relativeCursorPosition = transform.position - cursorPosition;
 
             // Hardcode cursor offset, due to object rotation
             // relativeCursorPosition.y = relativeCursorPosition.x;

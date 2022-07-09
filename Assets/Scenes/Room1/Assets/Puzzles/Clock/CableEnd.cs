@@ -35,7 +35,7 @@ public class CableEnd : MonoBehaviour, IInteractable
     {
         Vector3 connectionCenter = transform.parent.position;
         Vector3 connectionTargetPosition = connectionTarget.transform.position;
-        Vector3 relativeEndPosition = (connectionTargetPosition - connectionCenter);
+        Vector3 relativeEndPosition = connectionCenter - connectionTargetPosition;
         Vector3 scaling = transform.parent.lossyScale;
         relativeEndPosition = new Vector3(relativeEndPosition.x / scaling.x,
                                           relativeEndPosition.y / scaling.y,
