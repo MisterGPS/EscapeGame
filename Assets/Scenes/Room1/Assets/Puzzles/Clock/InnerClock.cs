@@ -18,6 +18,8 @@ public class InnerClock : MonoBehaviour
     private const int totalCableConnections = 3;
     private bool bSingleCableSelected = false;
 
+    private List<GameObject> cables = new();
+
     // Whether the InnerClock Puzzle is activated
     public bool bActivated { private get; set; } = false;
 
@@ -33,6 +35,7 @@ public class InnerClock : MonoBehaviour
         {
             cableMaterials[i] = new Material(cableMaterials[i]);
         }
+        GameManager.PlayerController.OnViewModeChanged += UpdateCableVisibilty;
     }
 
     void Update()
@@ -56,6 +59,24 @@ public class InnerClock : MonoBehaviour
             connectionVector *= connectionVector.magnitude > MAX_CABLE_LENGTH ? (MAX_CABLE_LENGTH / connectionVector.magnitude) : 1;
 
             DrawConnection(currentCableEnds.Item1, currentCableEnds.Item1.GetConnectionPosition() + connectionVector);
+        }
+    }
+
+    void UpdateCableVisibilty()
+    {
+        if (GameManager.PlayerController.viewMode == ViewMode.SideView)
+        {
+            foreach (GameObject cable in cables)
+            {
+                cable.GetComponent<Renderer>().enabled = true;
+            }
+        }
+        else
+        {
+            foreach (GameObject cable in cables)
+            {
+                cable.GetComponent<Renderer>().enabled = false;
+            }
         }
     }
 
@@ -190,6 +211,7 @@ public class InnerClock : MonoBehaviour
         activeLineRenderer.SetPosition(0, positionA);
         activeLineRenderer.SetPosition(1, positionB);
 
+        if (bFinal) cables.Add(activeCable);
         activeCable = bFinal ? null : activeCable;
         activeLineRenderer.sortingOrder = bFinal ? 1 : 3;
     }

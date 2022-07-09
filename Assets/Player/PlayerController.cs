@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private float originalCameraSize;
     public ViewMode viewMode { get; private set; } = ViewMode.TopDown;
     public ViewDirection viewDirection { get; private set; } = ViewDirection.North;
-    private bool bPerspectiveTransitioning = false;
+    public bool PerspectiveTransitioning { get; private set; } = false;
 
     public float moveSpeed = 1.0f;
     private Rigidbody rb;
@@ -42,8 +42,8 @@ public class PlayerController : MonoBehaviour
     public const int INVENTORY_LENGHT=4;
     public int activeItemID;
 
-    private delegate void ViewModeChanged();
-    private ViewModeChanged onViewModeChanged;
+    public delegate void ViewModeChanged();
+    public ViewModeChanged OnViewModeChanged { get; set; }
 
     [SerializeField]
     private PlayerBounds playerBounds;
@@ -99,18 +99,17 @@ public class PlayerController : MonoBehaviour
 
     public void SwitchPerspective()
     {
-        if (!bPerspectiveTransitioning)
+        if (!PerspectiveTransitioning)
         {
             viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
             UpdateView();
-            onViewModeChanged?.Invoke();
         }
     }
 
     // Called from within the RunBlackFade coroutine
     private void ActivateInput()
     {
-        bPerspectiveTransitioning = false;
+        PerspectiveTransitioning = false;
         if (viewMode == ViewMode.TopDown)
         {
             inputController.EnableTopDownInput();
@@ -234,7 +233,7 @@ public class PlayerController : MonoBehaviour
 
     void UpdateView()
     {
-        bPerspectiveTransitioning = true;
+        PerspectiveTransitioning = true;
         inputController.DisableInput();
         StartCoroutine(RunBlackFade());
     }
@@ -307,6 +306,7 @@ public class PlayerController : MonoBehaviour
         float height = ((int) viewMode * 2 - 1) * -15.0f;
         controlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
         controlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
+        OnViewModeChanged?.Invoke();
         while (fadeBlackTime > 0)
         {
             fadeBlackTime -= Time.deltaTime;
