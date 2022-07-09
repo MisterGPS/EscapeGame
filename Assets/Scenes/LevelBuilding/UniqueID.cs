@@ -18,6 +18,10 @@ public class UniqueID : MonoBehaviour
 
     void Start()
     {
+        if (IDToGameobject.ContainsKey(ID))
+        {
+            Debug.LogError(string.Format("The ID {0} for the gameobject {1} is already taken. This will cause unexpected behavior when saving and loading. Please Generate a new ID.", ID, gameObject));
+        }
         IDToGameobject.Add(ID, gameObject);
         GameobjectToID.Add(gameObject, ID);
     }
