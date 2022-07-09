@@ -185,7 +185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4242294996474251712
 Transform:
   m_ObjectHideFlags: 0
@@ -229,4 +229,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemRepresentation: {fileID: 21300000, guid: 8e38eae92762b854f9d223593e761cb2, type: 3}
-  playerController: {fileID: 0}
+  itemName: Knife

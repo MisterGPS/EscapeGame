@@ -12,9 +12,6 @@ public class Bear : MonoBehaviour, IInteractable
     private Material bearCutWithKnife, bearCutWithoutKnife;
 
     [SerializeField]
-    private PlayerController playerController;
-
-    [SerializeField]
     private MeshRenderer displayingSprite;
     
     private bool bKnifeRemoved = false;
@@ -25,17 +22,19 @@ public class Bear : MonoBehaviour, IInteractable
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem = null)
     {
-        heldItemPrefab.playerController = playerController;
-        playerController.AddItemToInventory(heldItemPrefab);
-        
+        if (!bKnifeRemoved)
+        {
+            GameManager.GetPlayerController().AddItemToInventory(heldItemPrefab);
+            SetKnifeRemoved(true);
+        }
     }
 
     public void SetKnifeRemoved(bool value)
     {
         bKnifeRemoved = value;
         if (bKnifeRemoved)
-            displayingSprite.GetComponent<MeshRenderer>().sharedMaterials[0] = bBearCut ? bearCutWithKnife : bearWithKnife;
+            displayingSprite.GetComponent<MeshRenderer>().material = bBearCut ? bearCutWithoutKnife : bearWithoutKnife;
         else
-            displayingSprite.GetComponent<MeshRenderer>().sharedMaterials[0] = bBearCut ? bearCutWithoutKnife : bearWithoutKnife;
+            displayingSprite.GetComponent<MeshRenderer>().material = bBearCut ? bearCutWithKnife : bearWithKnife;
     }
 }

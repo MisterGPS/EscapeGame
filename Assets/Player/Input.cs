@@ -828,6 +828,15 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""OpenMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""559f0b7e-fb94-4935-ac6b-40b7890a3a09"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -861,6 +870,17 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bbf411cf-55e6-4ec3-b69a-35c86d6ca70c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -971,6 +991,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         m_CommonNav_ChangePerspective = m_CommonNav.FindAction("Change Perspective", throwIfNotFound: true);
         m_CommonNav_Click = m_CommonNav.FindAction("Click", throwIfNotFound: true);
         m_CommonNav_Zoom = m_CommonNav.FindAction("Zoom", throwIfNotFound: true);
+        m_CommonNav_OpenMenu = m_CommonNav.FindAction("OpenMenu", throwIfNotFound: true);
         // Debug
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_Save = m_Debug.FindAction("Save", throwIfNotFound: true);
@@ -1232,6 +1253,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputAction m_CommonNav_ChangePerspective;
     private readonly InputAction m_CommonNav_Click;
     private readonly InputAction m_CommonNav_Zoom;
+    private readonly InputAction m_CommonNav_OpenMenu;
     public struct CommonNavActions
     {
         private @Input m_Wrapper;
@@ -1239,6 +1261,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         public InputAction @ChangePerspective => m_Wrapper.m_CommonNav_ChangePerspective;
         public InputAction @Click => m_Wrapper.m_CommonNav_Click;
         public InputAction @Zoom => m_Wrapper.m_CommonNav_Zoom;
+        public InputAction @OpenMenu => m_Wrapper.m_CommonNav_OpenMenu;
         public InputActionMap Get() { return m_Wrapper.m_CommonNav; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1257,6 +1280,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Zoom.started -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnZoom;
                 @Zoom.performed -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnZoom;
                 @Zoom.canceled -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnZoom;
+                @OpenMenu.started -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnOpenMenu;
+                @OpenMenu.performed -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnOpenMenu;
+                @OpenMenu.canceled -= m_Wrapper.m_CommonNavActionsCallbackInterface.OnOpenMenu;
             }
             m_Wrapper.m_CommonNavActionsCallbackInterface = instance;
             if (instance != null)
@@ -1270,6 +1296,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
+                @OpenMenu.started += instance.OnOpenMenu;
+                @OpenMenu.performed += instance.OnOpenMenu;
+                @OpenMenu.canceled += instance.OnOpenMenu;
             }
         }
     }
@@ -1362,6 +1391,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
         void OnChangePerspective(InputAction.CallbackContext context);
         void OnClick(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
+        void OnOpenMenu(InputAction.CallbackContext context);
     }
     public interface IDebugActions
     {

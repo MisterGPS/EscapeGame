@@ -40,50 +40,51 @@ public class Inventar : MonoBehaviour
         for(int i =0; i<PlayerController.INVENTORY_LENGHT; i++)
         {
             inventoryItems[i].onSelected += OnSelectedItemChanged;
+            inventoryItems[i].SetEnabled(false);
         }
     }
 
     public void ToggleInventory()
     {
        if(!bInventoryOpen)
-        {
-            OpenInventory();
-        }
-        else
-        {
-            CloseInventory();
-        }
+       {
+           OpenInventory();
+       }
+       else
+       {
+           CloseInventory();
+       }
     }
-
-    public void OpenInventory() 
+    
+    public void OpenInventory()
     {
         imageInventar.enabled = true;
         bInventoryOpen = true;
 
         for (int i = 0; i < PlayerController.INVENTORY_LENGHT; i++)
         {
-            inventoryItems[i].itemID=i;
+            inventoryItems[i].itemID = i;
+            inventoryItems[i].SetEnabled(true);
+            
             if (playerController.inventory[i] == null)
             {
-                inventoryItems[i].image.enabled = false;       
+                inventoryItems[i].image.enabled = false;
             }
             else
             {
-                inventoryItems[i].image.enabled = true;
                 inventoryItems[i].image.sprite = playerController.inventory[i].itemRepresentation;
             }
         }
-
     }
 
-     void CloseInventory()
+     public void CloseInventory()
     {
         imageInventar.enabled = false;
         bInventoryOpen = false;
 
         for (int i = 0; i < PlayerController.INVENTORY_LENGHT; i++)
         {
-            inventoryItems[i].image.enabled = false;
+            inventoryItems[i].SetEnabled(false);
         }
     }
 

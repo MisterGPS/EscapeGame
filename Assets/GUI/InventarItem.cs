@@ -18,19 +18,20 @@ public class InventarItem : MonoBehaviour
         button.onClick.AddListener(Selected);
     }
 
+    public void SetEnabled(bool value)
+    {
+        button.enabled = value;
+        image.enabled = value;
+    }
 
     void Selected()
     {
-       if(onSelected!=null)
-        {
-            onSelected(itemID); 
-        }
-       
+        onSelected?.Invoke(itemID);
     }
 
-    public delegate void SelectedFunktion(int ID);
+    public delegate void SelectedDelegate(int ID);
 
-    public SelectedFunktion onSelected;
+    public SelectedDelegate onSelected;
 
     // Update is called once per frame
     void Update()

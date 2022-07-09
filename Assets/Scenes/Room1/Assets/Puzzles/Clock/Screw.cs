@@ -13,6 +13,7 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
     private ScrewState screwState = new ScrewState();
 
     const int NUM_REQUIRED_ROTATION = 2;
+    private const string REQUIRED_ITEM = "Screwdriver";
 
     private bool bInteracted { get; set; } = false;
 
@@ -23,7 +24,7 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
-        if (optItem==null||(ScrewdriverItem)optItem == null)
+        if (optItem == null || optItem.name != REQUIRED_ITEM)
             return;
 
         if (onInteracted != null && !bInteracted)

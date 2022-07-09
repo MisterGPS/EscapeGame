@@ -229,4 +229,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemRepresentation: {fileID: 21300000, guid: ee3064abea34ec940b07c84db385c928, type: 3}
-  playerController: {fileID: 0}
+  itemName: Screwdriver

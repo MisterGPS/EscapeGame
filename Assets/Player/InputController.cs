@@ -9,7 +9,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     private PlayerController playerController;
 
     public const float MIN_CAMERA_ZOOM = 1;
-    public const float MAX_CAMERA_ZOOM = 5;  // Should be smaller than a side of a wall; development only setting (7)
+    public const float MAX_CAMERA_ZOOM = 5;  // Should be set so that the view can always be fully filled with a wall
     
     public Vector2 movePosition { get; private set; }
     public Vector2 viewPosition { get; private set; }
@@ -96,6 +96,14 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
             float cameraSize = playerController.controlledCamera.orthographicSize;
             playerController.controlledCamera.orthographicSize =
             Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+        }
+    }
+
+    public void OnOpenMenu(InputAction.CallbackContext context)
+    {
+        if (!GameManager.Instance.bMainMenu)
+        {
+            GameManager.GetPlayerController().ToggleMenuUI();
         }
     }
 

@@ -6,8 +6,7 @@ public class BaseItem : MonoBehaviour, IInteractable
 {
     // The sprite used to represent this item in UI
     public Sprite itemRepresentation;
-
-    public PlayerController playerController;
+    public string itemName = "BaseItem";
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +22,7 @@ public class BaseItem : MonoBehaviour, IInteractable
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
-        playerController.AddItemToInventory(this);
+        GameManager.GetPlayerController().AddItemToInventory(this);
     }
 
     public void ToggleItemVisibility(bool visibility)

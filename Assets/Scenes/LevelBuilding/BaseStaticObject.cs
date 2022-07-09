@@ -42,7 +42,7 @@ public class BaseStaticObject : MonoBehaviour
 
     protected virtual void Start()
     {
-        playerController = GameManager.PlayerController;
+        playerController = GameManager.GetPlayerController();
     }
 
     // Update is called once per frame

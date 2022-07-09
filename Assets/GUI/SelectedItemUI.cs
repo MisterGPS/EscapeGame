@@ -19,11 +19,11 @@ public class SelectedItemUI : MonoBehaviour
         if (item)
         {
             SelectedItemImage.sprite = item.itemRepresentation;
-            SelectedItemImage.enabled = true;
         }
+        SelectedItemImage.enabled = item != null;
     }
 
-    public void RemoveDisplayedItem ()
+    public void RemoveDisplayedItem()
     {
         SelectedItemImage.enabled = false;
     }

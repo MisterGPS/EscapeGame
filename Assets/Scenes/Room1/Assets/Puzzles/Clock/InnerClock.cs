@@ -35,7 +35,7 @@ public class InnerClock : MonoBehaviour
         {
             cableMaterials[i] = new Material(cableMaterials[i]);
         }
-        GameManager.PlayerController.OnViewModeChanged += UpdateCableVisibilty;
+        GameManager.GetPlayerController().OnViewModeChanged += UpdateCableVisibilty;
     }
 
     void Update()
@@ -43,7 +43,7 @@ public class InnerClock : MonoBehaviour
         if (bSingleCableSelected)
         {
             // TODO Check with new input system
-            Vector3 cursorPosition = GameManager.PlayerController.controlledCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Vector3 cursorPosition = GameManager.GetPlayerController().controlledCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
             var relativeCursorPosition = transform.position - cursorPosition;
 
@@ -64,7 +64,7 @@ public class InnerClock : MonoBehaviour
 
     void UpdateCableVisibilty()
     {
-        if (GameManager.PlayerController.viewMode == ViewMode.SideView)
+        if (GameManager.GetPlayerController().viewMode == ViewMode.SideView)
         {
             foreach (GameObject cable in cables)
             {

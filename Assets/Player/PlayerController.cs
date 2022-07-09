@@ -42,9 +42,12 @@ public class PlayerController : MonoBehaviour
     public const int INVENTORY_LENGHT=4;
     public int activeItemID;
 
+    [SerializeField]
+    private GameMenuUI gameMenuUI;
+
     public delegate void ViewModeChanged();
     public ViewModeChanged OnViewModeChanged { get; set; }
-
+    
     [SerializeField]
     private PlayerBounds playerBounds;
     public Camera controlledCamera;
@@ -64,6 +67,7 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        // controlledCamera = FindObjectOfType<Camera>();
         cameraOriginalRotation = controlledCamera.transform.eulerAngles;
         cameraOriginalPosition = controlledCamera.transform.position;
 
@@ -95,6 +99,28 @@ public class PlayerController : MonoBehaviour
             Vector3 positionOffset = playerBounds.DistToBoundary(cameraViewBox);
             transform.position -= positionOffset;
         }
+    }
+
+    public void ToggleMenuUI()
+    {
+        if (gameMenuUI.bOpen)
+        {
+            CloseMenuUI();
+        }
+        else
+        {
+            OpenMenuUI();
+        }
+    }
+    
+    public void OpenMenuUI()
+    {
+        gameMenuUI.ShowUI();
+    }
+
+    public void CloseMenuUI()
+    {
+        gameMenuUI.HideUI();
     }
 
     public void SwitchPerspective()
@@ -338,26 +364,26 @@ public class PlayerController : MonoBehaviour
     ///////////////////////////////////
     struct Kernel
     {
-        public uint Height, Width;
-        public float[] kernelMatrice;
+        public uint height, width;
+        public float[] kernelMatrix;
 
-        public Kernel(uint Height, uint Width, float[] Matrice)
+        public Kernel(uint height, uint width, float[] matrix)
         {
-            this.Height = Height;
-            this.Width = Width;
-            this.kernelMatrice = Matrice;
-            Debug.Assert(this.kernelMatrice.Length == Height * Width);
+            this.height = height;
+            this.width = width;
+            this.kernelMatrix = matrix;
+            Debug.Assert(this.kernelMatrix.Length == height * width);
         }
     }
 
-    RenderTexture DispatchConvolution(Kernel inKernel, RenderTexture Source)
+    RenderTexture DispatchConvolution(Kernel inKernel, RenderTexture source)
     {
         Kernel[] inBuffer = { inKernel };
-        ComputeBuffer buffer = new ComputeBuffer(1, sizeof(float) * inKernel.kernelMatrice.Length);
+        ComputeBuffer buffer = new ComputeBuffer(1, sizeof(float) * inKernel.kernelMatrix.Length);
         buffer.SetData(inBuffer);
         fadeBlackShader.SetBuffer(0, "kernelValue", buffer);
         fadeBlackShader.SetTexture(0, "Result", texture);
-        fadeBlackShader.SetTexture(0, "Source", Source);
+        fadeBlackShader.SetTexture(0, "Source", source);
         fadeBlackShader.Dispatch(0, 8, 8, 1);
 
         buffer.Dispose();

@@ -1,9 +1,11 @@
+using System;
 using System.Text;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour, StateHolder
 {
@@ -11,8 +13,15 @@ public class GameManager : MonoBehaviour, StateHolder
     public static GameManager Instance { get; private set; }
 
     public static string SaveFile { get; private set; }
-    public static PlayerController PlayerController { get; private set; }
 
+    private static PlayerController PlayerController { get; set; }
+    
+    public static PlayerController GetPlayerController()
+    {
+        PlayerController = PlayerController != null ? PlayerController : FindObjectOfType<PlayerController>();
+        return PlayerController;
+    }
+    
     public static CacheDiscardList LoadCacheDiscardList { get; } = new CacheDiscardList();
 
     public State State => gameState;
@@ -20,31 +29,28 @@ public class GameManager : MonoBehaviour, StateHolder
 
     private SavingComponent[] saveList;
 
+    public bool bMainMenu = false;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(gameObject);
         }
         else
         {
             Instance = this;
-            PreStart();
+            DontDestroyOnLoad(transform.root.gameObject);
         }
     }
 
-    void PreStart()
-    {
-        PlayerController = FindObjectOfType<PlayerController>();
-    }
-    
-    void Start()
+    private void Start()
     {
         Instantiate();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         
     }
@@ -53,7 +59,7 @@ public class GameManager : MonoBehaviour, StateHolder
     {
         SaveFile = Application.persistentDataPath + "\\save.json";
         SetTime();
-        timeStringCache = new(() => {
+        timeStringCache = new LazyCache<string>(() => {
             StringBuilder sb = new();
             sb.Append(timeCode[0]);
             sb.Append(timeCode[1]);
@@ -123,11 +129,38 @@ public class GameManager : MonoBehaviour, StateHolder
         }
     }
 
+    public void NewGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Room1");
+        bMainMenu = false;
+        Save();
+    }
+    
+    public void LoadLevel()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Room1");
+        bMainMenu = false;
+        Load();
+    }
+
+    public void LoadMainMenu()
+    {
+        Save();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        bMainMenu = true;
+        PlayerController = null;
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
     public static void ShuffleList<T>(List<T> list)
     {
         int count = list.Count;
         int last = count - 1;
-        for (var i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             int r = Random.Range(i, count);
             (list[i], list[r]) = (list[r], list[i]);
