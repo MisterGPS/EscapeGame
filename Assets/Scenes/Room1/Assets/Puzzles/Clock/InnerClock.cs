@@ -28,17 +28,17 @@ public class InnerClock : MonoBehaviour
 
     // TODO Cables should be connectable from both sides
 
-    void Start()
+    private void Start()
     {
         GenerateCableConnections();
         for (int i = 0; i < cableMaterials.Count; i++)
         {
             cableMaterials[i] = new Material(cableMaterials[i]);
         }
-        GameManager.GetPlayerController().OnViewModeChanged += UpdateCableVisibilty;
+        GameManager.GetPlayerController().OnViewModeChanged += UpdateCableVisibility;
     }
 
-    void Update()
+    private void Update()
     {
         if (bSingleCableSelected)
         {
@@ -62,7 +62,7 @@ public class InnerClock : MonoBehaviour
         }
     }
 
-    void UpdateCableVisibilty()
+    private void UpdateCableVisibility()
     {
         if (GameManager.GetPlayerController().viewMode == ViewMode.SideView)
         {
@@ -83,7 +83,7 @@ public class InnerClock : MonoBehaviour
     public delegate void OnCablesConnected();
     public OnCablesConnected onCablesConnectedCallback;
 
-    void InitCableEnds()
+    private void InitCableEnds()
     {
         UnityEngine.Assertions.Assert.IsTrue(cableEndsA.Count == cableEndsB.Count);
         
@@ -94,7 +94,7 @@ public class InnerClock : MonoBehaviour
         }
     }
 
-    void GenerateCableConnections()
+    private void GenerateCableConnections()
     {
         InitCableEnds();
 
@@ -111,22 +111,22 @@ public class InnerClock : MonoBehaviour
             generatedColors.Add(Random.ColorHSV(currentHue, currentHue, 1, 1, 1, 1, 1, 1));
         }
 
-        for (int i = 0; i < generatedColors.Count; i++)
+        foreach (Color generatedColor in generatedColors)
         {
             int cableAIndex = Random.Range(0, tempACableEnds.Count);
             int cableBIndex = Random.Range(0, tempBCableEnds.Count);
 
             desiredCableConnections.Add((tempACableEnds[cableAIndex], tempBCableEnds[cableBIndex]));
 
-            tempACableEnds[cableAIndex].SetCableEndColor(generatedColors[i]);
-            tempBCableEnds[cableBIndex].SetCableEndColor(generatedColors[i]);
+            tempACableEnds[cableAIndex].SetCableEndColor(generatedColor);
+            tempBCableEnds[cableBIndex].SetCableEndColor(generatedColor);
 
             tempACableEnds.RemoveAt(cableAIndex);
             tempBCableEnds.RemoveAt(cableBIndex);
         }
     }
 
-    void ReceiveConnectionClicked(CableEnd cableEnd)
+    private void ReceiveConnectionClicked(CableEnd cableEnd)
     {
         FindObjectOfType<AudioManager>().Play("KabelVerbinden");
         if (!bActivated || IsConnected(cableEnd))
@@ -147,7 +147,7 @@ public class InnerClock : MonoBehaviour
         }
     }
 
-    bool IsConnected(CableEnd cableEnd)
+    private bool IsConnected(CableEnd cableEnd)
     {
         foreach ((CableEnd, CableEnd) connectedPair in connectedCableEnds)
         {
@@ -159,7 +159,7 @@ public class InnerClock : MonoBehaviour
         return false;
     }
 
-    bool ConnectCableEnds()
+    private bool ConnectCableEnds()
     {
         if (VerifyConnection())
         {
@@ -174,7 +174,7 @@ public class InnerClock : MonoBehaviour
         return false;
     }
 
-    void RemoveActiveCable()
+    private void RemoveActiveCable()
     {
         currentCableEnds = new();
         bSingleCableSelected = false;
@@ -182,7 +182,7 @@ public class InnerClock : MonoBehaviour
         activeCable = null;
     }
 
-    void DrawConnection(CableEnd originCable, Vector3 positionB, bool bFinal = false)
+    private void DrawConnection(CableEnd originCable, Vector3 positionB, bool bFinal = false)
     {
         LineRenderer activeLineRenderer = null;
 
@@ -216,12 +216,12 @@ public class InnerClock : MonoBehaviour
         activeLineRenderer.sortingOrder = bFinal ? 1 : 3;
     }
 
-    void DrawConnection(CableEnd originCable, CableEnd targetCable, bool bFinal = false)
+    private void DrawConnection(CableEnd originCable, CableEnd targetCable, bool bFinal = false)
     {
         DrawConnection(originCable, targetCable.GetConnectionPosition(), bFinal);
     }
 
-    bool VerifyConnection((CableEnd, CableEnd) connection)
+    private bool VerifyConnection((CableEnd, CableEnd) connection)
     {
         UnityEngine.Assertions.Assert.IsTrue(connectedCableEnds.Count <= desiredCableConnections.Count);
 
@@ -236,10 +236,9 @@ public class InnerClock : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < desiredCableConnections.Count; i++)
+        foreach ((CableEnd, CableEnd) targetConnection in desiredCableConnections)
         {
-            if (desiredCableConnections[i] == connection ||
-                desiredCableConnections[i] == (connection.Item2, connection.Item1))
+            if (targetConnection == connection || targetConnection == (connection.Item2, connection.Item1))
             {
                 print("Found valid connection");
                 return true;
@@ -249,12 +248,12 @@ public class InnerClock : MonoBehaviour
         return false;
     }
 
-    bool VerifyConnection()
+    private bool VerifyConnection()
     {
         return VerifyConnection(currentCableEnds);
     }
 
-    void VerifyAllCableConnections()
+    private void VerifyAllCableConnections()
     {
         if (connectedCableEnds.Count == totalCableConnections)
         {
