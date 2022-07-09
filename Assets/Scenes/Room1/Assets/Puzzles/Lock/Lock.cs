@@ -58,6 +58,9 @@ public class Lock : BasePuzzleSide, StateHolder
     public Text open;
     public Text closed;
 
+    [SerializeField]
+    private Door targetDoor;
+
     void Awake()
     {
         position9 = new(2.37F, -0.77F);
@@ -148,6 +151,7 @@ public class Lock : BasePuzzleSide, StateHolder
         closed.enabled = false;
         FindObjectOfType<AudioManager>().Stop("UhrTick");
         FindObjectOfType<AudioManager>().Play("DoorOpen");
+        targetDoor.OpenDoor();
     }
     
     // Update is called once per frame
@@ -166,8 +170,6 @@ public class Lock : BasePuzzleSide, StateHolder
             Numbers[numberCount] = number;
             numberCount++;
             UpdateDisplay();
-           
-
         }
         else
         {
@@ -225,7 +227,6 @@ public class Lock : BasePuzzleSide, StateHolder
 
     void playErrorSound()
     {
-
         FindObjectOfType<AudioManager>().Play("Error");
     }
 
