@@ -171,7 +171,6 @@ public class GameManager : MonoBehaviour, StateHolder
     public int[] timeCode { get => gameState.timeCode; private set => gameState.timeCode = value; }
     public string timeString { get => timeStringCache.Value; }
     private LazyCache<string> timeStringCache;
-    public bool bClockWiresSolved { get; set; }
     private void SetTime()
     {
         int totalMinutes = Random.Range(0, 1440);

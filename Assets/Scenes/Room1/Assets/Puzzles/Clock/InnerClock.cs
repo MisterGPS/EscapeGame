@@ -258,7 +258,6 @@ public class InnerClock : MonoBehaviour
     {
         if (connectedCableEnds.Count == totalCableConnections)
         {
-            GameManager.Instance.bClockWiresSolved = true;
             onCablesConnectedCallback?.Invoke();
         }
     }
