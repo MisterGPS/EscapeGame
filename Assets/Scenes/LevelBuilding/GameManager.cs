@@ -15,13 +15,20 @@ public class GameManager : MonoBehaviour, StateHolder
     public static string SaveFile { get; private set; }
 
     private static PlayerController PlayerController { get; set; }
-    
     public static PlayerController GetPlayerController()
     {
         PlayerController = PlayerController != null ? PlayerController : FindObjectOfType<PlayerController>();
         return PlayerController;
     }
     
+    private static AudioManager AudioManager { get; set; }
+
+    public static AudioManager GetAudioManager()
+    {
+        AudioManager = AudioManager != null ? AudioManager : FindObjectOfType<AudioManager>();
+        return AudioManager;
+    }
+
     public static CacheDiscardList LoadCacheDiscardList { get; } = new CacheDiscardList();
 
     public State State => gameState;

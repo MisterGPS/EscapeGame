@@ -96,6 +96,6 @@ public class Clock : BasePuzzleObject
     void ActivateScreen()
     {
         displayedTime.text = GameManager.Instance.timeString;
-        FindObjectOfType<AudioManager>().Play("UhrTick");
+        GameManager.GetAudioManager().Play("UhrTick");
     }
 }

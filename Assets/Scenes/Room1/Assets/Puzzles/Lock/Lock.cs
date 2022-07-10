@@ -149,8 +149,8 @@ public class Lock : BasePuzzleSide, StateHolder
     {
         open.enabled = true;
         closed.enabled = false;
-        FindObjectOfType<AudioManager>().Stop("UhrTick");
-        FindObjectOfType<AudioManager>().Play("DoorOpen");
+        GameManager.GetAudioManager().Stop("UhrTick");
+        GameManager.GetAudioManager().Play("DoorOpen");
         targetDoor.OpenDoor();
     }
     
@@ -219,7 +219,7 @@ public class Lock : BasePuzzleSide, StateHolder
             else
             {
                 sb.Append(number);
-                FindObjectOfType<AudioManager>().Play("Tastenfeldsound");
+                GameManager.GetAudioManager().Play("Tastenfeldsound");
             }
         }
         text.text = sb.ToString();
@@ -227,7 +227,7 @@ public class Lock : BasePuzzleSide, StateHolder
 
     void playErrorSound()
     {
-        FindObjectOfType<AudioManager>().Play("Error");
+        GameManager.GetAudioManager().Play("Error");
     }
 
     public override void OnInteract(RaycastHit raycastHit, BaseItem optItem)

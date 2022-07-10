@@ -128,7 +128,7 @@ public class InnerClock : MonoBehaviour
 
     private void ReceiveConnectionClicked(CableEnd cableEnd)
     {
-        FindObjectOfType<AudioManager>().Play("KabelVerbinden");
+        GameManager.GetAudioManager().Play("KabelVerbinden");
         if (!bActivated || IsConnected(cableEnd))
             return;
 
