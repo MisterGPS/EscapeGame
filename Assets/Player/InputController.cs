@@ -82,7 +82,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         if (context.performed)
         {
-            GameManager.GetPlayerController().InteractWithObject();
+            GameManager.GetPlayerController().Interact();
         }
     }
 

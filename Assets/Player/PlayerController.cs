@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
     private float fadeBlackTime = 0.0f;
     public float fadeBlackHalfTime = 0.4f;
 
+    private bool shouldInteract;
+
     //[SerializeField]
     //private ComputeShader convolutionShader;
 
@@ -86,6 +88,11 @@ public class PlayerController : MonoBehaviour
     {
         ReceiveMove();
         ClampPosition();
+    }
+
+    private void Update()
+    {
+        if (shouldInteract) InteractWithObject();
     }
 
     // Ensures the players view is always within the defined boundaries
@@ -243,6 +250,11 @@ public class PlayerController : MonoBehaviour
         UpdateView();
     }
 
+    public void Interact()
+    {
+        shouldInteract = true;
+    }
+
     public void InteractWithObject()
     {
         if (!EventSystem.current.IsPointerOverGameObject())
@@ -258,6 +270,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        shouldInteract = false;
     }
 
     void UpdateView()
