@@ -39,7 +39,6 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
         bInteracted = true;
         while (transform.rotation.eulerAngles.z < 160 * (screwState.currentRotations + 1))
         {
-            FindObjectOfType<AudioManager>().Play("SchraubenzieherDreh");
             transform.Rotate(new Vector3(0, 0, 240.0f * Time.deltaTime));
             yield return new WaitForFixedUpdate();
         }
@@ -64,6 +63,7 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<Collider>().enabled = false;
             bInteracted = true;
+            GameManager.GetAudioManager().Play("SchraubenzieherDreh");
         }
         onInteracted.Invoke();
     }
