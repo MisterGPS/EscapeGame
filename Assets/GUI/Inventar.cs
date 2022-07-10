@@ -24,7 +24,7 @@ public class Inventar : MonoBehaviour
 
     private void Awake()
     {
-        for (int i = 0; i < PlayerController.INVENTORY_LENGHT; i++)
+        for (int i = 0; i < PlayerController.InventoryLenght; i++)
         {
             inventoryItems[i].image.enabled = false;
         }
@@ -37,7 +37,7 @@ public class Inventar : MonoBehaviour
         imageInventar.enabled = false;
         mainInventoryButton.onClick.AddListener(ToggleInventory);
 
-        for(int i =0; i<PlayerController.INVENTORY_LENGHT; i++)
+        for(int i =0; i<PlayerController.InventoryLenght; i++)
         {
             inventoryItems[i].onSelected += OnSelectedItemChanged;
             inventoryItems[i].SetEnabled(false);
@@ -61,18 +61,18 @@ public class Inventar : MonoBehaviour
         imageInventar.enabled = true;
         bInventoryOpen = true;
 
-        for (int i = 0; i < PlayerController.INVENTORY_LENGHT; i++)
+        for (int i = 0; i < PlayerController.InventoryLenght; i++)
         {
             inventoryItems[i].itemID = i;
             inventoryItems[i].SetEnabled(true);
             
-            if (playerController.inventory[i] == null)
+            if (playerController.Inventory[i] == null)
             {
                 inventoryItems[i].image.enabled = false;
             }
             else
             {
-                inventoryItems[i].image.sprite = playerController.inventory[i].itemRepresentation;
+                inventoryItems[i].image.sprite = playerController.Inventory[i].itemRepresentation;
             }
         }
     }
@@ -82,7 +82,7 @@ public class Inventar : MonoBehaviour
         imageInventar.enabled = false;
         bInventoryOpen = false;
 
-        for (int i = 0; i < PlayerController.INVENTORY_LENGHT; i++)
+        for (int i = 0; i < PlayerController.InventoryLenght; i++)
         {
             inventoryItems[i].SetEnabled(false);
         }

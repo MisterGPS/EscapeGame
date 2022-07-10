@@ -64,7 +64,7 @@ public class InnerClock : MonoBehaviour
 
     private void UpdateCableVisibility()
     {
-        if (GameManager.GetPlayerController().viewMode == ViewMode.SideView)
+        if (GameManager.GetPlayerController().ViewMode == ViewMode.SideView)
         {
             foreach (GameObject cable in cables)
             {

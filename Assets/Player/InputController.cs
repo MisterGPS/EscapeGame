@@ -35,7 +35,7 @@ public class InputController : MonoBehaviour, Input.IAlwaysActiveActions, Input.
 
         input.AlwaysActive.Enable();
         input.CommonNav.Enable();
-        if (GameManager.GetPlayerController().viewMode == ViewMode.TopDown)
+        if (GameManager.GetPlayerController().ViewMode == ViewMode.TopDown)
         {
             EnableTopDownInput();
         }

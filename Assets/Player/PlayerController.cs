@@ -24,8 +24,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 cameraOriginalRotation;
     private Vector3 cameraOriginalPosition;
     private float originalCameraSize;
-    public ViewMode viewMode { get; private set; } = ViewMode.TopDown;
-    public ViewDirection viewDirection { get; private set; } = ViewDirection.North;
+    public ViewMode ViewMode { get; private set; } = ViewMode.TopDown;
+    public ViewDirection ViewDirection { get; private set; } = ViewDirection.North;
     public bool PerspectiveTransitioning { get; private set; } = false;
 
     public float moveSpeed = 1.0f;
@@ -37,8 +37,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private Inventar inventoryUI;
     private SelectedItemUI itemUI;
-    public  List<BaseItem> inventory { get; private set; }
-    public const int INVENTORY_LENGHT=4;
+    public List<BaseItem> Inventory { get; private set; }
+    public const int InventoryLenght = 4;
     public int activeItemID;
 
     [SerializeField]
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private ComputeShader fadeBlackShader;
     private float fadeBlackTime = 0.0f;
-    public float fadeBlackHalfTime = 0.4f;
+    public float fadeBlackDuration = 0.5f;
 
     private bool shouldInteract;
 
@@ -74,10 +74,10 @@ public class PlayerController : MonoBehaviour
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
 
-        inventory = new List<BaseItem> ();
-        for (int i = 0; i < INVENTORY_LENGHT; i++)
+        Inventory = new List<BaseItem> ();
+        for (int i = 0; i < InventoryLenght; i++)
         {
-            inventory.Add(null);
+            Inventory.Add(null);
         }
     }
 
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
     private void ClampPosition()
     {
         (Vector3, Vector3) cameraViewBox = GetCameraViewBoxWorldSpace();
-        cameraViewBox.Item1.y = viewMode == ViewMode.TopDown ? 5 : cameraViewBox.Item1.y;
+        cameraViewBox.Item1.y = ViewMode == ViewMode.TopDown ? 5 : cameraViewBox.Item1.y;
 
         if (!playerBounds.InBoundary(cameraViewBox))
         {
@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!PerspectiveTransitioning)
         {
-            viewMode = viewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
+            ViewMode = ViewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
             UpdateView();
         }
     }
@@ -140,7 +140,7 @@ public class PlayerController : MonoBehaviour
     public void ActivateInput()
     {
         PerspectiveTransitioning = false;
-        if (viewMode == ViewMode.TopDown)
+        if (ViewMode == ViewMode.TopDown)
         {
             GameManager.InputController.EnableTopDownInput();
         }
@@ -152,7 +152,7 @@ public class PlayerController : MonoBehaviour
 
     private void ReceiveMove()
     {
-        if (viewMode == ViewMode.TopDown)
+        if (ViewMode == ViewMode.TopDown)
         {
             ReceiveTopDownMove();
         }
@@ -167,7 +167,7 @@ public class PlayerController : MonoBehaviour
         // Scale Movement by Speed, Time and camera zoom level
         Vector2 velocity = GameManager.InputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
-        switch (viewDirection)
+        switch (ViewDirection)
         {
             case ViewDirection.North:
                 movementOffset = new Vector3(velocity.x, 0, velocity.y);
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
         // Scale Movement by Speed, Time and camera zoom level
         Vector2 velocity = GameManager.InputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
-        switch (viewDirection)
+        switch (ViewDirection)
         {
             case ViewDirection.North:
                 movementOffset = new Vector3(velocity.x, velocity.y, 0);
@@ -221,8 +221,8 @@ public class PlayerController : MonoBehaviour
 
         // Negative width moves the point to the top right camera view corner
         Vector3 cameraPosition = ControlledCamera.transform.position;
-        Vector3 cameraHalfSize = new Vector3(-camHalfWidth, camHalfHeight * (int)viewMode, camHalfHeight * (1 - (int)viewMode));
-        Vector3 angles = new Vector3(0, 90 * (int)viewDirection, 0);
+        Vector3 cameraHalfSize = new Vector3(-camHalfWidth, camHalfHeight * (int)ViewMode, camHalfHeight * (1 - (int)ViewMode));
+        Vector3 angles = new Vector3(0, 90 * (int)ViewDirection, 0);
 
         Vector3 boxCoordinates = cameraPosition + cameraHalfSize;
         Vector3 relativePosition = boxCoordinates - cameraPosition;
@@ -235,15 +235,15 @@ public class PlayerController : MonoBehaviour
 
     public void TurnLeft()
     {
-        viewDirection = (ViewDirection)((int)viewDirection - 1);
-        int positiveDirection = viewDirection < 0 ? 4 + (int)viewDirection : (int)viewDirection;
-        viewDirection = (ViewDirection)(positiveDirection % 4);
+        ViewDirection = (ViewDirection)((int)ViewDirection - 1);
+        int positiveDirection = ViewDirection < 0 ? 4 + (int)ViewDirection : (int)ViewDirection;
+        ViewDirection = (ViewDirection)(positiveDirection % 4);
         UpdateView();
     }
 
     public void TurnRight()
     {
-        viewDirection = (ViewDirection)(((int)viewDirection + 1) % 4);
+        ViewDirection = (ViewDirection)(((int)ViewDirection + 1) % 4);
         UpdateView();
     }
 
@@ -263,7 +263,7 @@ public class PlayerController : MonoBehaviour
                 IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
                 foreach (IInteractable interactable in interactables)
                 {
-                    interactable.OnInteract(hit, inventory[activeItemID]);
+                    interactable.OnInteract(hit, Inventory[activeItemID]);
                 }
             }
         }
@@ -279,16 +279,16 @@ public class PlayerController : MonoBehaviour
 
     public BaseItem GetActiveItem()
     {
-        return inventory[activeItemID];
+        return Inventory[activeItemID];
     }
 
     public void AddItemToInventory(BaseItem item)
     {
-        for(int i=0; i<INVENTORY_LENGHT; i++)
+        for(int i=0; i<InventoryLenght; i++)
         {
-           if (inventory[i] == null)
+           if (Inventory[i] == null)
            {
-                inventory[i] = item;
+                Inventory[i] = item;
                 item.ToggleItemVisibility(false);
                 itemUI.SetDisplayedItem(item);
                 if (inventoryUI.bInventoryOpen)
@@ -298,8 +298,8 @@ public class PlayerController : MonoBehaviour
                 return;
            }
         }
-        inventory[activeItemID].ToggleItemVisibility(true);
-        inventory[activeItemID] = item;
+        Inventory[activeItemID].ToggleItemVisibility(true);
+        Inventory[activeItemID] = item;
         item.ToggleItemVisibility(false);
         itemUI.SetDisplayedItem(item);
         if (inventoryUI.bInventoryOpen)
@@ -312,8 +312,8 @@ public class PlayerController : MonoBehaviour
     public void RemoveItemFromInventory(BaseItem item)
     {
         Debug.Log("removed item from inventory");
-        inventory[activeItemID].ToggleItemVisibility(true);
-        inventory[activeItemID] = null;
+        Inventory[activeItemID].ToggleItemVisibility(true);
+        Inventory[activeItemID] = null;
         itemUI.RemoveDisplayedItem();
     }
 
@@ -332,7 +332,7 @@ public class PlayerController : MonoBehaviour
         texture.Create();
 
         fadeBlackTime = 0;
-        while (fadeBlackTime < fadeBlackHalfTime)
+        while (fadeBlackTime < fadeBlackDuration / 2.0f)
         {
             fadeBlackTime += Time.deltaTime;
 
@@ -340,9 +340,9 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        float rotateValueX = (int)viewMode * 90.0f;
-        float rotateValueY = (int)viewDirection * 90.0f;
-        float height = ((int) viewMode * 2 - 1) * -15.0f;
+        float rotateValueX = (int)ViewMode * 90.0f;
+        float rotateValueY = (int)ViewDirection * 90.0f;
+        float height = ((int) ViewMode * 2 - 1) * -15.0f;
         ControlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
         ControlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
         OnViewModeChanged?.Invoke();
@@ -358,7 +358,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnPostRenderCallback(Camera cam)
     {
-        DispatchBlackFade(fadeBlackTime / fadeBlackHalfTime * Mathf.PI / 2, cam.activeTexture);
+        DispatchBlackFade(fadeBlackTime / (fadeBlackDuration / 1.0f), cam.activeTexture);
         Graphics.Blit(texture, cam.activeTexture);
         texture.Release();
     }
