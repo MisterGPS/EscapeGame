@@ -6,24 +6,22 @@ using UnityEngine.UIElements;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-public class PuzzlePiece : MonoBehaviour
+public class PuzzlePiece : MonoBehaviour, IInteractable
 {
-    [SerializeField]
-    private Material puzzleMaterial;
+    public Material PuzzleMaterial { get; set; }
+    public Vector2Int Position { get; set; } = new Vector2Int(0, 0);
 
-    [SerializeField]
-    private Vector2Int pos = new Vector2Int(0, 0);
-
-    // Start is called before the first frame update
-    void Start()
+    public void Instantiate(Vector2Int numPieces, Vector2 size)
     {
-        GetComponent<MeshFilter>().mesh = CreatePuzzlePlane(pos, new Vector2Int(2, 2), new Vector2(10, 10));
-        GetComponent<MeshRenderer>().sharedMaterial = puzzleMaterial;
+        GetComponent<MeshFilter>().mesh = CreatePuzzlePlane(Position, numPieces, size);
+        GetComponent<MeshRenderer>().sharedMaterial = PuzzleMaterial;
+        gameObject.AddComponent<BoxCollider>().size += new Vector3(0, 0, 0.1f);
+        transform.Rotate(new Vector3(1, 0 , 0), -90.0f);
     }
 
     // Can be expanded to allow for n pieces with an arbitrary shape
     // pos describes x and y position of the piece in the puzzle
-    Mesh CreatePuzzlePlane(Vector2Int pos, Vector2Int numRects, Vector2 size)
+    private static Mesh CreatePuzzlePlane(Vector2Int pos, Vector2Int numPieces, Vector2 size)
     {
         Vector3[] vertices = new Vector3[4];
         Vector2[] uvs = new Vector2[4];
@@ -32,8 +30,8 @@ public class PuzzlePiece : MonoBehaviour
         Mesh mesh = new Mesh();
 
         // Create a square mesh
-        float normalizedWidth = 1.0f / numRects.x;
-        float normalizedHeight = 1.0f / numRects.y;
+        float normalizedWidth = 1.0f / numPieces.x;
+        float normalizedHeight = 1.0f / numPieces.y;
         float startX = normalizedWidth * pos.x * size.x - size.x / 2.0f;
         float startY = normalizedHeight * pos.y * size.y - size.y / 2.0f;
 
@@ -43,7 +41,7 @@ public class PuzzlePiece : MonoBehaviour
             for (int j = 0; j < 2; j++, v++)
             {
                 vertices[v] = new Vector3(startX + normalizedWidth * j * size.x, startY + normalizedHeight * i * size.y, 0);
-                uvs[v] = new Vector2(normalizedWidth * (j + pos.x),  1 - (1 - normalizedHeight) * (i + pos.y));
+                uvs[v] = new Vector2(normalizedWidth * (j + pos.x),  1 - normalizedHeight * (i + pos.y));
             }
         }
 
@@ -63,10 +61,9 @@ public class PuzzlePiece : MonoBehaviour
 
         return mesh;
     }
-    
-    // Update is called once per frame
-    void Update()
+
+    public void OnInteract(RaycastHit raycastHit, BaseItem optItem = null)
     {
-        
+        throw new NotImplementedException();
     }
 }

@@ -20,6 +20,7 @@ public class InventarItem : MonoBehaviour
 
     public void SetEnabled(bool value)
     {
+        gameObject.SetActive(value);
         button.enabled = value;
         image.enabled = value;
     }
@@ -32,10 +33,4 @@ public class InventarItem : MonoBehaviour
     public delegate void SelectedDelegate(int ID);
 
     public SelectedDelegate onSelected;
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
