@@ -5,18 +5,16 @@ using System.Numerics;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
-[RequireComponent(typeof(BoxCollider))]
 public class PlayerBounds : MonoBehaviour
 {
-    private BoxCollider boxCollider;
-    private Collider boundsCollider;
+    [SerializeField]
+    private Vector3 boundaries;
+    
     private Bounds colliderBounds;
 
     private void Start()
     {
-        boundsCollider = GetComponent<Collider>();
-        colliderBounds = boundsCollider.bounds;
-        boundsCollider.enabled = false;
+        colliderBounds.size = boundaries;
     }
     
     public bool InBoundary(Vector3 origin, Vector3 extends)
