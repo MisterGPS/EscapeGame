@@ -189,7 +189,7 @@ public class Lock : BasePuzzleSide, StateHolder
     {
         if (numberCount == 4)
         {
-            if (Numbers.SequenceEqual(GetCode()))
+            if (Numbers.SequenceEqual(GetCode()) && Locked)
             {
                 Locked = false;
                 Debug.Log("unlocked");

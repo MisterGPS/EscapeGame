@@ -12,7 +12,7 @@ public class Puzzle : MonoBehaviour
     [SerializeField]
     private Vector2Int numTiles;
 
-    private Vector2 scale = new Vector2(3, 3);
+    private Vector2 scale = new Vector2(1, 1);
 
     private void Start()
     {
@@ -43,7 +43,7 @@ public class Puzzle : MonoBehaviour
 
     private void DistributeTiles()
     {
-        
+        // for (int i = 0; i < )
     }
 
     private void Solved()

@@ -3,42 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CreepyGuy : MonoBehaviour, IInteractable
-    
-    {
-
-    public SpriteRenderer normal;
-    public SpriteRenderer withpistol;
-    public SpriteRenderer dead;
+{
+    public MeshRenderer normal;
+    public MeshRenderer withPistol;
+    public MeshRenderer dead;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         normal.enabled = true;
-        withpistol.enabled = false;
+        withPistol.enabled = false;
         dead.enabled = false;
-        suicidal();
+        Suicidal();
     }
 
-    void suicidal()
+    private void Suicidal()
     {
         normal.enabled = false;
-        withpistol.enabled = true;
+        withPistol.enabled = true;
     }
 
-    void kill()
+    private void Kill()
     {
-        withpistol.enabled = false;
+        withPistol.enabled = false;
         dead.enabled = true;
-        openCage();
+        OpenCage();
     }
 
-    void openCage()
+    private void OpenCage()
     {
     }
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optIte)
     {
-        kill();
+        Kill();
     }
-
 }

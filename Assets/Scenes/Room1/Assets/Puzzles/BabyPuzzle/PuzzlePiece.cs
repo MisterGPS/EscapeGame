@@ -21,8 +21,9 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
 
     // Can be expanded to allow for n pieces with an arbitrary shape
     // pos describes x and y position of the piece in the puzzle
-    private static Mesh CreatePuzzlePlane(Vector2Int pos, Vector2Int numPieces, Vector2 size)
+    private Mesh CreatePuzzlePlane(Vector2Int pos, Vector2Int numPieces, Vector2 size)
     {
+        size *= transform.localScale;
         Vector3[] vertices = new Vector3[4];
         Vector2[] uvs = new Vector2[4];
         int[] firstTriangle = new int[6];
