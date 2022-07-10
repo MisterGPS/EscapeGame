@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFirstPersonActions, Input.ITopDownActions, Input.IUIActions, Input.IDebugActions
 {
     private Input input;
-    private PlayerController playerController;
 
     public const float MIN_CAMERA_ZOOM = 1;
     public const float MAX_CAMERA_ZOOM = 5;  // Should be set so that the view can always be fully filled with a wall
@@ -19,8 +18,6 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         input = new Input();
 
-        playerController = GetComponent<PlayerController>();
-
         input.CommonNav.SetCallbacks(this);
         input.FirstPerson.SetCallbacks(this);
         input.TopDown.SetCallbacks(this);
@@ -32,7 +29,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
 
         input.CommonNav.Enable();
-        if (playerController.viewMode == ViewMode.TopDown)
+        if (GameManager.GetPlayerController().viewMode == ViewMode.TopDown)
         {
             EnableTopDownInput();
         }
@@ -77,7 +74,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         if (context.performed)
         {
-            playerController.SwitchPerspective();
+            GameManager.GetPlayerController().SwitchPerspective();
         }
     }
 
@@ -85,7 +82,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         if (context.performed)
         {
-            playerController.InteractWithObject();
+            GameManager.GetPlayerController().InteractWithObject();
         }
     }
 
@@ -93,8 +90,8 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         if (context.performed)
         {
-            float cameraSize = playerController.controlledCamera.orthographicSize;
-            playerController.controlledCamera.orthographicSize =
+            float cameraSize = GameManager.GetPlayerController().ControlledCamera.orthographicSize;
+            GameManager.GetPlayerController().ControlledCamera.orthographicSize =
             Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
         }
     }
@@ -124,7 +121,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         if (context.performed)
         {
-            playerController.TurnLeft();
+            GameManager.GetPlayerController().TurnLeft();
         }
     }
 
@@ -133,7 +130,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         if (context.performed)
         {
-            playerController.TurnRight();
+            GameManager.GetPlayerController().TurnRight();
         }
     }
 
