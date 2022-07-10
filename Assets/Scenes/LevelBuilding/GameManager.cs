@@ -176,6 +176,7 @@ public class GameManager : MonoBehaviour, StateHolder
             saveTicks++;
             yield return new WaitForFixedUpdate();
         }
+        saveList = FindObjectsOfType<SavingComponent>();
         Save();
         saveTicks = 0;
         yield return null;
@@ -189,6 +190,7 @@ public class GameManager : MonoBehaviour, StateHolder
             loadTicks++;
             yield return new WaitForFixedUpdate();
         }
+        saveList = FindObjectsOfType<SavingComponent>();
         Load();
         loadTicks = 0;
         yield return null;
