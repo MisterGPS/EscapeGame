@@ -3943,7 +3943,7 @@ GameObject:
   - component: {fileID: 1299026931}
   - component: {fileID: 1299026930}
   - component: {fileID: 1299026932}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: PlayerBounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
