@@ -5,25 +5,29 @@ using System.Numerics;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
+[RequireComponent(typeof(BoxCollider))]
 public class PlayerBounds : MonoBehaviour
 {
-    [SerializeField]
-    private Vector3 boundaries;
-    
-    private Bounds colliderBounds;
+    private BoxCollider bounds;
+    private Collider boundsCollider;
 
     private void Start()
     {
-        colliderBounds.size = boundaries;
+        boundsCollider = GetComponent<Collider>();
     }
     
     public bool InBoundary(Vector3 origin, Vector3 extends)
     {
         return extends == Vector3.zero ?
-            colliderBounds.Contains(origin) : 
-            colliderBounds.Contains(origin) && colliderBounds.Contains(origin + extends);
+            boundsCollider.bounds.Contains(origin) : 
+            boundsCollider.bounds.Contains(origin) && boundsCollider.bounds.Contains(origin + extends);
     }
 
+    public bool InBoundary(Vector3 origin)
+    {
+        return InBoundary(origin, Vector3.zero);
+    }
+    
     public bool InBoundary((Vector3, Vector3) box)
     {
         return InBoundary(box.Item1, box.Item2);
@@ -43,9 +47,9 @@ public class PlayerBounds : MonoBehaviour
                                value.z - Mathf.Clamp(value.z, min.z, max.z));
         }
 
-        Bounds bounds = colliderBounds;
-        Vector3 minBounds = bounds.min;
-        Vector3 maxBounds = bounds.max;
+        Bounds colliderBounds = boundsCollider.bounds;
+        Vector3 minBounds = colliderBounds.min;
+        Vector3 maxBounds = colliderBounds.max;
         
         Vector3 outDeltaVectorFirst = GetDeltaClampedVector(origin, minBounds, maxBounds);
         Vector3 outDeltaVectorSecond = GetDeltaClampedVector(origin + extends, minBounds, maxBounds);
