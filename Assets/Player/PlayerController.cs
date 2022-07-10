@@ -21,7 +21,6 @@ public enum ViewDirection
 
 public class PlayerController : MonoBehaviour
 {
-    private InputController inputController;
     private Vector3 cameraOriginalRotation;
     private Vector3 cameraOriginalPosition;
     private float originalCameraSize;
@@ -72,8 +71,6 @@ public class PlayerController : MonoBehaviour
         ControlledCamera = GetComponentInChildren<Camera>();
         cameraOriginalRotation = ControlledCamera.transform.eulerAngles;
         cameraOriginalPosition = ControlledCamera.transform.position;
-
-        inputController = GetComponent<InputController>();
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
 
@@ -140,16 +137,16 @@ public class PlayerController : MonoBehaviour
     }
 
     // Called from within the RunBlackFade coroutine
-    private void ActivateInput()
+    public void ActivateInput()
     {
         PerspectiveTransitioning = false;
         if (viewMode == ViewMode.TopDown)
         {
-            inputController.EnableTopDownInput();
+            GameManager.InputController.EnableTopDownInput();
         }
         else
         {
-            inputController.EnableFirstPersonInput();
+            GameManager.InputController.EnableFirstPersonInput();
         }
     }
 
@@ -168,7 +165,7 @@ public class PlayerController : MonoBehaviour
     private void ReceiveTopDownMove()
     {
         // Scale Movement by Speed, Time and camera zoom level
-        Vector2 velocity = inputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
+        Vector2 velocity = GameManager.InputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
         switch (viewDirection)
         {
@@ -192,7 +189,7 @@ public class PlayerController : MonoBehaviour
     private void ReceiveSideViewMove()
     {
         // Scale Movement by Speed, Time and camera zoom level
-        Vector2 velocity = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
+        Vector2 velocity = GameManager.InputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
         switch (viewDirection)
         {
@@ -276,7 +273,7 @@ public class PlayerController : MonoBehaviour
     void UpdateView()
     {
         PerspectiveTransitioning = true;
-        inputController.DisableInput();
+        GameManager.InputController.DisableInput();
         StartCoroutine(RunBlackFade());
     }
 

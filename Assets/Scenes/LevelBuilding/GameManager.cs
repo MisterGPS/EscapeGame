@@ -22,12 +22,13 @@ public class GameManager : MonoBehaviour, StateHolder
     }
     
     private static AudioManager AudioManager { get; set; }
-
     public static AudioManager GetAudioManager()
     {
         AudioManager = AudioManager != null ? AudioManager : FindObjectOfType<AudioManager>();
         return AudioManager;
     }
+
+    public static InputController InputController { get; private set; }
 
     public static CacheDiscardList LoadCacheDiscardList { get; } = new CacheDiscardList();
 
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour, StateHolder
     private void Start()
     {
         Instantiate();
+        InputController = GetComponent<InputController>();
     }
 
     // Update is called once per frame
@@ -157,6 +159,7 @@ public class GameManager : MonoBehaviour, StateHolder
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         bMainMenu = true;
         PlayerController = null;
+        InputController.DisableInput();
     }
 
     public void ExitGame()
@@ -186,6 +189,7 @@ public class GameManager : MonoBehaviour, StateHolder
         saveList = FindObjectsOfType<SavingComponent>();
         Save();
         saveTicks = 0;
+        PlayerController.ActivateInput();
         yield return null;
     }
 
@@ -200,6 +204,7 @@ public class GameManager : MonoBehaviour, StateHolder
         saveList = FindObjectsOfType<SavingComponent>();
         Load();
         loadTicks = 0;
+        PlayerController.ActivateInput();
         yield return null;
     }
 

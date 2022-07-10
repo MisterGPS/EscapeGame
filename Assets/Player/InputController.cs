@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFirstPersonActions, Input.ITopDownActions, Input.IUIActions, Input.IDebugActions
+public class InputController : MonoBehaviour, Input.IAlwaysActiveActions, Input.ICommonNavActions, Input.IFirstPersonActions, Input.ITopDownActions, Input.IDebugActions
 {
     private Input input;
 
@@ -13,6 +13,11 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     public Vector2 movePosition { get; private set; }
     public Vector2 viewPosition { get; private set; }
 
+    public float gamepadCursorSpeed;
+    private Vector2 cursorMoveVector = new();
+    private Vector2 mousePosition = new();
+    private bool isMouseMoving;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,13 +26,14 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         input.CommonNav.SetCallbacks(this);
         input.FirstPerson.SetCallbacks(this);
         input.TopDown.SetCallbacks(this);
-        input.UI.SetCallbacks(this);
+        input.AlwaysActive.SetCallbacks(this);
         if (Debug.isDebugBuild)
         {
             input.Debug.SetCallbacks(this);
             input.Debug.Enable();
         }
 
+        input.AlwaysActive.Enable();
         input.CommonNav.Enable();
         if (GameManager.GetPlayerController().viewMode == ViewMode.TopDown)
         {
@@ -42,7 +48,37 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     // Update is called once per frame
     void Update()
     {
-        
+        if (Mathf.Approximately(0, cursorMoveVector.x) && Mathf.Approximately(0, cursorMoveVector.y))
+        {
+            cursorMoveVector = Vector2.zero;
+            if (isMouseMoving)
+            {
+                Mouse.current.WarpCursorPosition(mousePosition);
+                StopCoroutine(MousePosUpdater());
+            }
+            isMouseMoving = false;
+        }
+        else
+        {
+            if (!isMouseMoving)
+            {
+                isMouseMoving = true;
+                StartCoroutine(MousePosUpdater());
+                mousePosition = Mouse.current.position.ReadValue();
+            }
+            float deltaTime = Time.deltaTime;
+            Vector2 deltaVector = new Vector2(gamepadCursorSpeed * cursorMoveVector.x * deltaTime, gamepadCursorSpeed * cursorMoveVector.y * deltaTime);
+
+            mousePosition = mousePosition + deltaVector;
+
+            Mouse.current.WarpCursorPosition(mousePosition);
+        }
+    }
+
+    IEnumerator MousePosUpdater()
+    {
+        Vector2 currentPos = Mouse.current.position.ReadValue();
+        yield return new WaitForSeconds(1);
     }
 
     public void DisableInput()
@@ -70,6 +106,12 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         input.TopDown.Enable();
     }
 
+    //Vector2 zum bewegen de Zeigers/Maus in First Person
+    void Input.IAlwaysActiveActions.OnPoint(InputAction.CallbackContext context)
+    {
+        cursorMoveVector = context.ReadValue<Vector2>();
+    }
+
     void Input.ICommonNavActions.OnChangePerspective(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -86,13 +128,24 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
         }
     }
 
+    private bool shouldZoom = true;
     void Input.ICommonNavActions.OnZoom(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        float scrollValue = context.ReadValue<float>();
+        Debug.Log(scrollValue);
+        if (!Mathf.Approximately(0, scrollValue))
         {
-            float cameraSize = GameManager.GetPlayerController().ControlledCamera.orthographicSize;
-            GameManager.GetPlayerController().ControlledCamera.orthographicSize =
-            Mathf.Clamp(cameraSize + (Mouse.current.scroll.ReadValue().y > 1 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+            if (shouldZoom)
+            {
+                float cameraSize = GameManager.GetPlayerController().ControlledCamera.orthographicSize;
+                GameManager.GetPlayerController().ControlledCamera.orthographicSize =
+                Mathf.Clamp(cameraSize + (scrollValue > 0 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+                shouldZoom = false;
+            }
+        }
+        else
+        {
+            shouldZoom = true;
         }
     }
 
@@ -108,12 +161,6 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     void Input.IFirstPersonActions.OnLook(InputAction.CallbackContext context)
     {
         viewPosition = context.ReadValue<Vector2>();
-    }
-
-    //Vector2 zum bewegen de Zeigers/Maus in First Person
-    void Input.IFirstPersonActions.OnPoint(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
     }
 
     //temporary?
@@ -139,58 +186,7 @@ public class InputController : MonoBehaviour, Input.ICommonNavActions, Input.IFi
     {
         movePosition = context.ReadValue<Vector2>();
     }
-
-    //Ab hier UI-Zeug f�r sp�ter
-    void Input.IUIActions.OnNavigate(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnSubmit(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnCancel(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnPoint(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnClick(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnScrollWheel(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnMiddleClick(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnRightClick(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnTrackedDevicePosition(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    void Input.IUIActions.OnTrackedDeviceOrientation(InputAction.CallbackContext context)
-    {
-        throw new System.NotImplementedException();
-    }
-
+    
     //Debug Zeug
 
     void Input.IDebugActions.OnSave(InputAction.CallbackContext context)

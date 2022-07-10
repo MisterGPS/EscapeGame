@@ -363,6 +363,17 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""f3d5be34-96de-438f-a052-1db3b8cee400"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""c52c8e0b-8179-41d3-b8a1-d149033bbe86"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
@@ -401,6 +412,17 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""61feeba1-641d-4d28-a57c-d100491f5275"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -454,15 +476,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""Point"",
-                    ""type"": ""Value"",
-                    ""id"": ""5e3298d4-393d-427f-a052-a829ce059d77"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""SwitchLeft"",
                     ""type"": ""Button"",
                     ""id"": ""95ae461a-b79a-4e30-a677-1777c94aeec4"",
@@ -506,6 +519,17 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""131a9ec5-9318-4642-a960-cd8db520da47"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""69994be5-d6cd-4615-844b-69c17fd72635"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
@@ -517,12 +541,12 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7a3168a9-587e-48cb-8916-544f5cb09e6e"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""id"": ""9bf9c250-0914-4afc-88e9-233d3eee76ee"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
                     ""interactions"": """",
-                    ""processors"": ""ScaleVector2(x=3,y=3)"",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Point"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchRight"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -601,7 +625,7 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""cb3ecbe6-1bb8-4ec2-94ff-6e542d0e3b40"",
-                    ""path"": ""<Gamepad>/leftStick"",
+                    ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -663,28 +687,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""5d6dd746-dfb5-49e9-9674-03d06c615be2"",
-                    ""path"": ""<XRController>/{Primary2DAxis}"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""a450a317-b90d-4259-a5cd-01bcfbf18428"",
-                    ""path"": ""<Joystick>/stick"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -743,11 +745,33 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""9c737468-6d87-4e56-8eed-479946c67c40"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Change Perspective"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""ebdc070c-b756-4544-89e3-71c8860e26b8"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Click"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2bdb5e6d-e5d4-43d5-b14d-bc36c80bda08"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
                     ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -764,9 +788,53 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
+                    ""name"": ""Gamepad"",
+                    ""id"": ""b9405241-d4a6-43b3-b1d8-e1056896d0fe"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""ed11d041-85b3-49f3-a250-619c6099a9b8"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""e32f64cf-6330-4ec8-9c2c-b70c3947868a"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": """",
                     ""id"": ""bbf411cf-55e6-4ec3-b69a-35c86d6ca70c"",
                     ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""OpenMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7799aed0-1f0b-428d-8612-1324aa26eb1d"",
+                    ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -823,6 +891,34 @@ public partial class @Input : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""AlwaysActive"",
+            ""id"": ""c321c1c8-3397-48d9-992e-6e421290e36e"",
+            ""actions"": [
+                {
+                    ""name"": ""Point"",
+                    ""type"": ""Value"",
+                    ""id"": ""1606b7f2-116f-4e87-99d5-c82be5406a87"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""233f906e-f883-47ae-85c8-995a3462fbdc"",
+                    ""path"": ""<Gamepad>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Point"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -870,7 +966,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
         // First-Person
         m_FirstPerson = asset.FindActionMap("First-Person", throwIfNotFound: true);
         m_FirstPerson_Look = m_FirstPerson.FindAction("Look", throwIfNotFound: true);
-        m_FirstPerson_Point = m_FirstPerson.FindAction("Point", throwIfNotFound: true);
         m_FirstPerson_SwitchLeft = m_FirstPerson.FindAction("SwitchLeft", throwIfNotFound: true);
         m_FirstPerson_SwitchRight = m_FirstPerson.FindAction("SwitchRight", throwIfNotFound: true);
         // Top-Down
@@ -886,6 +981,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
         m_Debug = asset.FindActionMap("Debug", throwIfNotFound: true);
         m_Debug_Save = m_Debug.FindAction("Save", throwIfNotFound: true);
         m_Debug_Load = m_Debug.FindAction("Load", throwIfNotFound: true);
+        // AlwaysActive
+        m_AlwaysActive = asset.FindActionMap("AlwaysActive", throwIfNotFound: true);
+        m_AlwaysActive_Point = m_AlwaysActive.FindAction("Point", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -1051,7 +1149,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_FirstPerson;
     private IFirstPersonActions m_FirstPersonActionsCallbackInterface;
     private readonly InputAction m_FirstPerson_Look;
-    private readonly InputAction m_FirstPerson_Point;
     private readonly InputAction m_FirstPerson_SwitchLeft;
     private readonly InputAction m_FirstPerson_SwitchRight;
     public struct FirstPersonActions
@@ -1059,7 +1156,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
         private @Input m_Wrapper;
         public FirstPersonActions(@Input wrapper) { m_Wrapper = wrapper; }
         public InputAction @Look => m_Wrapper.m_FirstPerson_Look;
-        public InputAction @Point => m_Wrapper.m_FirstPerson_Point;
         public InputAction @SwitchLeft => m_Wrapper.m_FirstPerson_SwitchLeft;
         public InputAction @SwitchRight => m_Wrapper.m_FirstPerson_SwitchRight;
         public InputActionMap Get() { return m_Wrapper.m_FirstPerson; }
@@ -1074,9 +1170,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Look.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnLook;
-                @Point.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnPoint;
-                @Point.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnPoint;
-                @Point.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnPoint;
                 @SwitchLeft.started -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchLeft;
                 @SwitchLeft.performed -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchLeft;
                 @SwitchLeft.canceled -= m_Wrapper.m_FirstPersonActionsCallbackInterface.OnSwitchLeft;
@@ -1090,9 +1183,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
-                @Point.started += instance.OnPoint;
-                @Point.performed += instance.OnPoint;
-                @Point.canceled += instance.OnPoint;
                 @SwitchLeft.started += instance.OnSwitchLeft;
                 @SwitchLeft.performed += instance.OnSwitchLeft;
                 @SwitchLeft.canceled += instance.OnSwitchLeft;
@@ -1234,6 +1324,39 @@ public partial class @Input : IInputActionCollection2, IDisposable
         }
     }
     public DebugActions @Debug => new DebugActions(this);
+
+    // AlwaysActive
+    private readonly InputActionMap m_AlwaysActive;
+    private IAlwaysActiveActions m_AlwaysActiveActionsCallbackInterface;
+    private readonly InputAction m_AlwaysActive_Point;
+    public struct AlwaysActiveActions
+    {
+        private @Input m_Wrapper;
+        public AlwaysActiveActions(@Input wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Point => m_Wrapper.m_AlwaysActive_Point;
+        public InputActionMap Get() { return m_Wrapper.m_AlwaysActive; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(AlwaysActiveActions set) { return set.Get(); }
+        public void SetCallbacks(IAlwaysActiveActions instance)
+        {
+            if (m_Wrapper.m_AlwaysActiveActionsCallbackInterface != null)
+            {
+                @Point.started -= m_Wrapper.m_AlwaysActiveActionsCallbackInterface.OnPoint;
+                @Point.performed -= m_Wrapper.m_AlwaysActiveActionsCallbackInterface.OnPoint;
+                @Point.canceled -= m_Wrapper.m_AlwaysActiveActionsCallbackInterface.OnPoint;
+            }
+            m_Wrapper.m_AlwaysActiveActionsCallbackInterface = instance;
+            if (instance != null)
+            {
+                @Point.started += instance.OnPoint;
+                @Point.performed += instance.OnPoint;
+                @Point.canceled += instance.OnPoint;
+            }
+        }
+    }
+    public AlwaysActiveActions @AlwaysActive => new AlwaysActiveActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -1268,7 +1391,6 @@ public partial class @Input : IInputActionCollection2, IDisposable
     public interface IFirstPersonActions
     {
         void OnLook(InputAction.CallbackContext context);
-        void OnPoint(InputAction.CallbackContext context);
         void OnSwitchLeft(InputAction.CallbackContext context);
         void OnSwitchRight(InputAction.CallbackContext context);
     }
@@ -1287,5 +1409,9 @@ public partial class @Input : IInputActionCollection2, IDisposable
     {
         void OnSave(InputAction.CallbackContext context);
         void OnLoad(InputAction.CallbackContext context);
+    }
+    public interface IAlwaysActiveActions
+    {
+        void OnPoint(InputAction.CallbackContext context);
     }
 }

@@ -3268,7 +3268,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1024249187}
   - component: {fileID: 1024249188}
-  - component: {fileID: 1024249190}
   m_Layer: 0
   m_Name: Player
   m_TagString: MainCamera
@@ -3312,18 +3311,6 @@ MonoBehaviour:
   playerBounds: {fileID: 1299026930}
   fadeBlackShader: {fileID: 7200000, guid: a9745547ec4e2ac4daff6385688956dc, type: 3}
   fadeBlackHalfTime: 0.4
---- !u!114 &1024249190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1024249184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a4f92af1f75be82429844cfce5e8d816, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1071409007
 GameObject:
   m_ObjectHideFlags: 0
@@ -3719,6 +3706,7 @@ GameObject:
   - component: {fileID: 1213908599}
   - component: {fileID: 1213908602}
   - component: {fileID: 1213908601}
+  - component: {fileID: 1213908603}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3779,6 +3767,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: efeec778-342d-4dc5-9ae0-4f800601f1ce
+--- !u!114 &1213908603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1213908598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4f92af1f75be82429844cfce5e8d816, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gamepadCursorSpeed: 500
 --- !u!1 &1242877275
 GameObject:
   m_ObjectHideFlags: 0
