@@ -27,6 +27,10 @@ public class Bear : MonoBehaviour, IInteractable
             GameManager.GetPlayerController().AddItemToInventory(heldItemPrefab);
             SetKnifeRemoved(true);
         }
+        else if (!bBearCut && GameManager.GetPlayerController().GetActiveItem() == heldItemPrefab)
+        {
+            SetBearCutTrue();
+        }
     }
 
     public void SetKnifeRemoved(bool value)
@@ -36,5 +40,11 @@ public class Bear : MonoBehaviour, IInteractable
             displayingSprite.GetComponent<MeshRenderer>().material = bBearCut ? bearCutWithoutKnife : bearWithoutKnife;
         else
             displayingSprite.GetComponent<MeshRenderer>().material = bBearCut ? bearCutWithKnife : bearWithKnife;
+    }
+
+    public void SetBearCutTrue()
+    {
+         bBearCut = true;
+         displayingSprite.GetComponent<MeshRenderer>().material = bearCutWithoutKnife;
     }
 }
