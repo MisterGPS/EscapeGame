@@ -12,7 +12,9 @@ public class Door : MonoBehaviour
 
     public void OpenDoor()
     {
-        // GetComponent<MeshRenderer>().material = doorOpenMaterial;
+        GetComponent<MeshRenderer>().material = doorOpenMaterial;
         background.SetActive(true);
+        // Adjust shifted image
+        transform.position += new Vector3(-0.03f, 0, 0);
     }
 }

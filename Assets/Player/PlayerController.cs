@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField]
     private PlayerBounds playerBounds;
-    public Camera controlledCamera;
+    public Camera ControlledCamera { get; private set; }
 
     // On screen FX
     private RenderTexture texture;
@@ -61,15 +61,17 @@ public class PlayerController : MonoBehaviour
     private float fadeBlackTime = 0.0f;
     public float fadeBlackHalfTime = 0.4f;
 
+    private bool shouldInteract;
+
     //[SerializeField]
     //private ComputeShader convolutionShader;
 
     // Start is called before the first frame update
     private void Start()
     {
-        // controlledCamera = FindObjectOfType<Camera>();
-        cameraOriginalRotation = controlledCamera.transform.eulerAngles;
-        cameraOriginalPosition = controlledCamera.transform.position;
+        ControlledCamera = GetComponentInChildren<Camera>();
+        cameraOriginalRotation = ControlledCamera.transform.eulerAngles;
+        cameraOriginalPosition = ControlledCamera.transform.position;
 
         inputController = GetComponent<InputController>();
 
@@ -86,6 +88,11 @@ public class PlayerController : MonoBehaviour
     {
         ReceiveMove();
         ClampPosition();
+    }
+
+    private void Update()
+    {
+        if (shouldInteract) InteractWithObject();
     }
 
     // Ensures the players view is always within the defined boundaries
@@ -161,7 +168,7 @@ public class PlayerController : MonoBehaviour
     private void ReceiveTopDownMove()
     {
         // Scale Movement by Speed, Time and camera zoom level
-        Vector2 velocity = inputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (controlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
+        Vector2 velocity = inputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
         switch (viewDirection)
         {
@@ -185,7 +192,7 @@ public class PlayerController : MonoBehaviour
     private void ReceiveSideViewMove()
     {
         // Scale Movement by Speed, Time and camera zoom level
-        Vector2 velocity = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (controlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
+        Vector2 velocity = inputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / InputController.MAX_CAMERA_ZOOM));
         Vector3 movementOffset = Vector3.zero;
         switch (viewDirection)
         {
@@ -212,11 +219,11 @@ public class PlayerController : MonoBehaviour
     {
 
         float screenAspect = (float) Screen.width / (float) Screen.height;
-        float camHalfHeight = controlledCamera.orthographicSize;
+        float camHalfHeight = ControlledCamera.orthographicSize;
         float camHalfWidth = screenAspect * camHalfHeight;
 
         // Negative width moves the point to the top right camera view corner
-        Vector3 cameraPosition = controlledCamera.transform.position;
+        Vector3 cameraPosition = ControlledCamera.transform.position;
         Vector3 cameraHalfSize = new Vector3(-camHalfWidth, camHalfHeight * (int)viewMode, camHalfHeight * (1 - (int)viewMode));
         Vector3 angles = new Vector3(0, 90 * (int)viewDirection, 0);
 
@@ -243,11 +250,16 @@ public class PlayerController : MonoBehaviour
         UpdateView();
     }
 
+    public void Interact()
+    {
+        shouldInteract = true;
+    }
+
     public void InteractWithObject()
     {
         if (!EventSystem.current.IsPointerOverGameObject())
         {
-            Ray ray = controlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            Ray ray = ControlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Debug.Log(hit.collider.gameObject.name);
@@ -258,6 +270,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        shouldInteract = false;
     }
 
     void UpdateView()
@@ -314,8 +327,8 @@ public class PlayerController : MonoBehaviour
     {
         Camera.onPostRender += OnPostRenderCallback;
 
-        renderTextureResolution.x = controlledCamera.pixelWidth;
-        renderTextureResolution.y = controlledCamera.pixelHeight;
+        renderTextureResolution.x = ControlledCamera.pixelWidth;
+        renderTextureResolution.y = ControlledCamera.pixelHeight;
 
         texture = new RenderTexture(renderTextureResolution.x, renderTextureResolution.y, renderTextureResolution.z);
         texture.enableRandomWrite = true;
@@ -333,8 +346,8 @@ public class PlayerController : MonoBehaviour
         float rotateValueX = (int)viewMode * 90.0f;
         float rotateValueY = (int)viewDirection * 90.0f;
         float height = ((int) viewMode * 2 - 1) * -15.0f;
-        controlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
-        controlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
+        ControlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
+        ControlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
         OnViewModeChanged?.Invoke();
         while (fadeBlackTime > 0)
         {

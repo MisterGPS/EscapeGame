@@ -43,7 +43,7 @@ public class InnerClock : MonoBehaviour
         if (bSingleCableSelected)
         {
             // TODO Check with new input system
-            Vector3 cursorPosition = GameManager.GetPlayerController().controlledCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            Vector3 cursorPosition = GameManager.GetPlayerController().ControlledCamera.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
             var relativeCursorPosition = transform.position - cursorPosition;
 
