@@ -3048,7 +3048,6 @@ MonoBehaviour:
   activeItemID: 0
   gameMenuUI: {fileID: 587918453}
   playerBounds: {fileID: 1299026930}
-  controlledCamera: {fileID: 732928608}
   fadeBlackShader: {fileID: 7200000, guid: a9745547ec4e2ac4daff6385688956dc, type: 3}
   fadeBlackHalfTime: 0.4
 --- !u!114 &1024249190
