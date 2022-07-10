@@ -245,14 +245,17 @@ public class PlayerController : MonoBehaviour
 
     public void InteractWithObject()
     {
-        Ray ray = controlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (!EventSystem.current.IsPointerOverGameObject())
         {
-            Debug.Log(hit.collider.gameObject.name);
-            IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
-            foreach (IInteractable interactable in interactables)
+            Ray ray = controlledCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                interactable.OnInteract(hit, inventory[activeItemID]);
+                Debug.Log(hit.collider.gameObject.name);
+                IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
+                foreach (IInteractable interactable in interactables)
+                {
+                    interactable.OnInteract(hit, inventory[activeItemID]);
+                }
             }
         }
     }
