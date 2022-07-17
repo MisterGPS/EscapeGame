@@ -17,7 +17,7 @@ public class Inventar : MonoBehaviour
     [SerializeField]
     private Button mainInventoryButton;
 
-    public bool bInventoryOpen { get; private set; }
+    public bool InventoryOpen { get; private set; }
 
     [SerializeField]
     private SelectedItemUI selectedItemUI;
@@ -46,20 +46,20 @@ public class Inventar : MonoBehaviour
 
     public void ToggleInventory()
     {
-       if(!bInventoryOpen)
+       if(InventoryOpen)
        {
-           OpenInventory();
+           CloseInventory();
        }
        else
        {
-           CloseInventory();
+           OpenInventory();
        }
     }
     
     public void OpenInventory()
     {
         imageInventar.enabled = true;
-        bInventoryOpen = true;
+        InventoryOpen = true;
 
         for (int i = 0; i < PlayerController.InventoryLength; i++)
         {
@@ -80,7 +80,7 @@ public class Inventar : MonoBehaviour
     public void CloseInventory()
     {
         imageInventar.enabled = false;
-        bInventoryOpen = false;
+        InventoryOpen = false;
 
         for (int i = 0; i < PlayerController.InventoryLength; i++)
         {

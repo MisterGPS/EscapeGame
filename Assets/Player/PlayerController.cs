@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour, StateHolder
 
     public delegate void ViewModeChanged();
     public ViewModeChanged OnViewModeChanged { get; set; }
-    
+
     [SerializeField]
     private PlayerBounds playerBounds;
     public Camera ControlledCamera { get; private set; }
@@ -123,7 +123,7 @@ public class PlayerController : MonoBehaviour, StateHolder
             OpenMenuUI();
         }
     }
-    
+
     public void OpenMenuUI()
     {
         gameMenuUI.ShowUI();
@@ -303,7 +303,8 @@ public class PlayerController : MonoBehaviour, StateHolder
                 Inventory[i] = item;
                 item.ToggleItemVisibility(false);
                 itemUI.SetDisplayedItem(item);
-                if (inventoryUI.bInventoryOpen)
+                if (inventoryUI.InventoryOpen)
+                ActiveItemID = i;
                 {
                     inventoryUI.OpenInventory();
                 }
@@ -314,7 +315,7 @@ public class PlayerController : MonoBehaviour, StateHolder
         Inventory[ActiveItemID] = item;
         item.ToggleItemVisibility(false);
         itemUI.SetDisplayedItem(item);
-        if (inventoryUI.bInventoryOpen)
+        if (inventoryUI.InventoryOpen)
         {
             inventoryUI.OpenInventory();
         }
@@ -465,6 +466,6 @@ public class PlayerController : MonoBehaviour, StateHolder
         public Vector3 cameraPosition;
 
         public string[] inventoryItemIDs;
-        public int activeItemID;
+        public int activeItemID = 0;
     }
 }
