@@ -427,6 +427,7 @@ public class PlayerController : MonoBehaviour, StateHolder
         {
             playerState.inventoryItemIDs[i] = Inventory[i]?.GetComponent<UniqueID>().ID;
         }
+        playerState.cameraPosition = ControlledCamera.transform.position;
     }
 
     public void PostLoad()
@@ -452,6 +453,7 @@ public class PlayerController : MonoBehaviour, StateHolder
         UpdateView();
         GameManager.InputController.DisableInput();
         ActivateInput();
+        ControlledCamera.transform.position = playerState.cameraPosition;
     }
 
     [System.Serializable]
@@ -460,6 +462,7 @@ public class PlayerController : MonoBehaviour, StateHolder
         public ViewMode viewMode = ViewMode.TopDown;
         public ViewDirection viewDirection = ViewDirection.North;
         public float zoom = 1;
+        public Vector3 cameraPosition;
 
         public string[] inventoryItemIDs;
         public int activeItemID;
