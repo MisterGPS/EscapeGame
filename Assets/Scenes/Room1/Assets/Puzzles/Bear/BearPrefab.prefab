@@ -109,6 +109,8 @@ GameObject:
   - component: {fileID: 516641166591054287}
   - component: {fileID: 7638350349159146992}
   - component: {fileID: 1059598082389132854}
+  - component: {fileID: 6240799507839823849}
+  - component: {fileID: 8425975997525396286}
   m_Layer: 0
   m_Name: BearPrefab
   m_TagString: Untagged
@@ -148,9 +150,7 @@ MonoBehaviour:
   bearWithoutKnife: {fileID: 2100000, guid: 89b1d862c5c6fb547a66c5ea2b225741, type: 2}
   bearCutWithKnife: {fileID: 2100000, guid: 3421d761918bb3644806a7b996ddaef9, type: 2}
   bearCutWithoutKnife: {fileID: 2100000, guid: 583118bfcff5eeb49874732323366152, type: 2}
-  playerController: {fileID: 0}
   displayingSprite: {fileID: 7131335472870222679}
-  heldItemPrefab: {fileID: 6739615885417492098, guid: eb514035f30bda14d8d15c3d618e0322, type: 3}
 --- !u!65 &1059598082389132854
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -164,3 +164,30 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 3.2892175, y: 5.7097235, z: 0.40438142}
   m_Center: {x: -3.0664198, y: 5.3955016, z: -0.003888443}
+--- !u!114 &6240799507839823849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6532244506490214392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c58458327a6c694980da9c2fff29da4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 233a9394-a151-4f6e-a360-9b01767067ca
+--- !u!114 &8425975997525396286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6532244506490214392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90606faa720fd0f41b6ea84a8b43e8a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemRepresentation: {fileID: 0}
+  itemName: BaseItem

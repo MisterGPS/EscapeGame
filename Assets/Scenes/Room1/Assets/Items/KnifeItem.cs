@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class KnifeItem : BaseItem
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void ToggleItemVisibility(bool visibility)
     {
-        
+        onVisibilityToggled?.Invoke(this, visibility);
     }
 }

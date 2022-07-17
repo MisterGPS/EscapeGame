@@ -1594,6 +1594,14 @@ PrefabInstance:
       propertyPath: playerController
       value: 
       objectReference: {fileID: 1024249188}
+    - target: {fileID: 8425975997525396286, guid: 1f7d5d026e8211949939d95f69cc1aff, type: 3}
+      propertyPath: itemName
+      value: Knife
+      objectReference: {fileID: 0}
+    - target: {fileID: 8425975997525396286, guid: 1f7d5d026e8211949939d95f69cc1aff, type: 3}
+      propertyPath: itemRepresentation
+      value: 
+      objectReference: {fileID: 21300000, guid: 8e38eae92762b854f9d223593e761cb2, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f7d5d026e8211949939d95f69cc1aff, type: 3}
 --- !u!1 &530530272
@@ -3099,6 +3107,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1024249187}
   - component: {fileID: 1024249188}
+  - component: {fileID: 1024249190}
+  - component: {fileID: 1024249189}
   m_Layer: 0
   m_Name: Player
   m_TagString: MainCamera
@@ -3141,7 +3151,32 @@ MonoBehaviour:
   gameMenuUI: {fileID: 587918453}
   playerBounds: {fileID: 1299026930}
   fadeBlackShader: {fileID: 7200000, guid: a9745547ec4e2ac4daff6385688956dc, type: 3}
-  fadeBlackHalfTime: 0.4
+  fadeBlackDuration: 0.5
+--- !u!114 &1024249189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024249184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54bd91e33594a6e4ebbfebf8f5ef49f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1024249190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1024249184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c58458327a6c694980da9c2fff29da4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: e6c91577-8e4f-4015-8aa4-011c1f4fd13e
 --- !u!1 &1071409007
 GameObject:
   m_ObjectHideFlags: 0

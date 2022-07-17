@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,13 +18,14 @@ public enum ViewDirection
     West = 3
 }
 
-public class PlayerController : MonoBehaviour
+[RequireComponent(typeof(SavingComponent))]
+public class PlayerController : MonoBehaviour, StateHolder
 {
     private Vector3 cameraOriginalRotation;
     private Vector3 cameraOriginalPosition;
     private float originalCameraSize;
-    public ViewMode ViewMode { get; private set; } = ViewMode.TopDown;
-    public ViewDirection ViewDirection { get; private set; } = ViewDirection.North;
+    public ViewMode ViewMode { get => playerState.viewMode; private set => playerState.viewMode = value; }
+    public ViewDirection ViewDirection { get => playerState.viewDirection; private set => playerState.viewDirection = value; }
     public bool PerspectiveTransitioning { get; private set; } = false;
 
     public float moveSpeed = 1.0f;
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     public const float MIN_CAMERA_ZOOM = 1;
     public const float MAX_CAMERA_ZOOM = 5;  // Should be set so that the view can always be fully filled with a wall
-    public float Zoom { get; set; }
+    public float Zoom { get => playerState.zoom; set => playerState.zoom = value; }
 
     [SerializeField]
     private GameObject itemUIObject;
@@ -42,8 +42,8 @@ public class PlayerController : MonoBehaviour
     private Inventar inventoryUI;
     private SelectedItemUI itemUI;
     public List<BaseItem> Inventory { get; private set; }
-    public const int InventoryLenght = 4;
-    public int activeItemID;
+    public const int InventoryLength = 4;
+    public int ActiveItemID { get => playerState.activeItemID; set => playerState.activeItemID = value; }
 
     [SerializeField]
     private GameMenuUI gameMenuUI;
@@ -66,6 +66,9 @@ public class PlayerController : MonoBehaviour
 
     private bool shouldInteract;
 
+    public State State => playerState;
+    private PlayerState playerState = new PlayerState();
+
     //[SerializeField]
     //private ComputeShader convolutionShader;
 
@@ -78,8 +81,8 @@ public class PlayerController : MonoBehaviour
 
         itemUI = itemUIObject.GetComponent<SelectedItemUI>();
 
-        Inventory = new List<BaseItem> ();
-        for (int i = 0; i < InventoryLenght; i++)
+        Inventory = new List<BaseItem>();
+        for (int i = 0; i < InventoryLength; i++)
         {
             Inventory.Add(null);
         }
@@ -136,7 +139,7 @@ public class PlayerController : MonoBehaviour
         if (!PerspectiveTransitioning)
         {
             ViewMode = ViewMode == ViewMode.TopDown ? ViewMode.SideView : ViewMode.TopDown;
-            UpdateView();
+            ChangeView();
         }
     }
 
@@ -247,13 +250,13 @@ public class PlayerController : MonoBehaviour
         ViewDirection = (ViewDirection)((int)ViewDirection - 1);
         int positiveDirection = ViewDirection < 0 ? 4 + (int)ViewDirection : (int)ViewDirection;
         ViewDirection = (ViewDirection)(positiveDirection % 4);
-        UpdateView();
+        ChangeView();
     }
 
     public void TurnRight()
     {
         ViewDirection = (ViewDirection)(((int)ViewDirection + 1) % 4);
-        UpdateView();
+        ChangeView();
     }
 
     public void Interact()
@@ -272,14 +275,14 @@ public class PlayerController : MonoBehaviour
                 IInteractable[] interactables = hit.collider.gameObject.GetComponents<IInteractable>();
                 foreach (IInteractable interactable in interactables)
                 {
-                    interactable.OnInteract(hit, Inventory[activeItemID]);
+                    interactable.OnInteract(hit, Inventory[ActiveItemID]);
                 }
             }
         }
         shouldInteract = false;
     }
 
-    void UpdateView()
+    void ChangeView()
     {
         PerspectiveTransitioning = true;
         GameManager.InputController.DisableInput();
@@ -288,12 +291,12 @@ public class PlayerController : MonoBehaviour
 
     public BaseItem GetActiveItem()
     {
-        return Inventory[activeItemID];
+        return Inventory[ActiveItemID];
     }
 
     public void AddItemToInventory(BaseItem item)
     {
-        for(int i=0; i<InventoryLenght; i++)
+        for(int i=0; i<InventoryLength; i++)
         {
            if (Inventory[i] == null)
            {
@@ -307,8 +310,8 @@ public class PlayerController : MonoBehaviour
                 return;
            }
         }
-        Inventory[activeItemID].ToggleItemVisibility(true);
-        Inventory[activeItemID] = item;
+        Inventory[ActiveItemID].ToggleItemVisibility(true);
+        Inventory[ActiveItemID] = item;
         item.ToggleItemVisibility(false);
         itemUI.SetDisplayedItem(item);
         if (inventoryUI.bInventoryOpen)
@@ -321,8 +324,8 @@ public class PlayerController : MonoBehaviour
     public void RemoveItemFromInventory(BaseItem item)
     {
         Debug.Log("removed item from inventory");
-        Inventory[activeItemID].ToggleItemVisibility(true);
-        Inventory[activeItemID] = null;
+        Inventory[ActiveItemID].ToggleItemVisibility(true);
+        Inventory[ActiveItemID] = null;
         itemUI.RemoveDisplayedItem();
     }
 
@@ -349,12 +352,7 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        float rotateValueX = (int)ViewMode * 90.0f;
-        float rotateValueY = (int)ViewDirection * 90.0f;
-        float height = ((int) ViewMode * 2 - 1) * -15.0f;
-        ControlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
-        ControlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
-        OnViewModeChanged?.Invoke();
+        UpdateView();
         while (fadeBlackTime > 0)
         {
             fadeBlackTime -= Time.deltaTime;
@@ -363,6 +361,16 @@ public class PlayerController : MonoBehaviour
 
         Camera.onPostRender -= OnPostRenderCallback;
         ActivateInput();
+    }
+
+    private void UpdateView()
+    {
+        float rotateValueX = (int)ViewMode * 90.0f;
+        float rotateValueY = (int)ViewDirection * 90.0f;
+        float height = ((int)ViewMode * 2 - 1) * -15.0f;
+        ControlledCamera.transform.eulerAngles = new Vector3(cameraOriginalRotation.x - rotateValueX, cameraOriginalRotation.y + rotateValueY, cameraOriginalRotation.z);
+        ControlledCamera.transform.position = new Vector3(cameraOriginalPosition.x, cameraOriginalPosition.y + height, cameraOriginalPosition.z);
+        OnViewModeChanged?.Invoke();
     }
 
     private void OnPostRenderCallback(Camera cam)
@@ -410,5 +418,50 @@ public class PlayerController : MonoBehaviour
 
         buffer.Dispose();
         return texture;
+    }
+
+    public void PreSave()
+    {
+        playerState.inventoryItemIDs = new string[InventoryLength];
+        for (int i = 0; i < InventoryLength; i++)
+        {
+            playerState.inventoryItemIDs[i] = Inventory[i]?.GetComponent<UniqueID>().ID;
+        }
+    }
+
+    public void PostLoad()
+    {
+        List<BaseItem> activeItems = new(FindObjectsOfType<BaseItem>());
+        for (int i = 0; i < InventoryLength; i++)
+        {
+            string id = playerState.inventoryItemIDs[i];
+            if (!id.Equals(""))
+            {
+                BaseItem item = UniqueID.IDToGameobject[id].GetComponent<BaseItem>();
+                activeItems.Remove(item);
+                item.ToggleItemVisibility(false);
+                Inventory[i] = item;
+            }
+        }
+        foreach (BaseItem item in activeItems)
+        {
+            item.ToggleItemVisibility(true);
+        }
+        inventoryUI.CloseInventory();
+        inventoryUI.UpdateSelectedItemImage();
+        UpdateView();
+        GameManager.InputController.DisableInput();
+        ActivateInput();
+    }
+
+    [System.Serializable]
+    private class PlayerState : State
+    {
+        public ViewMode viewMode = ViewMode.TopDown;
+        public ViewDirection viewDirection = ViewDirection.North;
+        public float zoom = 1;
+
+        public string[] inventoryItemIDs;
+        public int activeItemID;
     }
 }

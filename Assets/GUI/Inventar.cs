@@ -24,7 +24,7 @@ public class Inventar : MonoBehaviour
 
     private void Awake()
     {
-        for (int i = 0; i < PlayerController.InventoryLenght; i++)
+        for (int i = 0; i < PlayerController.InventoryLength; i++)
         {
             inventoryItems[i].image.enabled = false;
         }
@@ -37,7 +37,7 @@ public class Inventar : MonoBehaviour
         imageInventar.enabled = false;
         mainInventoryButton.onClick.AddListener(ToggleInventory);
 
-        for(int i =0; i<PlayerController.InventoryLenght; i++)
+        for(int i =0; i<PlayerController.InventoryLength; i++)
         {
             inventoryItems[i].onSelected += OnSelectedItemChanged;
             inventoryItems[i].SetEnabled(false);
@@ -61,7 +61,7 @@ public class Inventar : MonoBehaviour
         imageInventar.enabled = true;
         bInventoryOpen = true;
 
-        for (int i = 0; i < PlayerController.InventoryLenght; i++)
+        for (int i = 0; i < PlayerController.InventoryLength; i++)
         {
             inventoryItems[i].itemID = i;
             inventoryItems[i].SetEnabled(true);
@@ -77,21 +77,26 @@ public class Inventar : MonoBehaviour
         }
     }
 
-     public void CloseInventory()
+    public void CloseInventory()
     {
         imageInventar.enabled = false;
         bInventoryOpen = false;
 
-        for (int i = 0; i < PlayerController.InventoryLenght; i++)
+        for (int i = 0; i < PlayerController.InventoryLength; i++)
         {
             inventoryItems[i].SetEnabled(false);
         }
     }
 
-    void OnSelectedItemChanged (int ID)
+    void OnSelectedItemChanged(int ID)
     {
-        playerController.activeItemID = ID;
+        playerController.ActiveItemID = ID;
 
+        UpdateSelectedItemImage();
+    }
+
+    public void UpdateSelectedItemImage()
+    {
         selectedItemUI.SetDisplayedItem(playerController.GetActiveItem());
     }
 
