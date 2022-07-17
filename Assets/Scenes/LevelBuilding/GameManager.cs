@@ -142,14 +142,14 @@ public class GameManager : MonoBehaviour, StateHolder
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Room1");
         bMainMenu = false;
-        StartCoroutine(SaveInOneTick());
+        StartCoroutine(SaveNextTick());
     }
     
     public void LoadLevel()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Room1");
         bMainMenu = false;
-        StartCoroutine(LoadInOneTick());
+        StartCoroutine(LoadNextTick());
     }
 
     public void LoadMainMenu()
@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour, StateHolder
     }
 
     private int saveTicks = 0;
-    IEnumerator SaveInOneTick()
+    IEnumerator SaveNextTick()
     {
         while (saveTicks < 1)
         {
@@ -194,7 +194,7 @@ public class GameManager : MonoBehaviour, StateHolder
     }
 
     private int loadTicks = 0;
-    IEnumerator LoadInOneTick()
+    IEnumerator LoadNextTick()
     {
         while (loadTicks < 1)
         {
