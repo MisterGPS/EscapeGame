@@ -6,9 +6,6 @@ using UnityEngine.InputSystem;
 public class InputController : MonoBehaviour, Input.IAlwaysActiveActions, Input.ICommonNavActions, Input.IFirstPersonActions, Input.ITopDownActions, Input.IDebugActions
 {
     private Input input;
-
-    public const float MIN_CAMERA_ZOOM = 1;
-    public const float MAX_CAMERA_ZOOM = 5;  // Should be set so that the view can always be fully filled with a wall
     
     public Vector2 movePosition { get; private set; }
     public Vector2 viewPosition { get; private set; }
@@ -132,14 +129,14 @@ public class InputController : MonoBehaviour, Input.IAlwaysActiveActions, Input.
     void Input.ICommonNavActions.OnZoom(InputAction.CallbackContext context)
     {
         float scrollValue = context.ReadValue<float>();
-        Debug.Log(scrollValue);
         if (!Mathf.Approximately(0, scrollValue))
         {
             if (shouldZoom)
             {
-                float cameraSize = GameManager.GetPlayerController().ControlledCamera.orthographicSize;
-                GameManager.GetPlayerController().ControlledCamera.orthographicSize =
-                Mathf.Clamp(cameraSize + (scrollValue > 0 ? -1 : 1), MIN_CAMERA_ZOOM, MAX_CAMERA_ZOOM);
+                float cameraSize = GameManager.GetPlayerController().Zoom;
+                GameManager.GetPlayerController().Zoom =
+                Mathf.Clamp(cameraSize + (scrollValue > 0 ? -1 : 1), PlayerController.MIN_CAMERA_ZOOM, PlayerController.MAX_CAMERA_ZOOM);
+                GameManager.GetPlayerController().UpdateZoom();
                 shouldZoom = false;
             }
         }
