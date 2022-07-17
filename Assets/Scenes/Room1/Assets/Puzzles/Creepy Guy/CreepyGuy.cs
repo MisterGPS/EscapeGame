@@ -2,32 +2,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CreepyGuy : MonoBehaviour, IInteractable
+[RequireComponent(typeof(SavingComponent))]
+public class CreepyGuy : MonoBehaviour, IInteractable, StateHolder
 {
     public MeshRenderer normal;
     public MeshRenderer withPistol;
     public MeshRenderer dead;
 
+    public State State => hansState;
+    private HansState hansState = new HansState();
+
     // Start is called before the first frame update
     private void Start()
     {
-        normal.enabled = true;
-        withPistol.enabled = false;
-        dead.enabled = false;
-        Suicidal();
+        //TODO needs to be changed when baby puzzle is finished
+        hansState.hansAppearance = HansAppearance.Suicidal;
+        
+        UpdateAppearance();
     }
 
-    private void Suicidal()
+    private void UpdateAppearance()
     {
         normal.enabled = false;
-        withPistol.enabled = true;
-    }
-
-    private void Kill()
-    {
         withPistol.enabled = false;
-        dead.enabled = true;
-        OpenCage();
+        dead.enabled = false;
+
+        switch (hansState.hansAppearance)
+        {
+            case HansAppearance.Normal:
+                normal.enabled = true;
+                break;
+            case HansAppearance.Suicidal:
+                withPistol.enabled = true;
+                break;
+            case HansAppearance.Dead:
+                dead.enabled = true;
+                OpenCage();
+                break;
+        }
     }
 
     private void OpenCage()
@@ -36,6 +48,29 @@ public class CreepyGuy : MonoBehaviour, IInteractable
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optIte)
     {
-        Kill();
+        if (hansState.hansAppearance == HansAppearance.Suicidal)
+        {
+            hansState.hansAppearance = HansAppearance.Dead;
+            UpdateAppearance();
+        }
+    }
+
+    public enum HansAppearance
+    {
+        Normal,
+        Suicidal,
+        Dead
+    }
+
+    public void PostLoad()
+    {
+        UpdateAppearance();
+    }
+
+    [System.Serializable]
+    private class HansState : State
+    {
+        public HansAppearance hansAppearance;
     }
 }
+
