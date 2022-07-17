@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(KnifeItem))]
-public class Bear : MonoBehaviour, IInteractable
+[RequireComponent(typeof(SavingComponent))]
+public class Bear : MonoBehaviour, IInteractable, StateHolder
 {
     [SerializeField]
     private Material bearWithKnife, bearWithoutKnife;
@@ -14,9 +15,9 @@ public class Bear : MonoBehaviour, IInteractable
 
     [SerializeField]
     private MeshRenderer displayingSprite;
-    
-    private bool bKnifeRemoved = false;
-    private bool bBearCut = false;
+
+    public State State => bearState;
+    private BearState bearState = new();
     
     private BaseItem heldItem;
 
@@ -27,12 +28,12 @@ public class Bear : MonoBehaviour, IInteractable
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem = null)
     {
-        if (!bKnifeRemoved)
+        if (!bearState.knifeRemoved)
         {
             GameManager.GetPlayerController().AddItemToInventory(heldItem);
             SetKnifeRemoved(true);
         }
-        else if (!bBearCut && GameManager.GetPlayerController().GetActiveItem() == heldItem)
+        else if (!bearState.bearCut && GameManager.GetPlayerController().GetActiveItem() == heldItem)
         {
             SetBearCutTrue();
         }
@@ -40,21 +41,33 @@ public class Bear : MonoBehaviour, IInteractable
 
     public void SetKnifeRemoved(bool value)
     {
-        bKnifeRemoved = value;
+        bearState.knifeRemoved = value;
         UpdateAppearance();
     }
 
     public void SetBearCutTrue()
     {
-         bBearCut = true;
+         bearState.bearCut = true;
          UpdateAppearance();
     }
 
     private void UpdateAppearance()
     {
-        if (bKnifeRemoved)
-            displayingSprite.GetComponent<MeshRenderer>().material = bBearCut ? bearCutWithoutKnife : bearWithoutKnife;
+        if (bearState.knifeRemoved)
+            displayingSprite.GetComponent<MeshRenderer>().material = bearState.bearCut ? bearCutWithoutKnife : bearWithoutKnife;
         else
-            displayingSprite.GetComponent<MeshRenderer>().material = bBearCut ? bearCutWithKnife : bearWithKnife;
+            displayingSprite.GetComponent<MeshRenderer>().material = bearState.bearCut ? bearCutWithKnife : bearWithKnife;
+    }
+
+    public void PostLoad()
+    {
+        UpdateAppearance();
+    }
+
+    [System.Serializable]
+    private class BearState : State
+    {
+        public bool knifeRemoved;
+        public bool bearCut;
     }
 }
