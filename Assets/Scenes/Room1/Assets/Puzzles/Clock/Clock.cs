@@ -111,10 +111,18 @@ public class Clock : BasePuzzleObject, StateHolder
         UpdateBack();
     }
 
-    void UpdateScreen()
+    void UpdateScreen(bool working)
     {
-        displayedTime.text = GameManager.Instance.timeString;
-        GameManager.GetAudioManager().Play("UhrTick");
+        if (working)
+        {
+            displayedTime.text = GameManager.Instance.timeString;
+            GameManager.GetAudioManager().Play("UhrTick");
+        }
+        else
+        {
+            displayedTime.text = "";
+            GameManager.GetAudioManager().Stop("UhrTick");
+        }
     }
 
     public void PostLoad()

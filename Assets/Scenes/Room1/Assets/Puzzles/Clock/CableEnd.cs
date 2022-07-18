@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(UniqueID))]
 public class CableEnd : MonoBehaviour, IInteractable
 {
     public delegate void OnConnectionClicked(CableEnd cableEnd);
