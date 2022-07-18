@@ -45,6 +45,7 @@ public class InputController : MonoBehaviour, Input.IAlwaysActiveActions, Input.
     // Update is called once per frame
     void Update()
     {
+        //Updates Mouse Position when using Controller
         if (Mathf.Approximately(0, cursorMoveVector.x) && Mathf.Approximately(0, cursorMoveVector.y))
         {
             cursorMoveVector = Vector2.zero;
