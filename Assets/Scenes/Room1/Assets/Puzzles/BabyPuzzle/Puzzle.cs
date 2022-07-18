@@ -1,20 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 public class Puzzle : MonoBehaviour
 {
     public Material puzzleMaterial;
     private List<PuzzlePiece> puzzlePieces = new List<PuzzlePiece>();
-    private List<BoxCollider> puzzleTargets = new List<BoxCollider>();
+    private List<PuzzleTarget> puzzleTargets = new List<PuzzleTarget>();
     
     [SerializeField]
     private Vector2Int numTiles;
 
-    private Vector3 tileScale;
-    private Vector2 distributionScale = new Vector2(1.0f, 1.0f);
-    
     private void Start()
     {
         SpawnTiles();
@@ -28,65 +28,80 @@ public class Puzzle : MonoBehaviour
         {
             for (int j = 0; j < numTiles.y; j++)
             {
+                Vector3 puzzleScale = new Vector3(10, 10, 10);
+                Vector3 localTilePosition = new Vector3((-0.5f + (float)i / numTiles.x) * puzzleScale.x * 0.29999f,
+                                                         0,
+                                                         (0.5f - (float)j / numTiles.y) * puzzleScale.z * 0.29999f);
+                
                 GameObject newPiece = new GameObject();
                 newPiece.name = "PuzzlePiece";
                 newPiece.transform.parent = transform;
                 // Adjust image offset irregularity
-                newPiece.transform.position = transform.position + offset;
+                newPiece.transform.position = transform.position + offset + localTilePosition;
+                newPiece.transform.localScale = Vector3.one;
                 
-                PuzzlePiece puzzle = newPiece.AddComponent<PuzzlePiece>();
-                puzzle.Position = new Vector2Int(i, j);
-                puzzle.PuzzleMaterial = puzzleMaterial;
-                puzzle.Instantiate(numTiles);
-                puzzlePieces.Add(puzzle);
-            }
-        }
-
-        UnityEngine.Debug.Assert(puzzlePieces.Count > 0 && puzzlePieces[0] != null);
-        tileScale = puzzlePieces[0].GetComponent<BoxCollider>().size;
-        
-        for (int i = 0; i < numTiles.x; i++)
-        {
-            for (int j = 0; j < numTiles.y; j++)
-            {
+                PuzzlePiece newPuzzlePiece = newPiece.AddComponent<PuzzlePiece>();
+                newPuzzlePiece.Position = new Vector2Int(i, j);
+                newPuzzlePiece.PuzzleMaterial = puzzleMaterial;
+                newPuzzlePiece.Instantiate(numTiles, puzzleScale);
+                puzzlePieces.Add(newPuzzlePiece);
+                
+                
+                // Add puzzle target position colliders
                 GameObject puzzleTarget = new GameObject();
                 puzzleTarget.name = "PuzzleTarget";
-                BoxCollider targetCollider = puzzleTarget.AddComponent<BoxCollider>();
-                targetCollider.size = new Vector3(tileScale.x, 0.1f, tileScale.z);
                 puzzleTarget.transform.parent = transform;
-                puzzleTarget.transform.position += offset;
+                puzzleTarget.transform.position = transform.position + offset + localTilePosition;
+                puzzleTarget.transform.localScale = Vector3.one;
+                puzzleTarget.transform.Rotate(new Vector3(1, 0 , 0), 180.0f);
+
+                PuzzleTarget target = puzzleTarget.AddComponent<PuzzleTarget>();
+                target.targetPiece = newPuzzlePiece;
+                BoxCollider targetCollider = target.GetComponent<BoxCollider>();
+                BoxCollider boxCollider = newPuzzlePiece.BoxCollider;
+                Vector3 colliderSize = boxCollider.size;
+                colliderSize.y = 0.05f;
+                targetCollider.size = colliderSize;
+                targetCollider.center = boxCollider.center;
+                puzzleTargets.Add(target);
             }
         }
         
+        UnityEngine.Debug.Assert(puzzlePieces.Count > 0 && puzzlePieces[0] != null);
     }
 
+    // Place all tiles to the left
+    // TODO Shift tiles more randomly
     private void DistributeTiles()
     {
-        float startX = tileScale.x * distributionScale.x / 2.0f;
-        float startY = tileScale.y * distributionScale.y / 2.0f;
-        float width = tileScale.x * distributionScale.x / numTiles.x;
-        float height = tileScale.y * distributionScale.y / numTiles.y;
-        bool[] bSwitched = new bool[puzzlePieces.Count];
-        
-        // Swap position of tiles
-        // WIP Swap each tile with a tile that has not been switched   EXPENSIVE
-        for (int i = 0; i < numTiles.x; i++)
-        {
-            for (int j = 0; j < numTiles.y; j++)
-            {
-                
-            }
-        }
-        
         // Offset tiles
         foreach (PuzzlePiece puzzlePiece in puzzlePieces)
         {
-            
+            puzzlePiece.transform.localPosition += new Vector3(Random.Range(8f, 15f), 0, Random.Range(-12f, 12f));
         }
+    }
+
+    public void CheckTiles()
+    {
+        if (CheckCombinations())
+        {
+            Solved();
+        }
+    }
+    
+    public bool CheckCombinations()
+    {
+        print("Checking combinations");
+        foreach (PuzzleTarget target in puzzleTargets)
+        {
+            if (!target.CheckCorrect())
+                return false;
+        }
+        return true;
     }
 
     private void Solved()
     {
-        
+        print("Solved");
     }
 }
