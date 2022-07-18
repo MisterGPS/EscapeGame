@@ -17,9 +17,6 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
     private MeshRenderer displayingSprite;
 
     [SerializeField]
-    private KnifeCollider knifeCollider;
-
-    [SerializeField]
     private Puzzle puzzle;
     
     public State State => bearState;
@@ -64,6 +61,8 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
 
          puzzle.gameObject.SetActive(true);
          puzzle.StartPuzzle();
+         
+         GameManager.GetAudioManager().Play("BärGeschnitten");
     }
 
     private void UpdateAppearance()
