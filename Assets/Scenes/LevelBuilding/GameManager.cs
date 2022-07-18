@@ -152,14 +152,26 @@ public class GameManager : MonoBehaviour, StateHolder
         StartCoroutine(LoadNextTick());
     }
 
-    public void LoadMainMenu()
+    public void LoadMainMenuWithSave()
     {
         //Hier direkt saven
         Save();
+        LoadMainMenu();
+    }
+
+    public void LoadMainMenu()
+    {
         UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
         bMainMenu = true;
         PlayerController = null;
         InputController.DisableInput();
+    }
+
+    public void LoadCredits()
+    {
+        PlayerController = null;
+        InputController.DisableInput();
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Credits");
     }
 
     public void ExitGame()

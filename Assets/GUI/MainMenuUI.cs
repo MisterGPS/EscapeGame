@@ -47,7 +47,7 @@ public class MainMenuUI : MonoBehaviour
 
     private void Credits()
     {
-        throw new NotImplementedException();
+        GameManager.Instance.LoadCredits();
     }
 
     private void ExitGame()
