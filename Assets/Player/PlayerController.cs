@@ -465,7 +465,7 @@ public class PlayerController : MonoBehaviour, StateHolder
     {
         public ViewMode viewMode = ViewMode.TopDown;
         public ViewDirection viewDirection = ViewDirection.North;
-        public float zoom = 1;
+        public float zoom = 3;
         public Vector3 cameraPosition;
 
         public string[] inventoryItemIDs;
