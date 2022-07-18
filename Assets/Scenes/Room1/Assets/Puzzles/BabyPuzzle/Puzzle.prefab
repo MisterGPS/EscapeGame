@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 3890985944334740759}
   - component: {fileID: 3619963715932744749}
   - component: {fileID: 3654586486990066904}
-  - component: {fileID: 6492465045382973925}
   - component: {fileID: 8302207840022954413}
   m_Layer: 0
   m_Name: Frame
@@ -117,20 +116,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6492465045382973925
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8760270722195236860}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &8302207840022954413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,4 +129,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puzzleMaterial: {fileID: 2100000, guid: 5f7b87002be7969458ecbbe66d1e2fe7, type: 2}
-  numTiles: {x: 2, y: 2}
+  numTiles: {x: 3, y: 3}

@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
@@ -11,19 +11,24 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
     public Material PuzzleMaterial { get; set; }
     public Vector2Int Position { get; set; } = new Vector2Int(0, 0);
 
-    public void Instantiate(Vector2Int numPieces, Vector2 size)
+    private Vector3 mouseOffset;
+    private bool bSelected;
+
+    public void Instantiate(Vector2Int numPieces)
     {
-        GetComponent<MeshFilter>().mesh = CreatePuzzlePlane(Position, numPieces, size);
+        GetComponent<MeshFilter>().mesh = CreatePuzzlePlane(Position, numPieces);
         GetComponent<MeshRenderer>().sharedMaterial = PuzzleMaterial;
-        gameObject.AddComponent<BoxCollider>().size += new Vector3(0, 0, 0.1f);
+        BoxCollider boxCollider = gameObject.AddComponent<BoxCollider>();
+        boxCollider.size += new Vector3(0, 0, 0.1f);
+        boxCollider.isTrigger = true;
         transform.Rotate(new Vector3(1, 0 , 0), -90.0f);
     }
 
     // Can be expanded to allow for n pieces with an arbitrary shape
     // pos describes x and y position of the piece in the puzzle
-    private Mesh CreatePuzzlePlane(Vector2Int pos, Vector2Int numPieces, Vector2 size)
+    private Mesh CreatePuzzlePlane(Vector2Int pos, Vector2Int numPieces)
     {
-        size *= transform.localScale;
+        Vector2 size = transform.localScale;
         Vector3[] vertices = new Vector3[4];
         Vector2[] uvs = new Vector2[4];
         int[] firstTriangle = new int[6];
@@ -63,8 +68,46 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
         return mesh;
     }
 
+    private void Update()
+    {
+        if (bSelected)
+        {
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+            Vector3 worldPos = GameManager.GetPlayerController().ControlledCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0));
+            Vector3 localPos = GameManager.GetPlayerController().transform.InverseTransformPoint(worldPos);
+            localPos.Scale(transform.localScale);
+            
+            Vector3 newPosition = new Vector3(localPos.x - mouseOffset.x, transform.localPosition.y, localPos.z - mouseOffset.z);
+            transform.localPosition = newPosition;
+        }
+    }
+    
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem = null)
     {
-        throw new NotImplementedException();
+        if (bSelected)
+        {
+            DetachFromMouse();
+        }
+        else
+        {
+            AttachToMouse();
+        }
+        bSelected = !bSelected;
+    }
+
+    private void AttachToMouse()
+    {
+        Cursor.visible = false;
+        
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Vector3 mouseWorldPos = GameManager.GetPlayerController().ControlledCamera.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0));
+        Vector3 mouseLocalPos = GameManager.GetPlayerController().transform.InverseTransformPoint(mouseWorldPos);
+        mouseLocalPos.Scale(transform.localScale);
+        mouseOffset = mouseLocalPos - transform.localPosition;
+    }
+
+    private void DetachFromMouse()
+    {
+        Cursor.visible = true;
     }
 }
