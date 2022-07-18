@@ -260,8 +260,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -1000}
-  m_SizeDelta: {x: 400, y: 2000}
+  m_AnchoredPosition: {x: 0, y: -1466}
+  m_SizeDelta: {x: 500, y: 2000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1355425093
 MonoBehaviour:
@@ -289,7 +289,7 @@ MonoBehaviour:
     Sarah Stelzer\n\n<size=80%>Lead Puzzle Designer\r\n<size=60%>Toni \n\n<size=80%>Lead
     Programmer\r\n<size=60%>Kai Przadka \n\n<size=80%>Programming\r\n<size=60%>Eliane
     Wang, Kai Przadka, Keira Becker, Lena Jacobi, Timo Gottzsky, Toni (Andreas Belay,
-    Lena Gibis) \n\n<size=80%>Musik & Sounds\r\n<size=60%>Andreas Belay, Toni\n\n\n<size=80%>Dieses
+    Lena Gibis) \n\n<size=80%>Musik & Sounds\r\n<size=60%>Andreas Belay, Toni\n\n\n\n\n\n\n\n\n<size=80%>Dieses
     Spiel wurde in einem Schulprojekt unter der Leitung von Herr Liedl geschaffen"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -299,8 +299,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4293848814
+  m_fontColor: {r: 0.9339623, g: 0.9339623, b: 0.9339623, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -379,7 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5357799ee4e913e4f89834557379c277, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 75
 --- !u!1 &1770443137
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +416,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.066037714, g: 0.066037714, b: 0.066037714, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
