@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Clock : BasePuzzleObject
+public class Clock : BasePuzzleObject, StateHolder
 {
     // topLeft, topRight, bottomLeft, bottomRight
     [SerializeField]
@@ -16,6 +16,12 @@ public class Clock : BasePuzzleObject
     private MeshRenderer innerClockRenderer;
 
     private bool innerClockVisible = false;
+
+    public State State => clockState;
+    private ClockState clockState = new ClockState();
+
+    private Quaternion forwardsRotation;
+    private Quaternion backwardsRotation;
 
     // Start is called before the first frame update
     protected override void Start()
@@ -32,10 +38,13 @@ public class Clock : BasePuzzleObject
             screw.onInteracted += ScrewClicked;
         }
 
-        innerClock.onCablesConnectedCallback += ActivateScreen;
+        innerClock.onCablesConnectedCallback += UpdateScreen;
 
         innerClockRenderer.enabled = false;
         innerClock.bActivated = false;
+
+        forwardsRotation = transform.rotation;
+        backwardsRotation = forwardsRotation * Quaternion.AngleAxis(180, Vector3.up);
     }
 
     protected override GameObject CustomiseAddSide(GameObject side)
@@ -48,7 +57,8 @@ public class Clock : BasePuzzleObject
     {
         // Turn the clock to have the back facing forward
         Debug.Log("Interacted with front face of clock");
-        transform.Rotate(new Vector3(0, 180, 0));
+        clockState.rotated = true;
+        UpdateRotation();
     }
 
     protected override void BackClicked()
@@ -56,13 +66,21 @@ public class Clock : BasePuzzleObject
         Debug.Log("Interacted with back face of clock");
         if (innerClock.activeCable == null)
         {
-            transform.Rotate(new Vector3(0, -180, 0));
+            clockState.rotated = false;
+            UpdateRotation();
         }
     }
 
-    public override void SideClicked(BasePuzzleSide face)
-    {   
-        base.SideClicked(face);
+    private void UpdateRotation()
+    {
+        if (clockState.rotated)
+        {
+            transform.rotation = backwardsRotation;
+        }
+        else
+        {
+            transform.rotation = forwardsRotation;
+        }
     }
 
     private void UpdateBack()
@@ -93,9 +111,20 @@ public class Clock : BasePuzzleObject
         UpdateBack();
     }
 
-    void ActivateScreen()
+    void UpdateScreen()
     {
         displayedTime.text = GameManager.Instance.timeString;
         GameManager.GetAudioManager().Play("UhrTick");
+    }
+
+    public void PostLoad()
+    {
+        UpdateRotation();
+    }
+
+    [System.Serializable]
+    private class ClockState : State
+    {
+        public bool rotated;
     }
 }
