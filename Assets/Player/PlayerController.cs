@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Video;
 
 public enum ViewMode
 {
@@ -68,6 +69,8 @@ public class PlayerController : MonoBehaviour, StateHolder
 
     public State State => playerState;
     private PlayerState playerState = new PlayerState();
+
+    public VideoPlayer storyPlayer;
 
     //[SerializeField]
     //private ComputeShader convolutionShader;

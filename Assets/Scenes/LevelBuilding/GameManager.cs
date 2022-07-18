@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using UnityEngine.Video;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour, StateHolder
@@ -203,7 +204,9 @@ public class GameManager : MonoBehaviour, StateHolder
         saveList = FindObjectsOfType<SavingComponent>();
         Save();
         saveTicks = 0;
-        PlayerController.ActivateInput();
+        PlayerController.storyPlayer.Play();
+        PlayerController.storyPlayer.loopPointReached += (videoPlayer) => PlayerController.ActivateInput();
+        PlayerController.storyPlayer.loopPointReached += (videoPlayer) => PlayerController.storyPlayer.Stop();
         yield return null;
     }
 
