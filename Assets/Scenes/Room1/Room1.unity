@@ -2730,6 +2730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   doorOpenMaterial: {fileID: 2100000, guid: 2d015861871cbb34695b727601bdae53, type: 2}
   background: {fileID: 680151378}
+  targetLock: {fileID: 79766339}
 --- !u!1 &865875861 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5185089270386945886, guid: 0433248ae17ac894d88d7acb6ccffc6b, type: 3}

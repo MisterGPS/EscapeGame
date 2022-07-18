@@ -45,6 +45,6 @@ public class GameMenuUI : MonoBehaviour
 
     private void ExitToMainMenu()
     {
-        GameManager.Instance.LoadMainMenu();
+        GameManager.Instance.LoadMainMenuWithSave();
     }
 }
