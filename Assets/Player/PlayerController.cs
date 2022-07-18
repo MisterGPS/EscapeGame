@@ -86,6 +86,8 @@ public class PlayerController : MonoBehaviour, StateHolder
         {
             Inventory.Add(null);
         }
+
+        UpdateZoom();
     }
 
     private void FixedUpdate()
@@ -455,6 +457,7 @@ public class PlayerController : MonoBehaviour, StateHolder
         GameManager.InputController.DisableInput();
         ActivateInput();
         ControlledCamera.transform.position = playerState.cameraPosition;
+        UpdateZoom();
     }
 
     [System.Serializable]
