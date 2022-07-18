@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
-public class InnerClock : MonoBehaviour
+[RequireComponent(typeof(SavingComponent))]
+public class InnerClock : MonoBehaviour, StateHolder
 {
     [SerializeField]
     private List<CableEnd> cableEndsA, cableEndsB;
@@ -12,7 +14,7 @@ public class InnerClock : MonoBehaviour
     private List<Material> cableMaterials;
 
     private List<(CableEnd, CableEnd)> desiredCableConnections = new();
-    private List<(CableEnd, CableEnd)> connectedCableEnds = new();
+    private List<int> ConnectedCableEnds => innerClockState.connectedCableEnds;
     private (CableEnd, CableEnd) currentCableEnds = new();
     public GameObject activeCable { get; private set; }
     private const int totalCableConnections = 3;
@@ -25,16 +27,18 @@ public class InnerClock : MonoBehaviour
 
     const float MAX_CABLE_LENGTH = 10.0f;
 
+    public State State => innerClockState;
+    public InnerClockState innerClockState = new InnerClockState();
 
     // TODO Cables should be connectable from both sides
 
     private void Start()
     {
-        GenerateCableConnections();
         for (int i = 0; i < cableMaterials.Count; i++)
         {
             cableMaterials[i] = new Material(cableMaterials[i]);
         }
+        GenerateCableConnections();
         GameManager.GetPlayerController().OnViewModeChanged += UpdateCableVisibility;
     }
 
@@ -71,13 +75,13 @@ public class InnerClock : MonoBehaviour
         }
     }
 
-    public delegate void OnCablesConnected();
+    public delegate void OnCablesConnected(bool working);
     public OnCablesConnected onCablesConnectedCallback;
 
     private void InitCableEnds()
     {
         UnityEngine.Assertions.Assert.IsTrue(cableEndsA.Count == cableEndsB.Count);
-        
+
         for (int i = 0; i < cableEndsA.Count; i++)
         {
             cableEndsA[i].connectionClickedDelegate += ReceiveConnectionClicked;
@@ -89,31 +93,40 @@ public class InnerClock : MonoBehaviour
     {
         InitCableEnds();
 
-        List<CableEnd> tempACableEnds = new(cableEndsA);
-        List<CableEnd> tempBCableEnds = new(cableEndsB);
-        List<Color> generatedColors = new();
+        innerClockState.cableColors = new Color[totalCableConnections];
         GameManager.ShuffleList(cableMaterials);
-        desiredCableConnections.Clear();
 
         float generatedHue = Random.Range(0.0f, 1.0f);
-        for (int i = 1; i <= tempACableEnds.Count; i++)
+
+        List<CableEnd> shuffledCableEndsA = cableEndsA.OrderBy(x => Random.value).ToList();
+        List<CableEnd> shuffledCableEndsB = cableEndsB.OrderBy(x => Random.value).ToList();
+        for (int i = 0; i < totalCableConnections; i++)
         {
-            float currentHue = (generatedHue + ((float)i / (float)tempACableEnds.Count)) % 1.0f;
-            generatedColors.Add(Random.ColorHSV(currentHue, currentHue, 1, 1, 1, 1, 1, 1));
+            desiredCableConnections.Add((shuffledCableEndsA[i], shuffledCableEndsB[i]));
         }
 
-        foreach (Color generatedColor in generatedColors)
+        innerClockState.cableColors = new Color[totalCableConnections];
+
+        for (int i = 0; i < totalCableConnections; i++)
         {
-            int cableAIndex = Random.Range(0, tempACableEnds.Count);
-            int cableBIndex = Random.Range(0, tempBCableEnds.Count);
+            float currentHue = (generatedHue + ((float)i / (float)totalCableConnections)) % 1.0f;
+            innerClockState.cableColors[i] = (Random.ColorHSV(currentHue, currentHue, 1, 1, 1, 1, 1, 1));
+        }
 
-            desiredCableConnections.Add((tempACableEnds[cableAIndex], tempBCableEnds[cableBIndex]));
+        UpdateColors();
+    }
 
-            tempACableEnds[cableAIndex].SetCableEndColor(generatedColor);
-            tempBCableEnds[cableBIndex].SetCableEndColor(generatedColor);
+    private void UpdateColors()
+    {
+        for (int i = 0; i < innerClockState.cableColors.Length; i++)
+        {
+            Color generatedColor = innerClockState.cableColors[i];
+            (CableEnd cableEndA, CableEnd cableEndB) = desiredCableConnections[i];
 
-            tempACableEnds.RemoveAt(cableAIndex);
-            tempBCableEnds.RemoveAt(cableBIndex);
+            cableEndA.SetCableEndColor(generatedColor);
+            cableEndB.SetCableEndColor(generatedColor);
+
+            cableMaterials[i].color = generatedColor;
         }
     }
 
@@ -140,8 +153,9 @@ public class InnerClock : MonoBehaviour
 
     private bool IsConnected(CableEnd cableEnd)
     {
-        foreach ((CableEnd, CableEnd) connectedPair in connectedCableEnds)
+        foreach (int i in ConnectedCableEnds)
         {
+            (CableEnd, CableEnd) connectedPair = desiredCableConnections[i];
             if (connectedPair.Item1 == cableEnd || connectedPair.Item2 == cableEnd)
             {
                 return true;
@@ -156,7 +170,15 @@ public class InnerClock : MonoBehaviour
         {
             DrawConnection(currentCableEnds.Item1, currentCableEnds.Item2, true);
 
-            connectedCableEnds.Add(currentCableEnds);
+            if (cableEndsA.Contains(currentCableEnds.Item1))
+            {
+                ConnectedCableEnds.Add(desiredCableConnections.FindIndex(x => x == currentCableEnds));
+            }
+            else
+            {
+                ConnectedCableEnds.Add(desiredCableConnections.FindIndex(x => x == (currentCableEnds.Item2, currentCableEnds.Item1)));
+            }
+
             currentCableEnds = new();
             bSingleCableSelected = false;
             VerifyAllCableConnections();
@@ -173,7 +195,7 @@ public class InnerClock : MonoBehaviour
         activeCable = null;
     }
 
-    private void DrawConnection(CableEnd originCable, Vector3 positionB, bool bFinal = false)
+    private void DrawConnection(CableEnd originCable, Vector3 positionB, bool bFinal = false, int materialIndex = -1)
     {
         LineRenderer activeLineRenderer = null;
 
@@ -186,7 +208,8 @@ public class InnerClock : MonoBehaviour
             activeCable.transform.localScale = Vector3.one;
 
             activeLineRenderer = activeCable.AddComponent<LineRenderer>();
-            Material cableMaterial = cableMaterials[connectedCableEnds.Count];
+            if (materialIndex == -1) materialIndex = ConnectedCableEnds.Count;
+            Material cableMaterial = cableMaterials[materialIndex];
             cableMaterial.SetColor("_Color", originCable.cableEndColor);
             activeLineRenderer.material = cableMaterial;
 
@@ -207,19 +230,20 @@ public class InnerClock : MonoBehaviour
         activeLineRenderer.sortingOrder = bFinal ? 1 : 3;
     }
 
-    private void DrawConnection(CableEnd originCable, CableEnd targetCable, bool bFinal = false)
+    private void DrawConnection(CableEnd originCable, CableEnd targetCable, bool bFinal = false, int materialIndex = -1)
     {
-        DrawConnection(originCable, targetCable.GetConnectionPosition(), bFinal);
+        DrawConnection(originCable, targetCable.GetConnectionPosition(), bFinal, materialIndex);
     }
 
     private bool VerifyConnection((CableEnd, CableEnd) connection)
     {
-        UnityEngine.Assertions.Assert.IsTrue(connectedCableEnds.Count <= desiredCableConnections.Count);
+        UnityEngine.Assertions.Assert.IsTrue(ConnectedCableEnds.Count <= desiredCableConnections.Count);
 
-        print(connectedCableEnds.Count.ToString());
+        print(ConnectedCableEnds.Count.ToString());
         // Check if the connection already exists
-        foreach (var cableConnection in connectedCableEnds)
+        foreach (var cableConnectionIndex in ConnectedCableEnds)
         {
+            var cableConnection = desiredCableConnections[cableConnectionIndex];
             if (cableConnection == currentCableEnds)
             {
                 print("Invalid connection");
@@ -246,9 +270,61 @@ public class InnerClock : MonoBehaviour
 
     private void VerifyAllCableConnections()
     {
-        if (connectedCableEnds.Count == totalCableConnections)
+        onCablesConnectedCallback?.Invoke(ConnectedCableEnds.Count == totalCableConnections);
+    }
+
+    public void PreSave()
+    {
+        innerClockState.desiredCableConnectionsA = desiredCableConnections.Select(a => a.Item1).Select(b => UniqueID.GameobjectToID[b.gameObject]).ToArray();
+        innerClockState.desiredCableConnectionsB = desiredCableConnections.Select(a => a.Item2).Select(b => UniqueID.GameobjectToID[b.gameObject]).ToArray();
+    }
+
+    public void PostLoad()
+    {
+        foreach (GameObject cable in cables)
         {
-            onCablesConnectedCallback?.Invoke();
+            if (cable != activeCable)
+            {
+                Destroy(cable);
+            }
         }
+        RemoveActiveCable();
+        cables.Clear();
+        desiredCableConnections.Clear();
+        for (int i = 0; i < totalCableConnections; i++)
+        {
+            CableEnd cableEndA = UniqueID.IDToGameobject[innerClockState.desiredCableConnectionsA[i]].GetComponent<CableEnd>();
+            CableEnd cableEndB = UniqueID.IDToGameobject[innerClockState.desiredCableConnectionsB[i]].GetComponent<CableEnd>();
+            desiredCableConnections.Add((cableEndA, cableEndB));
+        }
+        StartCoroutine(DrawNextFrame());
+    }
+
+    private int drawTicks = 0;
+    IEnumerator DrawNextFrame()
+    {
+        while (drawTicks < 1)
+        {
+            drawTicks++;
+            yield return new WaitForFixedUpdate();
+        }
+        UpdateColors();
+        for (int i = 0; i < ConnectedCableEnds.Count; i++)
+        {
+            int index = ConnectedCableEnds[i];
+            DrawConnection(desiredCableConnections[index].Item1, desiredCableConnections[index].Item2, true, i);
+        }
+        drawTicks = 0;
+        VerifyAllCableConnections();
+        yield return null;
+    }
+
+    [System.Serializable]
+    public class InnerClockState : State
+    {
+        public Color[] cableColors;
+        public string[] desiredCableConnectionsA;
+        public string[] desiredCableConnectionsB;
+        public List<int> connectedCableEnds = new();
     }
 }
