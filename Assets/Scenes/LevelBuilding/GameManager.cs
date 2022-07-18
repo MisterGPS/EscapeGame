@@ -181,11 +181,13 @@ public class GameManager : MonoBehaviour, StateHolder
     private int saveTicks = 0;
     IEnumerator SaveNextTick()
     {
-        while (saveTicks < 1)
+        //Two two avoid catching destroyed GameManager
+        while (saveTicks < 2)
         {
             saveTicks++;
             yield return new WaitForFixedUpdate();
         }
+        saveList = new SavingComponent[0];
         saveList = FindObjectsOfType<SavingComponent>();
         Save();
         saveTicks = 0;
@@ -196,7 +198,8 @@ public class GameManager : MonoBehaviour, StateHolder
     private int loadTicks = 0;
     IEnumerator LoadNextTick()
     {
-        while (loadTicks < 1)
+        //Two two avoid catching destroyed GameManager
+        while (loadTicks < 2)
         {
             loadTicks++;
             yield return new WaitForFixedUpdate();
