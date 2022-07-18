@@ -28,7 +28,10 @@ public class UniqueID : MonoBehaviour
 
     void OnDestroy()
     {
-        IDToGameobject.Remove(ID);
-        GameobjectToID.Remove(gameObject);
+        if (ID != GameManager.Instance.GetComponent<UniqueID>().ID)
+        {
+            IDToGameobject.Remove(ID);
+            GameobjectToID.Remove(gameObject);
+        }
     }
 }
