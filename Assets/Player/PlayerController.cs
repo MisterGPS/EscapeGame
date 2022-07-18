@@ -31,8 +31,8 @@ public class PlayerController : MonoBehaviour, StateHolder
     public float moveSpeed = 1.0f;
     private Rigidbody rb;
 
-    public const float MIN_CAMERA_ZOOM = 1;
-    public const float MAX_CAMERA_ZOOM = 5;  // Should be set so that the view can always be fully filled with a wall
+    public const float MinCameraZoom = 1;
+    public const float MaxCameraZoom = 5;  // Should be set so that the view can always be fully filled with a wall
     public float Zoom { get => playerState.zoom; set => playerState.zoom = value; }
 
     [SerializeField]
@@ -174,7 +174,7 @@ public class PlayerController : MonoBehaviour, StateHolder
     private void ReceiveTopDownMove()
     {
         // Scale Movement by Speed, Time and camera zoom level
-        Vector2 velocity = GameManager.InputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / MAX_CAMERA_ZOOM));
+        Vector2 velocity = GameManager.InputController.movePosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / MaxCameraZoom));
         Vector3 movementOffset = Vector3.zero;
         switch (ViewDirection)
         {
@@ -198,7 +198,7 @@ public class PlayerController : MonoBehaviour, StateHolder
     private void ReceiveSideViewMove()
     {
         // Scale Movement by Speed, Time and camera zoom level
-        Vector2 velocity = GameManager.InputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / MAX_CAMERA_ZOOM));
+        Vector2 velocity = GameManager.InputController.viewPosition * (moveSpeed * Time.fixedDeltaTime * (ControlledCamera.orthographicSize / MaxCameraZoom));
         Vector3 movementOffset = Vector3.zero;
         switch (ViewDirection)
         {

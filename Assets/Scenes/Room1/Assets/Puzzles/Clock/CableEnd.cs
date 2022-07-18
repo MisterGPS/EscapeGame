@@ -7,7 +7,7 @@ public class CableEnd : MonoBehaviour, IInteractable
     public delegate void OnConnectionClicked(CableEnd cableEnd);
     public OnConnectionClicked connectionClickedDelegate;
 
-    public Color cableEndColor { get; private set; }
+    public Color CableEndColor { get; private set; }
 
     // This property should be set to an empty placed at the exact spot of where the cable should be attached to
     [SerializeField]
@@ -48,7 +48,7 @@ public class CableEnd : MonoBehaviour, IInteractable
 
     public void SetCableEndColor(Color value)
     {
-        cableEndColor = value;
+        CableEndColor = value;
         gameObject.GetComponent<SpriteRenderer>().material.color = value;
     }
 }

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Screw : MonoBehaviour, IInteractable, StateHolder
 {
     public delegate void OnInteractedWith();
@@ -12,10 +11,10 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
     public State State => screwState;
     private ScrewState screwState = new ScrewState();
 
-    const int NUM_REQUIRED_ROTATION = 2;
-    private const string REQUIRED_ITEM = "Screwdriver";
+    const int NumRequiredRotation = 2;
+    private const string RequiredItem = "Screwdriver";
 
-    private bool bInteracted { get; set; } = false;
+    private bool BInteracted { get; set; } = false;
 
     void Start()
     {
@@ -24,10 +23,10 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem)
     {
-        if (optItem == null || optItem.name != REQUIRED_ITEM)
+        if (optItem == null || optItem.name != RequiredItem)
             return;
 
-        if (onInteracted != null && !bInteracted)
+        if (onInteracted != null && !BInteracted)
         {
             StartCoroutine(Unscrew());
         }
@@ -36,19 +35,19 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
     // ReSharper disable Unity.PerformanceAnalysis
     private IEnumerator Unscrew()
     {
-        bInteracted = true;
+        BInteracted = true;
         while (transform.rotation.eulerAngles.z < 160 * (screwState.currentRotations + 1))
         {
             transform.Rotate(new Vector3(0, 0, 240.0f * Time.deltaTime));
             yield return new WaitForFixedUpdate();
         }
-        bInteracted = false;
+        BInteracted = false;
         screwState.currentRotations++;
         UpdateScrew();
         yield return null;
     }
 
-    public bool IsFixed() => screwState.currentRotations < NUM_REQUIRED_ROTATION;
+    public bool IsFixed() => screwState.currentRotations < NumRequiredRotation;
 
     private void UpdateScrew()
     {
@@ -56,13 +55,13 @@ public class Screw : MonoBehaviour, IInteractable, StateHolder
         {
             GetComponent<SpriteRenderer>().enabled = true;
             GetComponent<Collider>().enabled = true;
-            bInteracted = false;
+            BInteracted = false;
         }
         else
         {
             GetComponent<SpriteRenderer>().enabled = false;
             GetComponent<Collider>().enabled = false;
-            bInteracted = true;
+            BInteracted = true;
             GameManager.GetAudioManager().Play("SchraubenzieherDreh");
         }
         onInteracted.Invoke();

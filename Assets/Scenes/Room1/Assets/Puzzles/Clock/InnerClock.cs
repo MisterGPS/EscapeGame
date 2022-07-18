@@ -187,7 +187,7 @@ public class InnerClock : MonoBehaviour
 
             activeLineRenderer = activeCable.AddComponent<LineRenderer>();
             Material cableMaterial = cableMaterials[connectedCableEnds.Count];
-            cableMaterial.SetColor("_Color", originCable.cableEndColor);
+            cableMaterial.SetColor("_Color", originCable.CableEndColor);
             activeLineRenderer.material = cableMaterial;
 
             activeLineRenderer.useWorldSpace = false;

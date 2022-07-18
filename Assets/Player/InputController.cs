@@ -136,7 +136,7 @@ public class InputController : MonoBehaviour, Input.IAlwaysActiveActions, Input.
             {
                 float cameraSize = GameManager.GetPlayerController().Zoom;
                 GameManager.GetPlayerController().Zoom =
-                Mathf.Clamp(cameraSize + (scrollValue > 0 ? -1 : 1), PlayerController.MIN_CAMERA_ZOOM, PlayerController.MAX_CAMERA_ZOOM);
+                Mathf.Clamp(cameraSize + (scrollValue > 0 ? -1 : 1), PlayerController.MinCameraZoom, PlayerController.MaxCameraZoom);
                 GameManager.GetPlayerController().UpdateZoom();
                 shouldZoom = false;
             }
