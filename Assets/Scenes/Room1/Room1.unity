@@ -1031,6 +1031,18 @@ PrefabInstance:
       value: Puzzle
       objectReference: {fileID: 0}
     - target: {fileID: 3890985944334740759, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.30173
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890985944334740759, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.30173
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890985944334740759, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.30173
+      objectReference: {fileID: 0}
+    - target: {fileID: 3890985944334740759, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
       propertyPath: m_LocalPosition.y
       value: 1.57
       objectReference: {fileID: 0}
@@ -1054,16 +1066,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8302207840022954413, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
-      propertyPath: numTiles.x
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8302207840022954413, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
-      propertyPath: numTiles.y
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 9016416123562946708, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
       propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016416123562946708, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016416123562946708, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016416123562946708, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
+      propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9016416123562946708, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}

@@ -16,6 +16,9 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
     [SerializeField]
     private MeshRenderer displayingSprite;
 
+    [SerializeField]
+    private KnifeCollider knifeCollider;
+    
     public State State => bearState;
     private BearState bearState = new();
     
@@ -28,14 +31,19 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem = null)
     {
+        
+        if (!bearState.bearCut && GameManager.GetPlayerController().GetActiveItem() == heldItem)
+        {
+            SetBearCutTrue();
+        }
+    }
+
+    public void ClickedKnife()
+    {
         if (!bearState.knifeRemoved)
         {
             GameManager.GetPlayerController().AddItemToInventory(heldItem);
             SetKnifeRemoved(true);
-        }
-        else if (!bearState.bearCut && GameManager.GetPlayerController().GetActiveItem() == heldItem)
-        {
-            SetBearCutTrue();
         }
     }
 

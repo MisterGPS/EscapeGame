@@ -98,6 +98,65 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &3165591090972476722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4478046233676082467}
+  - component: {fileID: 8010023010849007514}
+  - component: {fileID: 7500501562854437907}
+  m_Layer: 0
+  m_Name: KnifeCollider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4478046233676082467
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3165591090972476722}
+  m_LocalRotation: {x: -0, y: -0, z: -0.073403224, w: 0.99730235}
+  m_LocalPosition: {x: 3.67, y: 6.27, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 516641166591054287}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -8.419}
+--- !u!65 &8010023010849007514
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3165591090972476722}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.9, y: 4.48, z: 0.0225}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7500501562854437907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3165591090972476722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbceddde9fc1fb428ea7ac603952bb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentBear: {fileID: 7638350349159146992}
 --- !u!1 &6532244506490214392
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,6 +170,7 @@ GameObject:
   - component: {fileID: 1059598082389132854}
   - component: {fileID: 6240799507839823849}
   - component: {fileID: 8425975997525396286}
+  - component: {fileID: 2823094858436357276}
   m_Layer: 0
   m_Name: BearPrefab
   m_TagString: Untagged
@@ -131,6 +191,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1000921752872347128}
+  - {fileID: 4478046233676082467}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -151,6 +212,7 @@ MonoBehaviour:
   bearCutWithKnife: {fileID: 2100000, guid: 3421d761918bb3644806a7b996ddaef9, type: 2}
   bearCutWithoutKnife: {fileID: 2100000, guid: 583118bfcff5eeb49874732323366152, type: 2}
   displayingSprite: {fileID: 7131335472870222679}
+  knifeCollider: {fileID: 0}
 --- !u!65 &1059598082389132854
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -162,8 +224,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 3.2892175, y: 5.7097235, z: 0.40438142}
-  m_Center: {x: -3.0664198, y: 5.3955016, z: -0.003888443}
+  m_Size: {x: 7.2335577, y: 8.31222, z: 0}
+  m_Center: {x: -0.296216, y: 3.8328447, z: 0.01}
 --- !u!114 &6240799507839823849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,3 +253,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemRepresentation: {fileID: 0}
   itemName: BaseItem
+--- !u!114 &2823094858436357276
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6532244506490214392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54bd91e33594a6e4ebbfebf8f5ef49f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -298,15 +298,15 @@ public class PlayerController : MonoBehaviour, StateHolder
 
     public void AddItemToInventory(BaseItem item)
     {
-        for(int i=0; i<InventoryLength; i++)
+        for(int i = 0; i < InventoryLength; i++)
         {
            if (Inventory[i] == null)
            {
                 Inventory[i] = item;
                 item.ToggleItemVisibility(false);
                 itemUI.SetDisplayedItem(item);
-                if (inventoryUI.InventoryOpen)
                 ActiveItemID = i;
+                if (inventoryUI.InventoryOpen)
                 {
                     inventoryUI.OpenInventory();
                 }

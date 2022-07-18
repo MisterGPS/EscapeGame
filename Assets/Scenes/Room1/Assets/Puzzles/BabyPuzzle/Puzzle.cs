@@ -12,7 +12,7 @@ public class Puzzle : MonoBehaviour
     [SerializeField]
     private Vector2Int numTiles;
 
-    private Vector2 tileScale;
+    private Vector3 tileScale;
     private Vector2 distributionScale = new Vector2(1.0f, 1.0f);
     
     private void Start()
@@ -23,30 +23,41 @@ public class Puzzle : MonoBehaviour
 
     private void SpawnTiles()
     {
+        Vector3 offset = new Vector3(0.038f, -0.01f, -0.008f);
         for (int i = 0; i < numTiles.x; i++)
         {
             for (int j = 0; j < numTiles.y; j++)
             {
                 GameObject newPiece = new GameObject();
-                newPiece.name = "puzzlePiece";
+                newPiece.name = "PuzzlePiece";
                 newPiece.transform.parent = transform;
                 // Adjust image offset irregularity
-                newPiece.transform.position = new Vector3(transform.position.x + 0.038f, 
-                                                          transform.position.y - 0.01f,
-                                                          transform.position.z - 0.008f);
+                newPiece.transform.position = transform.position + offset;
                 
                 PuzzlePiece puzzle = newPiece.AddComponent<PuzzlePiece>();
                 puzzle.Position = new Vector2Int(i, j);
                 puzzle.PuzzleMaterial = puzzleMaterial;
                 puzzle.Instantiate(numTiles);
                 puzzlePieces.Add(puzzle);
-
-                GameObject puzzleTarget = new GameObject();
-                BoxCollider targetCollider = puzzleTarget.AddComponent<BoxCollider>();
             }
         }
+
         UnityEngine.Debug.Assert(puzzlePieces.Count > 0 && puzzlePieces[0] != null);
         tileScale = puzzlePieces[0].GetComponent<BoxCollider>().size;
+        
+        for (int i = 0; i < numTiles.x; i++)
+        {
+            for (int j = 0; j < numTiles.y; j++)
+            {
+                GameObject puzzleTarget = new GameObject();
+                puzzleTarget.name = "PuzzleTarget";
+                BoxCollider targetCollider = puzzleTarget.AddComponent<BoxCollider>();
+                targetCollider.size = new Vector3(tileScale.x, 0.1f, tileScale.z);
+                puzzleTarget.transform.parent = transform;
+                puzzleTarget.transform.position += offset;
+            }
+        }
+        
     }
 
     private void DistributeTiles()
@@ -55,8 +66,10 @@ public class Puzzle : MonoBehaviour
         float startY = tileScale.y * distributionScale.y / 2.0f;
         float width = tileScale.x * distributionScale.x / numTiles.x;
         float height = tileScale.y * distributionScale.y / numTiles.y;
-
+        bool[] bSwitched = new bool[puzzlePieces.Count];
+        
         // Swap position of tiles
+        // WIP Swap each tile with a tile that has not been switched   EXPENSIVE
         for (int i = 0; i < numTiles.x; i++)
         {
             for (int j = 0; j < numTiles.y; j++)
@@ -75,10 +88,5 @@ public class Puzzle : MonoBehaviour
     private void Solved()
     {
         
-    }
-    
-    private void OnMouseOver()
-    {
-        print("Over objects");
     }
 }
