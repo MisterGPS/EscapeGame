@@ -18,6 +18,9 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
 
     [SerializeField]
     private KnifeCollider knifeCollider;
+
+    [SerializeField]
+    private Puzzle puzzle;
     
     public State State => bearState;
     private BearState bearState = new();
@@ -26,6 +29,7 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
 
     private void Start()
     {
+        puzzle.gameObject.SetActive(false);
         heldItem = GetComponent<KnifeItem>();
     }
 
@@ -57,6 +61,9 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
     {
          bearState.bearCut = true;
          UpdateAppearance();
+
+         puzzle.gameObject.SetActive(true);
+         puzzle.StartPuzzle();
     }
 
     private void UpdateAppearance()

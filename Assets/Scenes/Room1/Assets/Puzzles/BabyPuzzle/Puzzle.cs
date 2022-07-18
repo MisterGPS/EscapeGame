@@ -15,7 +15,7 @@ public class Puzzle : MonoBehaviour
     [SerializeField]
     private Vector2Int numTiles;
 
-    private void Start()
+    public void StartPuzzle()
     {
         SpawnTiles();
         DistributeTiles();

@@ -1019,6 +1019,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 178549435}
   m_CullTransparentMesh: 1
+--- !u!114 &186411553 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8302207840022954413, guid: ad4f4aa763f7a604fb150d765f99ff6b, type: 3}
+  m_PrefabInstance: {fileID: 246893475}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d704972b887c64bb92965818192482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &246893475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1570,6 +1581,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.16
       objectReference: {fileID: 0}
+    - target: {fileID: 7638350349159146992, guid: 1f7d5d026e8211949939d95f69cc1aff, type: 3}
+      propertyPath: puzzle
+      value: 
+      objectReference: {fileID: 186411553}
+    - target: {fileID: 7638350349159146992, guid: 1f7d5d026e8211949939d95f69cc1aff, type: 3}
+      propertyPath: knifeCollider
+      value: 
+      objectReference: {fileID: 928480762}
     - target: {fileID: 7638350349159146992, guid: 1f7d5d026e8211949939d95f69cc1aff, type: 3}
       propertyPath: playerController
       value: 
@@ -2860,6 +2879,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924196160}
   m_CullTransparentMesh: 1
+--- !u!114 &928480762 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7500501562854437907, guid: 1f7d5d026e8211949939d95f69cc1aff, type: 3}
+  m_PrefabInstance: {fileID: 451121505}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbbceddde9fc1fb428ea7ac603952bb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &955592434
 GameObject:
   m_ObjectHideFlags: 0
