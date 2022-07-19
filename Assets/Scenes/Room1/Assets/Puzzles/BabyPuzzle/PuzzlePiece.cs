@@ -16,6 +16,9 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
     public BoxCollider BoxCollider { get; private set; }
     private Vector3 startPosition;
 
+    private PuzzleTarget lastLock;
+    private Puzzle parentPuzzle;
+
     public void Instantiate(Vector2Int numPieces, Vector3 tileScale)
     {
         GetComponent<MeshFilter>().mesh = CreatePuzzlePlane(Position, numPieces, tileScale);
@@ -26,7 +29,7 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
         BoxCollider.size = colliderSize;
         BoxCollider.isTrigger = true;
         transform.Rotate(new Vector3(1, 0 , 0), 180.0f);
-        startPosition = transform.position;
+        parentPuzzle = transform.parent.gameObject.GetComponent<Puzzle>();
     }
 
     // Can be expanded to allow for n pieces with an arbitrary shape
@@ -70,6 +73,11 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
         return mesh;
     }
 
+    public void SetPosition()
+    {
+        startPosition = transform.position;
+    }
+
     private void Update()
     {
         if (bSelected)
@@ -82,6 +90,8 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
     
     public void OnInteract(RaycastHit raycastHit, BaseItem optItem = null)
     {
+        if (lastLock != null)
+            lastLock.ReleaseTile(this);
         if (bSelected)
         {
             DetachFromMouse();
@@ -92,14 +102,7 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
         }
         bSelected = !bSelected;
     }
-
-    private void AttachToMouse()
-    {
-        Cursor.visible = false;
-        Vector3 mouseLocalPos = GetLocalMousePosition();
-        mouseOffset = mouseLocalPos - transform.localPosition;
-    }
-
+    
     private Vector3 GetLocalMousePosition()
     {
         Vector2 mousePosition = Mouse.current.position.ReadValue();
@@ -109,8 +112,33 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
         return mouseLocalPos;
     }
 
+    // Activates movement and view
+    public void ActivateMovement()
+    {
+        GameManager.GetPlayerController().ActivateMovement();
+    }
+    
+    // Deactivates movement and view
+    public void DeactivateMovement()
+    {
+        GameManager.GetPlayerController().DeactivateMovement();
+    }
+    
+    private void AttachToMouse()
+    {
+        if (!enabled) return;
+        
+        Cursor.visible = false;
+        Vector3 mouseLocalPos = GetLocalMousePosition();
+        mouseOffset = mouseLocalPos - transform.localPosition;
+        
+        DeactivateMovement();
+    }
+
     private void DetachFromMouse()
     {
+        if (!enabled) return;
+        
         Cursor.visible = true;
         
         // Raycast to check if the piece can be locked onto the puzzle
@@ -119,21 +147,17 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
         start.x += transform.lossyScale.x * BoxCollider.size.x / 2.0f;
         start.z -= transform.lossyScale.y * BoxCollider.size.z / 2.0f;
         
-        print("Sent raycast");
         BoxCollider.enabled = false;
         if (Physics.Raycast(start, Vector3.down, out RaycastHit hit))
         {
-            print(start);
-            print(transform.position);
-            Debug.DrawRay(start, Vector3.down * hit.distance, Color.yellow, 10);
             PuzzleTarget target = hit.collider.gameObject.GetComponent<PuzzleTarget>();
             if (target != null)
             {
                 if (target.LockTile(this))
                 {
+                    lastLock = target;
                     transform.position = target.transform.position;
-                    Puzzle parent = transform.parent.gameObject.GetComponent<Puzzle>();
-                    parent.CheckTiles();
+                    parentPuzzle.CheckTiles();
                 }
                 else
                 {
@@ -142,5 +166,6 @@ public class PuzzlePiece : MonoBehaviour, IInteractable
             }
         }
         BoxCollider.enabled = true;
+        ActivateMovement();
     }
 }

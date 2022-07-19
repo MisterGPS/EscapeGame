@@ -162,6 +162,18 @@ public class PlayerController : MonoBehaviour, StateHolder
         }
     }
 
+    // Activates movement and view
+    public void ActivateMovement()
+    {
+        ActivateInput();
+    }
+    
+    // Deactivates movement and view
+    public void DeactivateMovement()
+    {
+        GameManager.InputController.DisableInputWithClick();
+    }
+
     private void ReceiveMove()
     {
         if (ViewMode == ViewMode.TopDown)

@@ -9,6 +9,9 @@ public class CreepyGuy : MonoBehaviour, IInteractable, StateHolder
     public MeshRenderer withPistol;
     public MeshRenderer dead;
 
+    [SerializeField]
+    private AirVent airVent;
+
     public State State => hansState;
     private HansState hansState = new HansState();
 
@@ -16,7 +19,7 @@ public class CreepyGuy : MonoBehaviour, IInteractable, StateHolder
     private void Start()
     {
         //TODO needs to be changed when baby puzzle is finished
-        hansState.hansAppearance = HansAppearance.Suicidal;
+        hansState.hansAppearance = HansAppearance.Normal;
         
         UpdateAppearance();
     }
@@ -44,6 +47,7 @@ public class CreepyGuy : MonoBehaviour, IInteractable, StateHolder
 
     private void OpenCage()
     {
+        airVent.OpenGrate();
     }
 
     public void OnInteract(RaycastHit raycastHit, BaseItem optIte)
@@ -53,6 +57,12 @@ public class CreepyGuy : MonoBehaviour, IInteractable, StateHolder
             hansState.hansAppearance = HansAppearance.Dead;
             UpdateAppearance();
         }
+    }
+
+    public void AllowSuicide()
+    {
+        hansState.hansAppearance = HansAppearance.Suicidal;
+        UpdateAppearance();
     }
 
     public enum HansAppearance

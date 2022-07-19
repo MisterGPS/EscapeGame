@@ -22,4 +22,11 @@ public class PuzzleTarget : MonoBehaviour
         }
         return false;
     }
+
+    public void ReleaseTile(PuzzlePiece piece)
+    {
+        if (piece != currentPiece) return;
+        print("Released tile");
+        currentPiece = null;
+    }
 }

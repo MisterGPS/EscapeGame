@@ -129,4 +129,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puzzleMaterial: {fileID: 2100000, guid: 5f7b87002be7969458ecbbe66d1e2fe7, type: 2}
-  numTiles: {x: 3, y: 3}
+  numTiles: {x: 4, y: 5}
+  creepyGuy: {fileID: 0}

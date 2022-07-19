@@ -15,6 +15,9 @@ public class Puzzle : MonoBehaviour
     [SerializeField]
     private Vector2Int numTiles;
 
+    [SerializeField]
+    private CreepyGuy creepyGuy;
+
     public void StartPuzzle()
     {
         SpawnTiles();
@@ -70,7 +73,7 @@ public class Puzzle : MonoBehaviour
         UnityEngine.Debug.Assert(puzzlePieces.Count > 0 && puzzlePieces[0] != null);
     }
 
-    // Place all tiles to the left
+    // Place all tiles to the right
     // TODO Shift tiles more randomly
     private void DistributeTiles()
     {
@@ -78,6 +81,7 @@ public class Puzzle : MonoBehaviour
         foreach (PuzzlePiece puzzlePiece in puzzlePieces)
         {
             puzzlePiece.transform.localPosition += new Vector3(Random.Range(8f, 15f), 0, Random.Range(-12f, 12f));
+            puzzlePiece.SetPosition();
         }
     }
 
@@ -103,5 +107,12 @@ public class Puzzle : MonoBehaviour
     private void Solved()
     {
         print("Solved");
+        
+        creepyGuy.AllowSuicide();
+
+        foreach (var puzzlePiece in puzzlePieces)
+        {
+            puzzlePiece.enabled = false;
+        }
     }
 }

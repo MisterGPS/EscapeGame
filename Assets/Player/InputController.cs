@@ -87,6 +87,12 @@ public class InputController : MonoBehaviour, Input.IAlwaysActiveActions, Input.
         input.UI.Disable();
     }
 
+    public void DisableInputWithClick()
+    {
+        DisableInput();
+        input.CommonNav.Click.Enable();
+    }
+
     public void EnableUIInput()
     {
         input.UI.Enable();
