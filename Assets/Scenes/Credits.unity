@@ -283,14 +283,15 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<size=100%>ESCAPE THE PROFESSOR\n\n<size=80%>Projekt Lead\r\n<size=60%>Lena
-    Jacobi and Kai Przadka \n\n<size=80%>Lead Designer\r\n<size=60%>Luise Wanner
-    \n\n<size=80%>Design\r\n<size=60%>Lena Jacobi, Lucie Augustin, Luise Wanner,
-    Sarah Stelzer\n\n<size=80%>Lead Puzzle Designer\r\n<size=60%>Toni \n\n<size=80%>Lead
-    Programmer\r\n<size=60%>Kai Przadka \n\n<size=80%>Programming\r\n<size=60%>Eliane
-    Wang, Kai Przadka, Keira Becker, Lena Jacobi, Timo Gottzsky, Toni (Andreas Belay,
-    Lena Gibis) \n\n<size=80%>Musik & Sounds\r\n<size=60%>Andreas Belay, Toni\n\n\n\n\n\n\n\n\n<size=80%>Dieses
-    Spiel wurde in einem Schulprojekt unter der Leitung von Herr Liedl geschaffen"
+  m_text: "<size=100%>ESCAPE THE PROFESSOR\r\n\r\n<size=80%>Projekt Lead\r\n<size=60%>Lena
+    Jacobi and Kai Przadka \r\n\r\n<size=80%>Lead Designer\r\n<size=60%>Luise Wanner
+    \r\n\r\n<size=80%>Design\r\n<size=60%>Lena Jacobi, Lucie Augustin, Luise Wanner,
+    Sarah Stelzer\r\n\r\n<size=80%>Lead Puzzle Designer\r\n<size=60%>Sophie Niggemann
+    \r\n\r\n<size=80%>Lead Programmer\r\n<size=60%>Kai Przadka \r\n\r\n<size=80%>Programming\r\n<size=60%>Eliane
+    Wang, Kai Przadka, Keira Becker, Lena Jacobi, Timo Gottzsky, Sophie Niggemann,
+    (Andreas Belay, Lena Gibis) \r\n\r\n<size=80%>Musik & Sounds\r\n<size=60%>Andreas
+    Belay, Sophie Niggemann\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n<size=80%>Dieses Spiel
+    wurde in einem Schulprojekt unter der Leitung von Herr Liedl geschaffen"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
