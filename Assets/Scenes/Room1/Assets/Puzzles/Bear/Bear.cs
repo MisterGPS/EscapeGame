@@ -58,9 +58,6 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
     {
          bearState.bearCut = true;
          UpdateAppearance();
-
-         puzzle.gameObject.SetActive(true);
-         puzzle.StartPuzzle();
          
          GameManager.GetAudioManager().Play("BärGeschnitten");
     }
@@ -71,6 +68,11 @@ public class Bear : MonoBehaviour, IInteractable, StateHolder
             displayingSprite.GetComponent<MeshRenderer>().material = bearState.bearCut ? bearCutWithoutKnife : bearWithoutKnife;
         else
             displayingSprite.GetComponent<MeshRenderer>().material = bearState.bearCut ? bearCutWithKnife : bearWithKnife;
+        if (bearState.bearCut)
+        {
+            puzzle.gameObject.SetActive(true);
+            puzzle.StartPuzzle();
+        }
     }
 
     public void PostLoad()
