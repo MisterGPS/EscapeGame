@@ -191,10 +191,12 @@ public class GameManager : MonoBehaviour, StateHolder
         }
     }
 
-    private int saveTicks = 0;
     IEnumerator SaveNextTick()
     {
-        //Two two avoid catching destroyed GameManager
+        InputController.DisableInput();
+        
+        int saveTicks = 0;
+        // avoid catching destroyed GameManager
         while (saveTicks < 2)
         {
             saveTicks++;
@@ -203,17 +205,18 @@ public class GameManager : MonoBehaviour, StateHolder
         saveList = new SavingComponent[0];
         saveList = FindObjectsOfType<SavingComponent>();
         Save();
-        saveTicks = 0;
+        
         PlayerController.storyPlayer.Play();
-        PlayerController.storyPlayer.loopPointReached += (videoPlayer) => PlayerController.ActivateInput();
-        PlayerController.storyPlayer.loopPointReached += (videoPlayer) => PlayerController.storyPlayer.Stop();
+        PlayerController.storyPlayer.loopPointReached += delegate { PlayerController.ActivateInput(); };
+        PlayerController.storyPlayer.loopPointReached += delegate { PlayerController.storyPlayer.Stop(); };
+        
         yield return null;
     }
 
     private int loadTicks = 0;
     IEnumerator LoadNextTick()
     {
-        //Two two avoid catching destroyed GameManager
+        // void catching destroyed GameManager
         while (loadTicks < 2)
         {
             loadTicks++;
