@@ -34,4 +34,11 @@ public class UniqueID : MonoBehaviour
             GameobjectToID.Remove(gameObject);
         }
     }
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void clearDictionarys()
+    {
+        IDToGameobject.Clear();
+        GameobjectToID.Clear();
+    }
 }
